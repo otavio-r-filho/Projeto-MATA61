@@ -1,4 +1,8 @@
 package tools;
+/*
+ * Classe para manuseio de arquivos 
+ * Baseada em códigos do site stackoverflow.com de múltiplos autores
+ */
 
 import java.io.BufferedReader;
 import java.io.File;
