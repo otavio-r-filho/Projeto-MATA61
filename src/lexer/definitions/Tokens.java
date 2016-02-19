@@ -3,7 +3,7 @@ package lexer.definitions;
 import lexer.definitions.tToken;
 
 public class Tokens {
-	//Lexemas reservados - comandos
+	//Tokens reservados - comandos
 	public static final tToken ELSE = new tToken("ELSE", "else", 1);
 	public static final tToken FLOAT = new tToken("FLOAT", "float", 2);
 	public static final tToken FOR = new tToken("FOR", "for", 3);
@@ -17,7 +17,7 @@ public class Tokens {
 	public static final tToken WHILE = new tToken("WHILE", "while", 11);
 	
 	
-	//Lexemas reservados - caracteres
+	//Tokens reservados - caracteres
 	public static final tToken PLUS = new tToken("PLUS", "+", 12);
 	public static final tToken MINUS = new tToken("MINUS", "-", 13);
 	public static final tToken ASTERISK = new tToken("ASTERISK", "*", 14);
@@ -40,7 +40,7 @@ public class Tokens {
 	public static final tToken COMERCIALE = new tToken("COMERCIALE", "&", 31);
 	public static final tToken PIPE = new tToken("PIPE", "|", 32);
 	
-	//Lexemas "abertos"
+	//Tokens "abertos"
 	public static final tToken ID = new tToken("ID", "", 33);
 	public static final tToken NUM = new tToken("NUM", "", 34);
 	public static final tToken REAL = new tToken("REAL", "", 35);
