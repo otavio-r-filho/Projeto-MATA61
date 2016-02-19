@@ -21,11 +21,11 @@ public class tToken {
 	}
 	
 	public String getToken() {
-		return ("<" + this.tokenClass + ", " + this.tokenValue + ">");
+		return ("<" + tokenClass + ", " + tokenValue + ">");
 	}
 	
 	public int getTokenClassIndex(){
-		return this.tokenClassIndex;
+		return tokenClassIndex;
 	}
 	
 	public void setTokenValue(String tokenValue){
