@@ -7,7 +7,7 @@ public class State {
 	private int stateIndex;
 	private String stateName;
 	private tToken returnToken;
-	private String returnValue;
+	//private String returnValue;
 	
 	
 	public State(int stateIndex, String stateName) {
@@ -27,6 +27,18 @@ public class State {
 	
 	public boolean isFinalState() {
 		return this.finalState;
+	}
+	
+	public String getToken() {
+		return returnToken.getToken();
+	}
+	
+	public int getStateIndex() {
+		return this.stateIndex;
+	}
+	
+	public String getStateName() {
+		return this.stateName;
 	}
 	
 }
