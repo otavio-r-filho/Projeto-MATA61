@@ -7,6 +7,14 @@ package lexer.definitions;
 import lexer.definitions.Lexeme;
 
 public class Lexemes {
+	
+	public static enum eLexemes {
+		ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE,
+		A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,
+		a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,
+		PLUS, MINU, ASTHERISK, SMALLER, GREATER, EQUAL, EXCLAMATION, OPARENTHESES, CPARENTHESES, OBRACKET, CBRACKET, OKEYBRACKET, CKEYBRACKET, COMERCIALE, PIPE 
+	};
+	
 	public static final Lexeme ZERO = new Lexeme(0, "0");
 	public static final Lexeme ONE = new Lexeme(1, "1");
 	public static final Lexeme TWO = new Lexeme(2, "2");
