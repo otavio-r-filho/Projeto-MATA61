@@ -39,6 +39,7 @@ public class Tokens {
 	public static final tToken CKEYBRACKET = new tToken("CKEYBRACKET", "}", 30);
 	public static final tToken COMERCIALE = new tToken("COMERCIALE", "&", 31);
 	public static final tToken PIPE = new tToken("PIPE", "|", 32);
+	public static final tToken POINT = new tToken("POINT", ".", 33);
 	
 	//Tokens "abertos"
 	public static final tToken ID = new tToken("ID", "", 33);
