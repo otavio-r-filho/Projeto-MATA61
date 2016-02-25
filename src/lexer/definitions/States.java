@@ -7,9 +7,9 @@ public class States {
 	
 	private Lexemes lexemes;
 	
-	public static final State ENTRY = new State(1,"ENTRY", false);
-	public static final State ID0 	= new State(2, "ID0", true);
-	public static final State IF 	= new State(3, "IF", true);
+	public static final State ENTRY 		= new State(1,"ENTRY", false);
+	public static final State ID0 			= new State(2, "ID0", true);
+	public static final State IF 			= new State(3, "IF", true);
 	public static final State ID1 			= new State(4, "ID1", true);
 	public static final State INT 			= new State(5, "INT", true);
 	public static final State ID2 			= new State(6, "ID2", true);
