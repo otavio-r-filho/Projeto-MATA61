@@ -66,10 +66,13 @@ public class States {
 	public static final State DIFFERENT		= new State(57, "DIFFERENT", true);
 	public static final State SEMICOLON		= new State(58, "SEMICOLON", true);
 	public static final State COMMA			= new State(59, "COMMA", true);
-	public static final State OPARENTHESES	= new State(60, "OPARENTHESES", true);
-	public static final State CPARENTHESES	= new State(61, "CPARENTHESES", true);
-	public static final State OBRACKET		= new State(62, "OBRACKET", true);
-	public static final State CBRACKET		= new State(63, "CBRACKET", true);
-	public static final State OKEYBRACKET	= new State(64, "OKEYBRACKET", true);
-	public static final State CKEYBRACKET	= new State(65, "CKEYBRACKET", true);
+	public static final State POINT			= new State(60, "POINT", true);
+	public static final State OPARENTHESES	= new State(61, "OPARENTHESES", true);
+	public static final State CPARENTHESES	= new State(62, "CPARENTHESES", true);
+	public static final State OBRACKET		= new State(63, "OBRACKET", true);
+	public static final State CBRACKET		= new State(64, "CBRACKET", true);
+	public static final State OKEYBRACKET	= new State(65, "OKEYBRACKET", true);
+	public static final State CKEYBRACKET	= new State(66, "CKEYBRACKET", true);
+	public static final State COMERCIALE	= new State(67, "COMERCIALE", true);
+	public static final State PIPE			= new State(68, "PIPE", true);
 }

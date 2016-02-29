@@ -93,5 +93,6 @@ public class Lexemes {
 	public static final Lexeme PIPE 		= new Lexeme(74,"|");
 	public static final Lexeme COMMA 		= new Lexeme(75, ",");
 	public static final Lexeme POINT 		= new Lexeme(76, ".");
+	public static final Lexeme SLASH 		= new Lexeme(77,"/");
 	
 }
