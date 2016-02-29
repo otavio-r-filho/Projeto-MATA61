@@ -42,15 +42,15 @@ public class States {
 	public static final State ID20			= new State(33, "ID20", true);
 	public static final State ID21			= new State(34, "ID21", true);
 	public static final State ID22			= new State(35, "ID22", true);
-	public static final State THEN			= new State(36, "ID23", true);
-	public static final State ID24			= new State(37, "ID24", true);
-	public static final State ID25			= new State(38, "ID25", true);
-	public static final State ID26			= new State(39, "ID26", true);
+	public static final State THEN			= new State(36, "THEN", true);
+	public static final State ID24			= new State(37, "ID23", true);
+	public static final State ID25			= new State(38, "ID24", true);
+	public static final State ID26			= new State(39, "ID25", true);
 	public static final State VOID			= new State(40, "VOID", true, Tokens.VOID);
-	public static final State ID27			= new State(41, "ID27", true);
-	public static final State ID28			= new State(42, "ID28", true);
-	public static final State ID29			= new State(43, "ID29", true);
-	public static final State ID30			= new State(44, "ID30", true);
+	public static final State ID27			= new State(41, "ID26", true);
+	public static final State ID28			= new State(42, "ID27", true);
+	public static final State ID29			= new State(43, "ID28", true);
+	public static final State ID30			= new State(44, "ID29", true);
 	public static final State WHILE			= new State(45, "WHILE", true, Tokens.WHILE);
 	public static final State PLUS			= new State(46, "PLUS", true, Tokens.PLUS);
 	public static final State MINUS			= new State(47, "MINUS", true, Tokens.MINUS);
@@ -72,5 +72,4 @@ public class States {
 	public static final State CBRACKET		= new State(63, "CBRACKET", true);
 	public static final State OKEYBRACKET	= new State(64, "OKEYBRACKET", true);
 	public static final State CKEYBRACKET	= new State(65, "CKEYBRACKET", true);
-	
 }
