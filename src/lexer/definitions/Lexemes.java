@@ -684,8 +684,15 @@ public static void printLexemeIndex(char lexeme){
 	case '|':
 		System.out.println( 80 );
 		break;
-	case 32: //Espaço
-		System.out.println("Espaço");
+	case 10: //Espaço
+		System.out.println(81);
+		break;
+	case 13:
+		System.out.println(81);
+		break;
+	case 32:
+		System.out.println(81);
+		break;
 	default:
 		System.out.println("Lexema: " + (int) lexeme);
 		break;
