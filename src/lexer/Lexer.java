@@ -11,6 +11,7 @@ public class Lexer {
 	private int lastFinalState = 0;
 	private String actualChain;
 	
+	//[Estado][Lexema]
 	int edges[][] = {/* 0 ,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,
 						A ,B ,C ,D ,E ,F ,G ,H ,I ,J ,K ,L ,M ,N ,O ,P ,Q ,R ,S ,T ,U ,V ,W ,X ,Y ,Z ,
 						a ,b ,c ,d ,e ,f ,g ,h ,i ,j ,k ,l ,m ,n ,o ,p ,q ,r ,s ,t ,u ,v ,w ,x ,y ,z ,
@@ -288,5 +289,16 @@ public class Lexer {
 						6 ,6 ,6 ,6 ,17,10,6 ,6 ,2 ,6 ,6 ,6 ,6 ,21,6 ,6 ,6 ,24,30,33,6 ,37,41,6 ,6 ,6 ,	
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	};
+	
+//	public String spitToken(int lexemeIndex) {
+//		switch (actualState) {
+//		case 1:
+//			if(lexemeIndex != -1) {
+//			} else {
+//				return Tokens.ERROR.getToken();
+//			}
+//			break;
+//		}
+//	}
 	
 }
