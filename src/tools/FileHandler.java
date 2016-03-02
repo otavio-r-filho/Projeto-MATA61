@@ -15,14 +15,14 @@ import java.nio.charset.Charset;
 
 public class FileHandler {
 	
-	public static void main(String[] args) throws IOException {
-	    // replace this with a known encoding if possible
-	    Charset encoding = Charset.defaultCharset();
-	    for (String filename : args) {
-	        File file = new File(filename);
-	        handleFile(file, encoding);
-	    }
-	}
+//	public static void main(String[] args) throws IOException {
+//	    // replace this with a known encoding if possible
+//	    Charset encoding = Charset.defaultCharset();
+//	    for (String filename : args) {
+//	        File file = new File(filename);
+//	        handleFile(file, encoding);
+//	    }
+//	}
 	
 	private static void handleFile(File file, Charset encoding)
 	        throws IOException {

@@ -2,6 +2,9 @@ package lexer.definitions;
 
 /*
  * Classe de definição dos lexemas que poderão ser identificados pelo compilador
+ * Códigos UTF-8:
+ * Espaço: 32
+ * NewLine: 13 | 10 | 13 + 10
  */
 
 import lexer.definitions.Lexeme;
@@ -434,5 +437,258 @@ public static int getLexemeIndex(char lexeme){
 			return -1;
 		}
 	}
+
+public static void printLexemeIndex(char lexeme){
 	
+	switch(lexeme) {
+	case '0':
+		System.out.println( 0 );
+		break;
+	case '1':
+		System.out.println( 1 );
+		break;
+	case '2':
+		System.out.println( 2 );
+		break;
+	case '3':
+		System.out.println( 3 );
+		break;
+	case '4':
+		System.out.println( 4 );
+		break;
+	case '5':
+		System.out.println( 5 );
+		break;
+	case '6':
+		System.out.println( 6 );
+		break;
+	case '7':
+		System.out.println( 7 );
+		break;
+	case '8':
+		System.out.println( 8 );
+		break;
+	case '9':
+		System.out.println( 9 );
+		break;
+	case 'A':
+		System.out.println( 10 );
+		break;
+	case 'B':
+		System.out.println( 11 );
+		break;
+	case 'C':
+		System.out.println( 12 );
+		break;
+	case 'D':
+		System.out.println( 13 );
+		break;
+	case 'E':
+		System.out.println( 14 );
+		break;
+	case 'F':
+		System.out.println( 15 );
+		break;
+	case 'G':
+		System.out.println( 16 );
+		break;
+	case 'H':
+		System.out.println( 17 );
+		break;
+	case 'I':		
+		System.out.println( 18 );
+		break;
+	case 'J':
+		System.out.println( 19 );
+		break;
+	case 'K':
+		System.out.println( 20 );
+		break;
+	case 'L':
+		System.out.println( 21 );
+		break;
+	case 'M':
+		System.out.println( 22 );
+		break;
+	case 'N':
+		System.out.println( 23 );
+		break;
+	case 'O':
+		System.out.println( 24 );
+		break;
+	case 'P':
+		System.out.println( 25 );
+		break;
+	case 'Q':
+		System.out.println( 26 );
+		break;
+	case 'R':
+		System.out.println( 27 );
+		break;
+	case 'S':
+		System.out.println( 28 );
+		break;
+	case 'T':
+		System.out.println( 29 );
+		break;
+	case 'U':
+		System.out.println( 30 );
+		break;
+	case 'V':
+		System.out.println( 31 );
+		break;
+	case 'W':
+		System.out.println( 32 );
+		break;
+	case 'X':
+		System.out.println( 33 );
+		break;
+	case 'Y':
+		System.out.println( 34 );
+		break;
+	case 'Z':
+		System.out.println( 35 );
+		break;
+	case 'a':
+		System.out.println( 36 );
+		break;
+	case 'b':
+		System.out.println( 37 );
+		break;
+	case 'c':
+		System.out.println( 38 );
+		break;
+	case 'd':
+		System.out.println( 39 );
+		break;
+	case 'e':
+		System.out.println( 40 );
+		break;
+	case 'f':
+		System.out.println( 41 );
+		break;
+	case 'g':
+		System.out.println( 42 );
+		break;
+	case 'h':
+		System.out.println( 43 );
+		break;
+	case 'i':
+		System.out.println( 44 );
+		break;
+	case 'j':
+		System.out.println( 45 );
+		break;
+	case 'k':
+		System.out.println( 46 );
+		break;
+	case 'l':
+		System.out.println( 47 );
+		break;
+	case 'm':
+		System.out.println( 48 );
+		break;
+	case 'n':
+		System.out.println( 49 );
+		break;
+	case 'o':
+		System.out.println( 50 );
+		break;
+	case 'p':
+		System.out.println( 51 );
+		break;
+	case 'q':
+		System.out.println( 52 );
+		break;
+	case 'r':
+		System.out.println( 53 );
+		break;
+	case 's':
+		System.out.println( 54 );
+		break;
+	case 't':
+		System.out.println( 55 );
+		break;
+	case 'u':
+		System.out.println( 56 );
+		break;
+	case 'v':
+		System.out.println( 57 );
+		break;
+	case 'w':
+		System.out.println( 58 );
+		break;
+	case 'x':
+		System.out.println( 59 );
+		break;
+	case 'y':
+		System.out.println( 60 );
+		break;
+	case 'z':
+		System.out.println( 61 );
+		break;
+	case '+':
+		System.out.println( 62 );
+		break;
+	case '-':
+		System.out.println( 63 );
+		break;
+	case '*':
+		System.out.println( 64 );
+		break;
+	case '/':
+		System.out.println( 65 );
+		break;
+	case '<':
+		System.out.println( 66 );
+		break;
+	case '>':
+		System.out.println( 67 );
+		break;
+	case '=':
+		System.out.println( 68 );
+		break;
+	case '!':
+		System.out.println( 69 );
+		break;
+	case ';':
+		System.out.println( 70 );
+		break;
+	case ',':
+		System.out.println( 71 );
+		break;
+	case '.':
+		System.out.println( 72 );
+		break;
+	case '(':
+		System.out.println( 73 );
+		break;
+	case ')':
+		System.out.println( 74 );
+		break;
+	case '[':
+		System.out.println( 75 );
+		break;
+	case ']':
+		System.out.println( 76 );
+		break;
+	case '{':
+		System.out.println( 77 );
+		break;
+	case '}':
+		System.out.println( 78 );
+		break;
+	case '&':
+		System.out.println( 79 );
+		break;
+	case '|':
+		System.out.println( 80 );
+		break;
+	case 32: //Espaço
+		System.out.println("Espaço");
+	default:
+		System.out.println("Lexema: " + (int) lexeme);
+		break;
+	}
+}
 }
