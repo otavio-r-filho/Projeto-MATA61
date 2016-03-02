@@ -122,6 +122,27 @@ public class Lexemes {
 			return 10;
 		case "B":
 			return 11;
+		case "C":
+			return 12;
+		case "D":
+			return 13;
+		case "E":
+			return 14;
+		case "F":
+			return 15;
+		case "G":
+			return 16;
+		case "H":
+			return 17;
+		case "I":
+			return 18;
+		case "J":
+			return 19;
+		case "K":
+			return 20;
+		case "L":
+			return 21;
+		
 			
 		}
 		return -1;
