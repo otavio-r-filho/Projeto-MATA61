@@ -25,59 +25,59 @@ public class Lexer {
 						6 ,6 ,6 ,6 ,17,10,6 ,6 ,2 ,6 ,6 ,6 ,6 ,21,6 ,6 ,6 ,24,30,33,6 ,37,41,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 2*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID0*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,3 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,4 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 3*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*IF*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 4*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID1*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,5 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 5*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*INT*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 6*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID2*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 7*/	   {7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,
-						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
+	/*NUM*/				0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 						46,47,48,49,50,52,54,56,58,59,8 ,61,62,63,64,65,66,67,68,1 },
 	/*Estado 8*/	   {9 ,9 ,9 ,9 ,9 ,9 ,9 ,9 ,9 ,9 ,
-						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
+	/*REAL0*/			0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 },
 	/*Estado 9*/	   {9 ,9 ,9 ,9 ,9 ,9 ,9 ,9 ,9 ,9 ,
-						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
+	/*REAL*/			0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 10*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID3*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,13,6 ,6 ,11,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 11*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID4*/					6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,12,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 12*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*FOR*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 13*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID5*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,14,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 14*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID6*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						15,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 15*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
-						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+	/*ID7*/				6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,16,6 ,6 ,6 ,6 ,6 ,6 ,
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 16*/	   {6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
@@ -292,12 +292,126 @@ public class Lexer {
 	
 	public String spitToken(int lexemeIndex, String lexeme) {
 		switch (actualState) {
-		case 1:
+		case 1://ENTRY
 			if(lexemeIndex != -1) {
+				//Atualiza o estado
 				actualState = edges[actualState][lexemeIndex];
+				//Adiciona o caractere à cadeia atual
 				actualChain = actualChain.concat(lexeme);
 				return null;
 			} else {
+				return Tokens.ERROR.getToken();
+			}
+		case 2://ID0
+			if(lexemeIndex != -1) {
+				if(lexemeIndex < 62) {
+					//Atualiza o estado atual
+					actualState = edges[actualState][lexemeIndex];
+					//Adiciona o caractere à cadeia atual
+					actualChain = actualChain.concat(lexeme);
+					return null;
+				} else {
+					Tokens.ID.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.ID.getToken();					
+				}
+			} else {
+				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
+				actualState = 1;
+				actualChain = "";
+				return Tokens.ERROR.getToken();
+			}
+		case 3://IF 
+			if(lexemeIndex != -1) {
+				if(lexemeIndex < 62) {
+					//Atualiza o estado atual
+					actualState = edges[actualState][lexemeIndex];
+					//Adiciona o caractere à cadeia atual
+					actualChain = actualChain.concat(lexeme);
+					return null;
+				} else {
+					actualChain = "";
+					return Tokens.IF.getToken();					
+				}
+			} else {
+				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
+				actualState = 1;
+				actualChain = "";
+				return Tokens.ERROR.getToken();
+			}
+		case 4://ID1
+			if(lexemeIndex != -1) {
+				if(lexemeIndex < 62) {
+					//Atualiza o estado atual
+					actualState = edges[actualState][lexemeIndex];
+					//Adiciona o caractere à cadeia atual
+					actualChain = actualChain.concat(lexeme);
+					return null;
+				} else {
+					Tokens.ID.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.ID.getToken();					
+				}
+			} else {
+				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
+				actualState = 1;
+				actualChain = "";
+				return Tokens.ERROR.getToken();
+			}
+		case 5: //INT
+			if(lexemeIndex != -1) {
+				if(lexemeIndex < 62) {
+					//Atualiza o estado atual
+					actualState = edges[actualState][lexemeIndex];
+					//Adiciona o caractere à cadeia atual
+					actualChain = actualChain.concat(lexeme);
+					return null;
+				} else {
+					actualChain = "";
+					return Tokens.INT.getToken();					
+				}
+			} else {
+				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
+				actualState = 1;
+				actualChain = "";
+				return Tokens.ERROR.getToken();
+			}
+		case 6: //ID2
+			if(lexemeIndex != -1) {
+				if(lexemeIndex < 62) {
+					//Atualiza o estado atual
+					actualState = edges[actualState][lexemeIndex];
+					//Adiciona o caractere à cadeia atual
+					actualChain = actualChain.concat(lexeme);
+					return null;
+				} else {
+					Tokens.ID.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.ID.getToken();					
+				}
+			} else {
+				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
+				actualState = 1;
+				actualChain = "";
+				return Tokens.ERROR.getToken();
+			}
+		case 7: //NUM
+			if(lexemeIndex != -1) {
+				if(lexemeIndex < 62) {
+					//Atualiza o estado atual
+					actualState = edges[actualState][lexemeIndex];
+					//Adiciona o caractere à cadeia atual
+					actualChain = actualChain.concat(lexeme);
+					return null;
+				} else {
+					Tokens.ID.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.ID.getToken();					
+				}
+			} else {
+				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
+				actualState = 1;
+				actualChain = "";
 				return Tokens.ERROR.getToken();
 			}
 		default:
