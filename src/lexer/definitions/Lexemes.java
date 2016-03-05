@@ -263,6 +263,10 @@ public class Lexemes {
 			return 79;
 		case "|":
 			return 80;
+		case "\n": //ignorando salto de linha
+			return 81;
+		case " ": //ignorando espaços
+			return 81;
 		default:
 			return -1;
 		}
@@ -433,6 +437,12 @@ public static int getLexemeIndex(char lexeme){
 			return 79;
 		case '|':
 			return 80;
+		case 10: //ignorando saltos de linha
+			return 81;
+		case 13:
+			return 81;
+		case 32: //ignorando espaços
+			return 81;
 		default:
 			return -1;
 		}
