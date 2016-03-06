@@ -23,28 +23,29 @@ public class Tokens {
 	public static final tToken ASTERISK = new tToken("ASTERISK", "*", 14);
 	public static final tToken SLASH = new tToken("SLASH", "/", 15);
 	public static final tToken SMALLER = new tToken("SMALLER", "<", 16);
-	public static final tToken GRATER = new tToken("GREATER", ">", 17);
+	public static final tToken GREATER = new tToken("GREATER", ">", 17);
 	public static final tToken ATTRIBUTION = new tToken("ATTRIBUTION", "=", 18);
-	public static final tToken SEQUAL = new tToken("SQUAL", "<=", 19);
-	public static final tToken GEQUAL = new tToken("GEQUAL", ">=", 20);
-	public static final tToken COMPARISSON = new tToken("COMPARISSON", "==", 21);
-	public static final tToken DIFFERENT = new tToken("DIFFERENT", "!=", 22);
-	public static final tToken SEMICOLON = new tToken("SEMICOLON", ";", 23);
-	public static final tToken COMMA = new tToken("COMMA", ",", 24);
-	public static final tToken OPARENTHESES = new tToken("OPARENTHESES", "(", 25);
-	public static final tToken CPARENTHESES = new tToken("CPARENTHESES", ")", 26);
-	public static final tToken OBRACKET = new tToken("OBRACKET", "[", 27);
-	public static final tToken CBRACKET = new tToken("CBRACKET", "]", 28);
-	public static final tToken OKEYBRACKET = new tToken("OKEYBRACKET", "{", 29);
-	public static final tToken CKEYBRACKET = new tToken("CKEYBRACKET", "}", 30);
-	public static final tToken COMERCIALE = new tToken("COMERCIALE", "&", 31);
-	public static final tToken PIPE = new tToken("PIPE", "|", 32);
-	public static final tToken POINT = new tToken("POINT", ".", 33);
+	public static final tToken EXCLAMATION = new tToken("EXCLAMATION", "!", 19);
+	public static final tToken SEQUAL = new tToken("SQUAL", "<=", 20);
+	public static final tToken GEQUAL = new tToken("GEQUAL", ">=", 21);
+	public static final tToken COMPARISSON = new tToken("COMPARISSON", "==", 22);
+	public static final tToken DIFFERENT = new tToken("DIFFERENT", "!=", 23);
+	public static final tToken SEMICOLON = new tToken("SEMICOLON", ";", 24);
+	public static final tToken COMMA = new tToken("COMMA", ",", 25);
+	public static final tToken OPARENTHESES = new tToken("OPARENTHESES", "(", 26);
+	public static final tToken CPARENTHESES = new tToken("CPARENTHESES", ")", 27);
+	public static final tToken OBRACKET = new tToken("OBRACKET", "[", 28);
+	public static final tToken CBRACKET = new tToken("CBRACKET", "]", 29);
+	public static final tToken OKEYBRACKET = new tToken("OKEYBRACKET", "{", 30);
+	public static final tToken CKEYBRACKET = new tToken("CKEYBRACKET", "}", 31);
+	public static final tToken COMERCIALE = new tToken("COMERCIALE", "&", 32);
+	public static final tToken PIPE = new tToken("PIPE", "|", 33);
+	public static final tToken POINT = new tToken("POINT", ".", 34);
 	
 	//Tokens "abertos"
-	public static tToken ID = new tToken("ID", "", 33);
-	public static tToken NUM = new tToken("NUM", "", 34);
-	public static tToken REAL = new tToken("REAL", "", 35);
+	public static tToken ID = new tToken("ID", "", 35);
+	public static tToken NUM = new tToken("NUM", "", 36);
+	public static tToken REAL = new tToken("REAL", "", 37);
 	
-	public static final tToken ERROR = new tToken("ERROR", "", 36);
+	public static final tToken ERROR = new tToken("ERROR", "", 38);
 }

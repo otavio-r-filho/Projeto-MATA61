@@ -16,10 +16,10 @@ public class Lexer {
 						A ,B ,C ,D ,E ,F ,G ,H ,I ,J ,K ,L ,M ,N ,O ,P ,Q ,R ,S ,T ,U ,V ,W ,X ,Y ,Z ,
 						a ,b ,c ,d ,e ,f ,g ,h ,i ,j ,k ,l ,m ,n ,o ,p ,q ,r ,s ,t ,u ,v ,w ,x ,y ,z ,
 						+ ,- ,* ,/ ,< ,> ,= ,! ,; ,, ,. ,( ,) ,[ ,] ,{ ,} ,& ,| */
-	/*Estado 0*/       {0 ,0 ,0 ,0 ,0 ,0, 0, 0, 0, 0 , 
-	/*INVALID*/			0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
-						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
-						0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 },
+	/*Estado 0*/       {7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,
+	/*ENTRY*/			6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
+						6 ,6 ,6 ,6 ,17,10,6 ,6 ,2 ,6 ,6 ,6 ,6 ,21,6 ,6 ,6 ,24,30,33,6 ,37,41,6 ,6 ,6 ,
+						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
 	/*Estado 1*/	   {7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,
 	/*ENTRY*/			6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,17,10,6 ,6 ,2 ,6 ,6 ,6 ,6 ,21,6 ,6 ,6 ,24,30,33,6 ,37,41,6 ,6 ,6 ,
@@ -397,7 +397,7 @@ public class Lexer {
 			}
 		case 7: //NUM
 			if(lexemeIndex != -1) {
-				if(lexemeIndex < 62) {
+				if((lexemeIndex < 10) || (lexemeIndex == 72)) {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
@@ -419,4 +419,463 @@ public class Lexer {
 		}
 	}
 	
+	public String spitToken2(int lexemeIndex, String lexeme) {
+		switch(actualState){
+		case 0:
+			actualChain = "";
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				actualChain = lexeme;
+			} else {
+				actualState = 0;
+			}
+			return Tokens.ERROR.getToken();
+		case 1: //ENTRY
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				actualChain = lexeme;
+			} else {
+				actualState = 0;
+				actualChain = "";
+			}
+			return null;
+		case 3: //IF
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.IF.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 5: //INT
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.INT.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 1;
+				return null;
+			}
+		case 7: //NUM
+			if(lexemeIndex != -1) {
+				if(((lexemeIndex > 45) && (lexemeIndex != 60)) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					Tokens.NUM.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.NUM.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 8: //REAL0 - estado intermediário entre NUM e REAL - não é um estado final
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				actualChain = lexeme;
+				return null;
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 9: //REAL
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					Tokens.REAL.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.REAL.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 12: //FOR
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.FOR.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 16: //FLOAT
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.FLOAT.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 20: //ELSE
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.ELSE.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 23: //NEW
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.NEW.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 29: //RETURN
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.RETURN.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 32: //STR
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.STR.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 36: //THEN
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.THEN.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 40: //VOID
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.VOID.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 45: //WHILE
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = "";
+					return Tokens.WHILE.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 46: //PLUS
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.PLUS.getToken();
+		case 47: //MINUS
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.MINUS.getToken();
+		case 48: //ASTERISK
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.ASTERISK.getToken();
+		case 49: //SLASH
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.SLASH.getToken();
+		case 50: //SMALLER
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.SMALLER.getToken();
+		case 51: //SEQUAL
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.SEQUAL.getToken();
+		case 52: //GREATER
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.GREATER.getToken();	
+		case 53: //GEQUAL
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.GEQUAL.getToken();
+		case 54: //ATTIBUTION
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.ATTRIBUTION.getToken();
+		case 55: //DIFFERENT
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.COMPARISSON.getToken();
+		case 56: //EXCLAMATION
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.EXCLAMATION.getToken();
+		case 57: //DIFFERENT
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.DIFFERENT.getToken();
+		case 58: //SEMICOLON
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.SEMICOLON.getToken();
+		case 59: //COMMA
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.COMMA.getToken();
+		case 60: //POINT
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.POINT.getToken();
+		case 61: //OPARENTHESES
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.OPARENTHESES.getToken();
+		case 62: //CPARENTHESES
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.CPARENTHESES.getToken();
+		case 63: //OBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.OBRACKET.getToken();
+		case 64: //CBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.CBRACKET.getToken();
+		case 65: //OKEYBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.OKEYBRACKET.getToken();
+		case 66: //CKEYBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.CKEYBRACKET.getToken();
+		case 67: //COMMERCIALE
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.COMERCIALE.getToken();
+		case 68: //PIPE
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.PIPE.getToken();
+		default:
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					Tokens.ID.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.ID.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		}
+	}	
 }
