@@ -26,7 +26,7 @@ public class Tokens {
 	public static final tToken GREATER = new tToken("GREATER", ">", 17);
 	public static final tToken ATTRIBUTION = new tToken("ATTRIBUTION", "=", 18);
 	public static final tToken EXCLAMATION = new tToken("EXCLAMATION", "!", 19);
-	public static final tToken SEQUAL = new tToken("SQUAL", "<=", 20);
+	public static final tToken SEQUAL = new tToken("SEQUAL", "<=", 20);
 	public static final tToken GEQUAL = new tToken("GEQUAL", ">=", 21);
 	public static final tToken COMPARISSON = new tToken("COMPARISSON", "==", 22);
 	public static final tToken DIFFERENT = new tToken("DIFFERENT", "!=", 23);
