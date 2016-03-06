@@ -287,7 +287,7 @@ public class Lexer {
 	/*Estado 68*/	   {7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,
 	/*PIPE*/			6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,6 ,
 						6 ,6 ,6 ,6 ,17,10,6 ,6 ,2 ,6 ,6 ,6 ,6 ,21,6 ,6 ,6 ,24,30,33,6 ,37,41,6 ,6 ,6 ,	
-						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 },
+						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 }
 	};
 	
 	public String spitToken(int lexemeIndex, String lexeme) {
@@ -297,7 +297,7 @@ public class Lexer {
 				//Atualiza o estado
 				actualState = edges[actualState][lexemeIndex];
 				//Adiciona o caractere à cadeia atual
-				actualChain = actualChain.concat(lexeme);
+				actualChain = actualChain = actualChain + lexeme;
 				return null;
 			} else {
 				return Tokens.ERROR.getToken();
@@ -308,7 +308,7 @@ public class Lexer {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain.concat(lexeme);
+					actualChain = actualChain = actualChain + lexeme;
 					return null;
 				} else {
 					Tokens.ID.setTokenValue(actualChain);
@@ -327,7 +327,7 @@ public class Lexer {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain.concat(lexeme);
+					actualChain = actualChain = actualChain + lexeme;
 					return null;
 				} else {
 					actualChain = "";
@@ -345,7 +345,7 @@ public class Lexer {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain.concat(lexeme);
+					actualChain = actualChain = actualChain + lexeme;
 					return null;
 				} else {
 					Tokens.ID.setTokenValue(actualChain);
@@ -364,7 +364,7 @@ public class Lexer {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain.concat(lexeme);
+					actualChain = actualChain = actualChain + lexeme;
 					return null;
 				} else {
 					actualChain = "";
@@ -382,7 +382,7 @@ public class Lexer {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain.concat(lexeme);
+					actualChain = actualChain = actualChain + lexeme;
 					return null;
 				} else {
 					Tokens.ID.setTokenValue(actualChain);
@@ -401,7 +401,7 @@ public class Lexer {
 					//Atualiza o estado atual
 					actualState = edges[actualState][lexemeIndex];
 					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain.concat(lexeme);
+					actualChain = actualChain = actualChain + lexeme;
 					return null;
 				} else {
 					Tokens.ID.setTokenValue(actualChain);
@@ -447,7 +447,7 @@ public class Lexer {
 					return Tokens.IF.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -463,7 +463,7 @@ public class Lexer {
 					return Tokens.INT.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -480,7 +480,8 @@ public class Lexer {
 					return Tokens.NUM.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					//actualChain = actualChain + lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -491,7 +492,7 @@ public class Lexer {
 		case 8: //REAL0 - estado intermediário entre NUM e REAL - não é um estado final
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
-				actualChain = lexeme;
+				actualChain = actualChain + lexeme;
 				return null;
 			} else {
 				actualChain = "";
@@ -507,7 +508,7 @@ public class Lexer {
 					return Tokens.REAL.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -523,7 +524,7 @@ public class Lexer {
 					return Tokens.FOR.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -539,7 +540,7 @@ public class Lexer {
 					return Tokens.FLOAT.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -555,7 +556,7 @@ public class Lexer {
 					return Tokens.ELSE.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -571,7 +572,7 @@ public class Lexer {
 					return Tokens.NEW.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -587,7 +588,7 @@ public class Lexer {
 					return Tokens.RETURN.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -603,7 +604,7 @@ public class Lexer {
 					return Tokens.STR.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -619,7 +620,7 @@ public class Lexer {
 					return Tokens.THEN.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -635,7 +636,7 @@ public class Lexer {
 					return Tokens.VOID.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -651,7 +652,7 @@ public class Lexer {
 					return Tokens.WHILE.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -695,7 +696,7 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
 				if(lexemeIndex == 68) {
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -715,7 +716,7 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
 				if(lexemeIndex == 68) {
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -735,7 +736,7 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
 				if(lexemeIndex == 68) {
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -755,7 +756,7 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
 				if(lexemeIndex == 68) {
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
@@ -861,14 +862,14 @@ public class Lexer {
 			return Tokens.PIPE.getToken();
 		default:
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					Tokens.ID.setTokenValue(actualChain);
 					actualChain = "";
 					return Tokens.ID.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
-					actualChain = lexeme;
+					actualChain = actualChain + lexeme;
 					return null;
 				}
 			} else {
