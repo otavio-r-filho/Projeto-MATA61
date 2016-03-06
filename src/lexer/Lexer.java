@@ -445,7 +445,7 @@ public class Lexer {
 			return null;
 		case 3: //IF
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.IF.getToken();
@@ -461,7 +461,7 @@ public class Lexer {
 			}
 		case 5: //INT
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.INT.getToken();
@@ -477,7 +477,7 @@ public class Lexer {
 			}
 		case 7: //NUM
 			if(lexemeIndex != -1) {
-				if(((lexemeIndex > 45) && (lexemeIndex != 60)) || (edges[actualState][lexemeIndex] == 1)) {
+				if(((lexemeIndex > 61) && (lexemeIndex != 72)) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					Tokens.NUM.setTokenValue(actualChain);
 					actualChain = "";
@@ -505,7 +505,7 @@ public class Lexer {
 			}
 		case 9: //REAL
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					Tokens.REAL.setTokenValue(actualChain);
 					actualChain = "";
@@ -522,7 +522,7 @@ public class Lexer {
 			}
 		case 12: //FOR
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.FOR.getToken();
@@ -538,7 +538,7 @@ public class Lexer {
 			}
 		case 16: //FLOAT
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.FLOAT.getToken();
@@ -554,7 +554,7 @@ public class Lexer {
 			}
 		case 20: //ELSE
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.ELSE.getToken();
@@ -570,7 +570,7 @@ public class Lexer {
 			}
 		case 23: //NEW
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.NEW.getToken();
@@ -586,7 +586,7 @@ public class Lexer {
 			}
 		case 29: //RETURN
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.RETURN.getToken();
@@ -602,7 +602,7 @@ public class Lexer {
 			}
 		case 32: //STR
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.STR.getToken();
@@ -618,7 +618,7 @@ public class Lexer {
 			}
 		case 36: //THEN
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.THEN.getToken();
@@ -634,7 +634,7 @@ public class Lexer {
 			}
 		case 40: //VOID
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.VOID.getToken();
@@ -650,7 +650,7 @@ public class Lexer {
 			}
 		case 45: //WHILE
 			if(lexemeIndex != -1) {
-				if((lexemeIndex > 45) || (edges[actualState][lexemeIndex] == 1)) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = "";
 					return Tokens.WHILE.getToken();
