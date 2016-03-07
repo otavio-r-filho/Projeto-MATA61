@@ -293,135 +293,475 @@ public class Lexer {
 						6 ,6 ,6 ,6 ,17,10,6 ,6 ,2 ,6 ,6 ,6 ,6 ,21,6 ,6 ,6 ,24,30,33,6 ,37,41,6 ,6 ,6 ,	
 						46,47,48,49,50,52,54,56,58,59,60,61,62,63,64,65,66,67,68,1 }
 	};
-	
+
+//spittoken modificado a partir da função spitToken2
+
 	public String spitToken(int lexemeIndex, String lexeme) {
-		switch (actualState) {
-		case 1://ENTRY
+		switch(actualState){
+		case 0:
+			actualChain = "";
 			if(lexemeIndex != -1) {
-				//Atualiza o estado
 				actualState = edges[actualState][lexemeIndex];
-				//Adiciona o caractere à cadeia atual
-				actualChain = actualChain = actualChain + lexeme;
+				actualChain = lexeme;
+			} else {
+				actualState = 0;
+			}
+			return Tokens.ERROR.getToken();
+		case 1: //ENTRY
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				actualChain = lexeme;
+			} else {
+				actualState = 0;
+				actualChain = "";
+			}
+			return null;
+		case 3: //IF
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.IF.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
 				return null;
-			} else {
-				return Tokens.ERROR.getToken();
-			}
-		case 2://ID0
-			if(lexemeIndex != -1) {
-				if(lexemeIndex < 62) {
-					//Atualiza o estado atual
-					actualState = edges[actualState][lexemeIndex];
-					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain = actualChain + lexeme;
-					return null;
-				} else {
-					Tokens.ID.setTokenValue(actualChain);
-					actualChain = "";
-					return Tokens.ID.getToken();					
-				}
-			} else {
-				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
-				actualState = 1;
-				actualChain = "";
-				return Tokens.ERROR.getToken();
-			}
-		case 3://IF 
-			if(lexemeIndex != -1) {
-				if(lexemeIndex < 62) {
-					//Atualiza o estado atual
-					actualState = edges[actualState][lexemeIndex];
-					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain = actualChain + lexeme;
-					return null;
-				} else {
-					actualChain = "";
-					return Tokens.IF.getToken();					
-				}
-			} else {
-				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
-				actualState = 1;
-				actualChain = "";
-				return Tokens.ERROR.getToken();
-			}
-		case 4://ID1
-			if(lexemeIndex != -1) {
-				if(lexemeIndex < 62) {
-					//Atualiza o estado atual
-					actualState = edges[actualState][lexemeIndex];
-					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain = actualChain + lexeme;
-					return null;
-				} else {
-					Tokens.ID.setTokenValue(actualChain);
-					actualChain = "";
-					return Tokens.ID.getToken();					
-				}
-			} else {
-				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
-				actualState = 1;
-				actualChain = "";
-				return Tokens.ERROR.getToken();
 			}
 		case 5: //INT
 			if(lexemeIndex != -1) {
-				if(lexemeIndex < 62) {
-					//Atualiza o estado atual
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain = actualChain + lexeme;
-					return null;
+					actualChain = lexeme;
+					return Tokens.INT.getToken();
 				} else {
-					actualChain = "";
-					return Tokens.INT.getToken();					
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
 				}
 			} else {
-				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
-				actualState = 1;
 				actualChain = "";
-				return Tokens.ERROR.getToken();
-			}
-		case 6: //ID2
-			if(lexemeIndex != -1) {
-				if(lexemeIndex < 62) {
-					//Atualiza o estado atual
-					actualState = edges[actualState][lexemeIndex];
-					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain = actualChain + lexeme;
-					return null;
-				} else {
-					Tokens.ID.setTokenValue(actualChain);
-					actualChain = "";
-					return Tokens.ID.getToken();					
-				}
-			} else {
-				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
 				actualState = 1;
-				actualChain = "";
-				return Tokens.ERROR.getToken();
+				return null;
 			}
 		case 7: //NUM
 			if(lexemeIndex != -1) {
-				if((lexemeIndex < 10) || (lexemeIndex == 72)) {
-					//Atualiza o estado atual
+				if(((lexemeIndex > 61) && (lexemeIndex != 72)) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					//Adiciona o caractere à cadeia atual
-					actualChain = actualChain = actualChain + lexeme;
-					return null;
+					//Tokens.NUM.setTokenValue(actualChain);
+					//Eliminando 0 à esquerda;
+					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
+					actualChain = lexeme;
+					return Tokens.NUM.getToken();
 				} else {
-					Tokens.ID.setTokenValue(actualChain);
-					actualChain = "";
-					return Tokens.ID.getToken();					
+					actualState = edges[actualState][lexemeIndex];
+					//actualChain = actualChain + lexeme;
+					actualChain = actualChain + lexeme;
+					return null;
 				}
 			} else {
-				//Apos erro léxico a máquina volta para o estado 1 e zera a cadeia de caracteres atual
-				actualState = 1;
 				actualChain = "";
-				return Tokens.ERROR.getToken();
+				actualState = 0;
+				return null;
 			}
+		case 8: //REAL0 - estado intermediário entre NUM e REAL - não é um estado final
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				actualChain = actualChain + lexeme;
+				return null;
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 9: //REAL
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					Tokens.REAL.setTokenValue(actualChain);
+					actualChain = lexeme;
+					return Tokens.REAL.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 12: //FOR
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.FOR.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 16: //FLOAT
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.FLOAT.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 20: //ELSE
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.ELSE.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 23: //NEW
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.NEW.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 29: //RETURN
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.RETURN.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 32: //STR
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.STR.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 36: //THEN
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.THEN.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 40: //VOID
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.VOID.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 45: //WHILE
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = lexeme;
+					return Tokens.WHILE.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
+		case 46: //PLUS
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.PLUS.getToken();
+		case 47: //MINUS
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.MINUS.getToken();
+		case 48: //ASTERISK
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.ASTERISK.getToken();
+		case 49: //SLASH
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.SLASH.getToken();
+		case 50: //SMALLER
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.SMALLER.getToken();
+		case 51: //SEQUAL
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.SEQUAL.getToken();
+		case 52: //GREATER
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.GREATER.getToken();	
+		case 53: //GEQUAL
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.GEQUAL.getToken();
+		case 54: //ATTIBUTION
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.ATTRIBUTION.getToken();
+		case 55: //DIFFERENT
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = "";
+			return Tokens.COMPARISSON.getToken();
+		case 56: //EXCLAMATION
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+				if(lexemeIndex == 68) {
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.EXCLAMATION.getToken();
+		case 57: //DIFFERENT
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.DIFFERENT.getToken();
+		case 58: //SEMICOLON
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.SEMICOLON.getToken();
+		case 59: //COMMA
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.COMMA.getToken();
+		case 60: //POINT
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.POINT.getToken();
+		case 61: //OPARENTHESES
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.OPARENTHESES.getToken();
+		case 62: //CPARENTHESES
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.CPARENTHESES.getToken();
+		case 63: //OBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.OBRACKET.getToken();
+		case 64: //CBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.CBRACKET.getToken();
+		case 65: //OKEYBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.OKEYBRACKET.getToken();
+		case 66: //CKEYBRACKET
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.CKEYBRACKET.getToken();
+		case 67: //COMMERCIALE
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.COMERCIALE.getToken();
+		case 68: //PIPE
+			if(lexemeIndex != -1) {
+				actualState = edges[actualState][lexemeIndex];
+			} else {
+				actualState = 0;
+			}
+			actualChain = lexeme;
+			return Tokens.PIPE.getToken();
 		default:
-			return null;
+			if(lexemeIndex != -1) {
+				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
+					actualState = edges[actualState][lexemeIndex];
+					Tokens.ID.setTokenValue(actualChain);
+					actualChain = "";
+					return Tokens.ID.getToken();
+				} else {
+					actualState = edges[actualState][lexemeIndex];
+					actualChain = actualChain + lexeme;
+					return null;
+				}
+			} else {
+				actualChain = "";
+				actualState = 0;
+				return null;
+			}
 		}
 	}
+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     spitToken2     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
 	public String spitToken2(int lexemeIndex, String lexeme) {
 		switch(actualState){
