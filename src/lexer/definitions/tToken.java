@@ -5,6 +5,10 @@ public class tToken {
 	private String tokenValue;
 	private int tokenClassIndex; 
 	
+	public tToken() {
+		
+	}
+	
 	public tToken(String tokenClass){
 		this.tokenClass = tokenClass;
 	}
