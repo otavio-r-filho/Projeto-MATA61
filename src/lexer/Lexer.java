@@ -670,7 +670,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.PLUS.getToken();
 		case 47: //MINUS
 			if(lexemeIndex != -1) {
@@ -678,7 +678,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.MINUS.getToken();
 		case 48: //ASTERISK
 			if(lexemeIndex != -1) {
@@ -686,7 +686,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.ASTERISK.getToken();
 		case 49: //SLASH
 			if(lexemeIndex != -1) {
@@ -694,7 +694,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.SLASH.getToken();
 		case 50: //SMALLER
 			if(lexemeIndex != -1) {
@@ -706,7 +706,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.SMALLER.getToken();
 		case 51: //SEQUAL
 			if(lexemeIndex != -1) {
@@ -714,7 +714,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.SEQUAL.getToken();
 		case 52: //GREATER
 			if(lexemeIndex != -1) {
@@ -726,7 +726,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.GREATER.getToken();	
 		case 53: //GEQUAL
 			if(lexemeIndex != -1) {
@@ -746,7 +746,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.ATTRIBUTION.getToken();
 		case 55: //DIFFERENT
 			if(lexemeIndex != -1) {
@@ -766,7 +766,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.EXCLAMATION.getToken();
 		case 57: //DIFFERENT
 			if(lexemeIndex != -1) {
@@ -774,7 +774,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.DIFFERENT.getToken();
 		case 58: //SEMICOLON
 			if(lexemeIndex != -1) {
@@ -782,7 +782,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.SEMICOLON.getToken();
 		case 59: //COMMA
 			if(lexemeIndex != -1) {
@@ -790,7 +790,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.COMMA.getToken();
 		case 60: //POINT
 			if(lexemeIndex != -1) {
@@ -798,7 +798,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.POINT.getToken();
 		case 61: //OPARENTHESES
 			if(lexemeIndex != -1) {
@@ -806,7 +806,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.OPARENTHESES.getToken();
 		case 62: //CPARENTHESES
 			if(lexemeIndex != -1) {
@@ -814,7 +814,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.CPARENTHESES.getToken();
 		case 63: //OBRACKET
 			if(lexemeIndex != -1) {
@@ -822,7 +822,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.OBRACKET.getToken();
 		case 64: //CBRACKET
 			if(lexemeIndex != -1) {
@@ -830,7 +830,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.CBRACKET.getToken();
 		case 65: //OKEYBRACKET
 			if(lexemeIndex != -1) {
@@ -838,7 +838,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.OKEYBRACKET.getToken();
 		case 66: //CKEYBRACKET
 			if(lexemeIndex != -1) {
@@ -846,7 +846,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.CKEYBRACKET.getToken();
 		case 67: //COMMERCIALE
 			if(lexemeIndex != -1) {
@@ -854,7 +854,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.COMERCIALE.getToken();
 		case 68: //PIPE
 			if(lexemeIndex != -1) {
@@ -862,7 +862,7 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			actualChain = "";
+			actualChain = lexeme;
 			return Tokens.PIPE.getToken();
 		default:
 			if(lexemeIndex != -1) {
