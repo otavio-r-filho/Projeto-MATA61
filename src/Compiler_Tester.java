@@ -6,10 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
 import java.util.List;
 
-import lexer.definitions.Lexemes;
-import lexer.definitions.tToken;
+import lexer.definitions.*;
 import lexer.Lexer;
 
 public class Compiler_Tester {
@@ -21,7 +21,7 @@ public class Compiler_Tester {
 		String lexerResult = null;
 		char ch = 0;
 		int r = 0;
-		List<tToken> tokenList;
+		List<tToken> tokenList = new LinkedList<tToken>();
 		try {
 			InputStream in = new FileInputStream(testFile);
 			Reader reader = new InputStreamReader(in, charset);
@@ -31,7 +31,7 @@ public class Compiler_Tester {
 			//int r; //Posição antiga do r
 			while ((r = buffer.read()) != -1) {
 		        ch = (char) r;
-		        lexer.feedTokenList(Lexemes.getLexemeIndex(ch), String.valueOf(ch));
+		        lexer.feedTokenList(Lexeme.getLexemeIndex(String.valueOf(ch)), String.valueOf(ch));
 //		        lexerResult = lexer.spitToken(Lexemes.getLexemeIndex(ch), String.valueOf(ch));
 //		        if(lexerResult != null) {
 //		        	System.out.println(lexerResult);

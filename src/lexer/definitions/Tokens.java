@@ -43,9 +43,9 @@ public class Tokens {
 	public static final tToken POINT = new tToken("POINT", ".", 34);
 	
 	//Tokens "abertos"
-	public static tToken ID = new tToken("ID", "", 35);
-	public static tToken NUM = new tToken("NUM", "", 36);
-	public static tToken REAL = new tToken("REAL", "", 37);
-	
-	public static final tToken ERROR = new tToken("ERROR", "", 38);
+//	public static tToken ID = new tToken("ID", "", 35);
+//	public static tToken NUM = new tToken("NUM", "", 36);
+//	public static tToken REAL = new tToken("REAL", "", 37);
+//	
+//	public static final tToken ERROR = new tToken("ERROR", "", 38);
 }

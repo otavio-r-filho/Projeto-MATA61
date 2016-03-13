@@ -324,6 +324,7 @@ public class Lexer {
 	public String spitTokenString(int lexemeIndex, String lexeme) {
 		switch(actualState){
 		case 0:
+			tToken errorToken = new tToken("ERROR", actualChain, 38);
 			actualChain = "";
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
@@ -331,7 +332,8 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			return Tokens.ERROR.getToken();
+//			return Tokens.ERROR.getToken();
+			return errorToken.getToken();
 		case 1: //ENTRY
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
@@ -377,11 +379,12 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				if(((lexemeIndex > 61) && (lexemeIndex != 72)) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					//Tokens.NUM.setTokenValue(actualChain);
 					//Eliminando 0 à esquerda;
-					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
+//					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
+					tToken numToken = new tToken("NUM", actualChain, 36);
 					actualChain = lexeme;
-					return Tokens.NUM.getToken();
+//					return Tokens.NUM.getToken();
+					return numToken.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
 					//actualChain = actualChain + lexeme;
@@ -407,9 +410,11 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					Tokens.REAL.setTokenValue(actualChain);
+//					Tokens.REAL.setTokenValue(actualChain);
+					tToken realToken = new tToken("REAL", actualChain, 37);
 					actualChain = lexeme;
-					return Tokens.REAL.getToken();
+//					return Tokens.REAL.getToken();
+					return realToken.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = actualChain + lexeme;
@@ -768,9 +773,11 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					Tokens.ID.setTokenValue(actualChain);
+//					Tokens.ID.setTokenValue(actualChain);
+					tToken idToken = new tToken("ID", actualChain, 35);
 					actualChain = "";
-					return Tokens.ID.getToken();
+//					return Tokens.ID.getToken();
+					return idToken.getToken();
 				} else {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = actualChain + lexeme;
@@ -791,6 +798,7 @@ public class Lexer {
 	public tToken spitToken(int lexemeIndex, String lexeme) {
 		switch(actualState){
 		case 0:
+			tToken errorToken = new tToken("ERROR", actualChain, 38);
 			actualChain = "";
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
@@ -798,7 +806,8 @@ public class Lexer {
 			} else {
 				actualState = 0;
 			}
-			return Tokens.ERROR;
+//			return Tokens.ERROR;
+			return errorToken;
 		case 1: //ENTRY
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
@@ -846,9 +855,10 @@ public class Lexer {
 					actualState = edges[actualState][lexemeIndex];
 					//Tokens.NUM.setTokenValue(actualChain);
 					//Eliminando 0 à esquerda;
-					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
+//					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
+					tToken numToken = new tToken("NUM", actualChain.replaceFirst("^0+(?!$)", ""), 36);
 					actualChain = lexeme;
-					return Tokens.NUM;
+					return numToken;
 				} else {
 					actualState = edges[actualState][lexemeIndex];
 					//actualChain = actualChain + lexeme;
@@ -874,9 +884,11 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					Tokens.REAL.setTokenValue(actualChain);
+//					Tokens.REAL.setTokenValue(actualChain);
+					tToken realToken = new tToken("REAL", actualChain, 37);
 					actualChain = lexeme;
-					return Tokens.REAL;
+//					return Tokens.REAL;
+					return realToken;
 				} else {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = actualChain + lexeme;
@@ -1235,9 +1247,11 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				if((lexemeIndex > 61) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					Tokens.ID.setTokenValue(actualChain);
+//					Tokens.ID.setTokenValue(actualChain);
+					tToken idToken = new tToken("ID", actualChain, 35);
 					actualChain = "";
-					return Tokens.ID;
+//					return Tokens.ID;
+					return idToken;
 				} else {
 					actualState = edges[actualState][lexemeIndex];
 					actualChain = actualChain + lexeme;
