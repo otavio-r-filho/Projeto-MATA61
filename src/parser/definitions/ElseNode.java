@@ -6,4 +6,8 @@ public class ElseNode extends CommandNode{
 	public ElseNode() {
 		command = null;
 	}
+	
+	public void setCommand(CommandNode command) {
+		this.command = command;
+	}
 }
