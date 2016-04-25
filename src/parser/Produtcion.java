@@ -358,37 +358,66 @@ public class Produtcion {
 			break;
 		case 59:
 			//exp6 -> ! exp 
+			productionStack.pop();
+			productionStack.push("EXCLAMATION");
+			productionStack.push("exp");
 			break;
 		case 60:
 			//exp6 -> - exp
+			productionStack.pop();
+			productionStack.push("MINUS");
+			productionStack.push("exp");
 			break;
 		case 61:
 			//exp-p6 -> / exp6
+			productionStack.pop();
+			productionStack.push("SLASH");
+			productionStack.push("exp6");
 			break;
 		case 62:
 			//exp-p6 -> * exp6
+			productionStack.pop();
+			productionStack.push("ASTERISK");
+			productionStack.push("exp6");
 			break;
 		case 63:
 			//exp-p6 -> EPSILON
+			productionStack.pop();
 			break;
 		case 64:
 			//exp7 -> chamada
+			productionStack.pop();
+			productionStack.push("chamada");
 			break;
 		case 65:
 			//exp7 -> exp-p6
+			productionStack.pop();
+			productionStack.push("exp-p6");
 			break;
 		case 66:
 			//exp7 -> EPSILON
+			productionStack.pop();
 			break;
 		case 67:
 			//lista-exp -> exp lista-exp
+			productionStack.pop();
+			productionStack.push("exp");
+			productionStack.push("lista-exp");
 			break;
 		case 68:
 			//lista-exp -> , exp lista-exp
+			productionStack.pop();
+			productionStack.push("COMMA");
+			productionStack.push("exp");
+			productionStack.push("lista-exp");
 			break;
 		case 69:
 			//lista-exp -> EPSILON
+			productionStack.pop();
 			break;
+		case 70:
+			//EPSILON
+			productionStack.pop();
 		default:
 			break;
 		}
