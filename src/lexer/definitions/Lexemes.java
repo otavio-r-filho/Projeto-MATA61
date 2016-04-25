@@ -5,6 +5,8 @@ package lexer.definitions;
  * Códigos UTF-8:
  * Espaço: 32
  * NewLine: 13 | 10 | 13 + 10
+ * 
+ * ESTA CLASSE NÃO ESTÁ SENDO UTILIZADA
  */
 
 import lexer.definitions.Lexeme;

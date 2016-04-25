@@ -5,11 +5,11 @@ import java.util.ArrayList;
 public class Stack {
 	private ArrayList<String> stackList;
 	
-	Stack() {
+	public Stack() {
 		stackList = new ArrayList<String>();
 	}
 	
-	public void pushInto(String element) {
+	public void push(String element) {
 		stackList.add(element);
 	}
 	

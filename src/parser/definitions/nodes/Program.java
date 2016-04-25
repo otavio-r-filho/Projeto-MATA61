@@ -3,8 +3,8 @@ package parser.definitions.nodes;
 import java.util.ArrayList;
 
 public class Program {
-	ArrayList<VariableNode> globalVariables;
-	ArrayList<FunctionNode> functions;
+	private ArrayList<VariableNode> globalVariables;
+	private ArrayList<FunctionNode> functions;
 	
 	public Program() {
 		globalVariables = new ArrayList<VariableNode>();

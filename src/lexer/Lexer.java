@@ -819,6 +819,9 @@ public class Lexer {
 			return errorToken;
 		case 1: //ENTRY
 			if(lexemeIndex != -1) {
+				if(lexemeIndex == 82){
+					return (new tToken("$", "$", 40, line, collumn - "$".length()));
+				}
 				actualState = edges[actualState][lexemeIndex];
 				actualChain = lexeme;
 			} else {
