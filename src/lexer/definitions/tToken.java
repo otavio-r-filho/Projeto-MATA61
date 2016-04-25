@@ -1,38 +1,68 @@
 package lexer.definitions;
 
 public class tToken {
-	private String tokenClass;
+	private String tokenType;
 	private String tokenValue;
-	private int tokenClassIndex; 
+	private int tokenTypeIndex; 
+	private int line;
+	private int collumn;
 	
 	public tToken() {
 		
 	}
 	
-	public tToken(String tokenClass){
-		this.tokenClass = tokenClass;
+	public tToken(String tokenType){
+		this.tokenType = tokenType;
+		this.line = 0;
+		this.collumn = 0;
 	}
 	
-	public tToken(String tokenClass, String tokenValue) {
-		//this.tokenClass = tokenClass;
-		this(tokenClass);
+	public tToken(String tokenType, String tokenValue) {
+		//this.tokenType = tokenType;
+		this(tokenType);
 		this.tokenValue = tokenValue;
 	}
 	
-	public tToken(String tokenClass, String tokenValue, int tokenClassIndex) {
-		this(tokenClass, tokenValue);
-		this.tokenClassIndex = tokenClassIndex;
+	public tToken(String tokenType, String tokenValue, int tokenTypeIndex) {
+		this(tokenType, tokenValue);
+		this.tokenTypeIndex = tokenTypeIndex;
+	}
+	
+	public tToken(String tokenType, String tokenValue, int tokenTypeIndex, int tokenLine, int tokenCollumn) {
+		this(tokenType, tokenValue, tokenTypeIndex);
+		this.line = tokenLine;
+		this.collumn = tokenCollumn;
 	}
 	
 	public String getToken() {
-		return ("<" + tokenClass + ", " + tokenValue + ">");
+		return ("<" + tokenType + ", " + tokenValue + ">");
 	}
 	
-	public int getTokenClassIndex(){
-		return tokenClassIndex;
+	public int gettokenTypeIndex(){
+		return tokenTypeIndex;
 	}
 	
 	public void setTokenValue(String tokenValue){
 		this.tokenValue = tokenValue;
+	}
+	
+	public int getLine() {
+		return line;
+	}
+	
+	public int getCollumn() {
+		return collumn;
+	}
+	
+	public void setLine(int line) {
+		this.line = line;
+	}
+	
+	public void setCollumn(int collumn) {
+		this.collumn = collumn;
+	}
+	
+	public String getTokenType() {
+		return tokenType;
 	}
 }

@@ -47,6 +47,7 @@ public class Lexeme {
 		lexemes.put("\n", 81);
 		lexemes.put("\r", 81);
 		lexemes.put(" ", 81);
+		lexemes.put("$", 82);
 	}
 	
 	public static int getLexemeIndex(String lexeme)

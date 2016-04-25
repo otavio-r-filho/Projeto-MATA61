@@ -38,14 +38,17 @@ public class Tokens {
 	public static final tToken CBRACKET = new tToken("CBRACKET", "]", 29);
 	public static final tToken OKEYBRACKET = new tToken("OKEYBRACKET", "{", 30);
 	public static final tToken CKEYBRACKET = new tToken("CKEYBRACKET", "}", 31);
-	public static final tToken COMERCIALE = new tToken("COMERCIALE", "&", 32);
+	public static final tToken COMERCIALE = new tToken("COMMERCIALE", "&", 32);
 	public static final tToken PIPE = new tToken("PIPE", "|", 33);
 	public static final tToken POINT = new tToken("POINT", ".", 34);
+	public static final tToken AND = new tToken("AND", "&&", 35);
+	public static final tToken OR = new tToken("OR", "||", 36);
+	
 	
 	//Tokens "abertos"
-//	public static tToken ID = new tToken("ID", "", 35);
-//	public static tToken NUM = new tToken("NUM", "", 36);
-//	public static tToken REAL = new tToken("REAL", "", 37);
+//	public static tToken ID = new tToken("ID", "", 37);
+//	public static tToken NUM = new tToken("NUM", "", 38);
+//	public static tToken REAL = new tToken("REAL", "", 39);
 //	
 //	public static final tToken ERROR = new tToken("ERROR", "", 38);
 }

@@ -21,6 +21,9 @@ public class Compiler_Tester {
 		String lexerResult = null;
 		char ch = 0;
 		int r = 0;
+		int line = 1;
+		int collumn = 1;
+		
 		List<tToken> tokenList = new LinkedList<tToken>();
 		try {
 			InputStream in = new FileInputStream(testFile);
@@ -31,7 +34,15 @@ public class Compiler_Tester {
 			//int r; //Posição antiga do r
 			while ((r = buffer.read()) != -1) {
 		        ch = (char) r;
-		        lexer.feedTokenList(Lexeme.getLexemeIndex(String.valueOf(ch)), String.valueOf(ch));
+		        lexer.feedTokenList(Lexeme.getLexemeIndex(String.valueOf(ch)), String.valueOf(ch), line, collumn);
+		        if(String.valueOf(ch).equals("\n")) {
+		        	++line;
+		        	collumn = 1;
+		        } else {
+		        	if(!String.valueOf(ch).equals("\r")) {
+		        		++collumn;
+		        	}
+		        }
 //		        lexerResult = lexer.spitToken(Lexemes.getLexemeIndex(ch), String.valueOf(ch));
 //		        if(lexerResult != null) {
 //		        	System.out.println(lexerResult);
@@ -41,10 +52,10 @@ public class Compiler_Tester {
 			}	
 //			lexerResult = lexer.spitToken(81, "EOF");
 //			System.out.println(lexerResult);
-			lexer.feedTokenList(81, "EOF");
+			lexer.feedTokenList(82, "$", line, collumn);
 			tokenList = lexer.getTokenList();
 			for (tToken token : tokenList) {
-				System.out.println(token.getToken());
+				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
 			}
 			buffer.close();
 		} catch(IOException e) {
