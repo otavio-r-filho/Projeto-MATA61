@@ -119,6 +119,102 @@ public class Produtcion {
 		case 37:
 			//exp-p1 -> EPSILON
 			break;
+		case 38:
+			//exp2 -> exp3 exp-p2
+			break;
+		case 39:
+			//exp-p2 -> && exp2
+			break;
+		case 40:
+			//exp-p2 -> EPSILON
+			break;
+		case 41:
+			//exp3 -> exp4 exp-p3
+			break;
+		case 42:
+			//exp-p3 ->  == exp3
+			break;
+		case 43:
+			//exp-p3 -> != exp3
+			break;
+		case 44:
+			//exp-p3 -> EPSILON
+			break;
+		case 45:
+			//exp4 -> exp5 exp-p4
+			break;
+		case 46:
+			//exp-p4 -> < exp4
+			break;
+		case 47:
+			//exp-p4 -> > exp4
+			break;
+		case 48:
+			//exp-p4 -> <= exp4
+			break;
+		case 49:
+			//exp-p4 -> >= exp4
+			break;
+		case 50:
+			//exp-p4 -> EPSILON
+			break;
+		case 51:
+			//exp5 -> exp6 exp-p5
+			break;
+		case 52:
+			//exp-p5 -> - exp-p5
+			break;
+		case 53:
+			//exp-p5 -> + exp-p5
+			break;
+		case 54:
+			//exp-p5 -> EPSILON
+			break;
+		case 55:
+			//exp6 -> NUM exp-p6
+			break;
+		case 56:
+			//exp6 -> REAL exp-p6
+			break;
+		case 57:
+			//exp6 -> ( exp ) exp-p6
+			break;
+		case 58:
+			//exp6 -> ID exp7
+			break;
+		case 59:
+			//exp6 -> ! exp 
+			break;
+		case 60:
+			//exp6 -> - exp
+			break;
+		case 61:
+			//exp-p6 -> / exp6
+			break;
+		case 62:
+			//exp-p6 -> * exp6
+			break;
+		case 63:
+			//exp-p6 -> EPSILON
+			break;
+		case 64:
+			//exp7 -> chamada
+			break;
+		case 65:
+			//exp7 -> exp-p6
+			break;
+		case 66:
+			//exp7 -> EPSILON
+			break;
+		case 67:
+			//lista-exp -> exp lista-exp
+			break;
+		case 68:
+			//lista-exp -> , exp lista-exp
+			break;
+		case 69:
+			//lista-exp -> EPSILON
+			break;
 		default:
 			break;
 		}
