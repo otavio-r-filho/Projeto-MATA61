@@ -18,7 +18,7 @@ public class Compiler_Tester {
 		File testFile = new File("C:\\arquivoTeste.c");
 		Charset charset = Charset.forName("UTF-8");
 		Lexer lexer = new Lexer();
-		String lexerResult = null;
+		//String lexerResult = null;
 		char ch = 0;
 		int r = 0;
 		int line = 1;

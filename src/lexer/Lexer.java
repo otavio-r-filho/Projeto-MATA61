@@ -313,6 +313,10 @@ public class Lexer {
 
 	
 	public void feedTokenList(int lexemeIndex, String lexeme, int line, int collumn) {
+		if(lexeme.equals("$") && tokenList.get(tokenList.size() - 1).getTokenType().equals("$")){
+			return;
+		}
+		
 		tToken tokenResult = new tToken();
 		
 		tokenResult = spitToken(lexemeIndex, lexeme, line, collumn);
