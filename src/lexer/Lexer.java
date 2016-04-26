@@ -14,7 +14,7 @@ public class Lexer {
 	private int lastFinalState = 0;
 	private String actualChain;
 	
-	private List<tToken> tokenList;
+	private ArrayList<tToken> tokenList;
 	
 	public Lexer() {
 		tokenList = new ArrayList<tToken>();		
@@ -325,7 +325,7 @@ public class Lexer {
 		}
 	}
 	
-	public List<tToken> getTokenList() {
+	public ArrayList<tToken> getTokenList() {
 		return this.tokenList;
 	}
 

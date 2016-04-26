@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import lexer.definitions.*;
 import lexer.Lexer;
+import parser.*;
 
 public class Compiler_Tester {
 
@@ -18,13 +20,14 @@ public class Compiler_Tester {
 		File testFile = new File("C:\\arquivoTeste.c");
 		Charset charset = Charset.forName("UTF-8");
 		Lexer lexer = new Lexer();
+		Parser parser = new Parser();
 		//String lexerResult = null;
 		char ch = 0;
 		int r = 0;
 		int line = 1;
 		int collumn = 1;
 		
-		List<tToken> tokenList = new LinkedList<tToken>();
+		ArrayList<tToken> tokenList = new ArrayList<tToken>();
 		try {
 			InputStream in = new FileInputStream(testFile);
 			Reader reader = new InputStreamReader(in, charset);
@@ -59,6 +62,9 @@ public class Compiler_Tester {
 				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
 			}
 			buffer.close();
+			
+			boolean parserResult = parser.checkSyntax(tokenList);
+			System.out.println(parserResult);
 		} catch(IOException e) {
 			System.out.println("Algo deu errado.");
 		}

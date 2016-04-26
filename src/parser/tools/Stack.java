@@ -23,4 +23,16 @@ public class Stack {
 			return null;
 		}		 
 	}
+	
+	public String checkTop() {
+		if(stackList.size() > 0) {
+			return stackList.get(stackList.size() - 1);
+		} else {
+			return null;
+		}
+	}
+	
+	public boolean isEmpty() {
+		return stackList.isEmpty();
+	}
 }
