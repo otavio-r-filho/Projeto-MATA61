@@ -136,6 +136,7 @@ public class Production {
 			productionStack.pop();
 			productionStack.push("lista-nomes");
 			productionStack.push("ID");
+			productionStack.push("COMMA");
 			break;
 		case 8:
 			//lista-nomes -> EPSILON
