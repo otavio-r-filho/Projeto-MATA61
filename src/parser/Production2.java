@@ -166,9 +166,9 @@ public class Production2 {
 			productionStack.push("tipo-base");
 			break;
 		case 12:
-			//opt-parametro -> , parametro parametros
+			//opt-parametro -> , parametro opt-parametro
 			productionStack.pop();
-			productionStack.push("parametros");
+			productionStack.push("opt-parametro");
 			productionStack.push("parametro");
 			productionStack.push("COMMA");
 			break;
