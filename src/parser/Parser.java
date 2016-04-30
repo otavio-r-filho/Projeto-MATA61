@@ -15,8 +15,8 @@ public class Parser {
 	
 	private int tokenPosition;
 	
-	private Production production;
-	private ParsingTable parsingTable;
+	private Production2 production;
+	private ParsingTable2 parsingTable;
 	
 	public Parser() {
 		treeStack = new Stack();
@@ -25,8 +25,8 @@ public class Parser {
 		
 		tokenPosition = 0;
 		
-		production = new Production();
-		parsingTable = new ParsingTable();
+		production = new Production2();
+		parsingTable = new ParsingTable2();
 	}
 	
 	private boolean checkSyntaxRecursive(ArrayList<tToken> tokenList) {
