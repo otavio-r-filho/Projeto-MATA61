@@ -65,6 +65,8 @@ public class Compiler_Tester {
 			
 			if(parser.checkSyntax(tokenList)) System.out.println("\nChecagem sintática OK.");
 			else System.out.println("\nEste programa não obedece a sintaxe da gramática.");
+			
+			
 		} catch(IOException e) {
 			System.out.println("Algo deu errado.");
 		}
