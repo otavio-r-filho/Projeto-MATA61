@@ -5,7 +5,7 @@ float func2(int param1, float param2) {
 }
 
 void func3() {
-	if((9 + 8) * 9 > 50) 
+	if((9 + 8) * 9 > 50 || 40 < 20) 
 		func1 = 9; 
 	else {
 		int mar;

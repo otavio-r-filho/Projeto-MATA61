@@ -33,17 +33,28 @@ public class Parser {
 		production = new Production2();
 		parsingTable = new ParsingTable2();
 		
-		//Inicializa a AST com o nó Programa;
+		//Initialize the AST with a program node;
 		programNode = new Program();
 		actualNode = programNode;
 		
 		meaningfulTerminals = new HashMap<String, Integer>();
-		meaningfulTerminals.put("INTEGER", 0);
+		meaningfulTerminals.put("INTEGER", 0);				//Keys with value 0 are stackable
 		meaningfulTerminals.put("FLOAT", 0);
 		meaningfulTerminals.put("VOID", 0);
-		meaningfulTerminals.put("ID", 1);
-		meaningfulTerminals.put("NUM", 1);
-		meaningfulTerminals.put("REAL", 1);
+		meaningfulTerminals.put("ID", 0);
+		meaningfulTerminals.put("NUM", 0);
+		meaningfulTerminals.put("REAL", 0);
+		meaningfulTerminals.put("IF", 1);					//Keys with value 1 are for imediate instantiation
+		meaningfulTerminals.put("ELSE", 1);
+		meaningfulTerminals.put("WHILE", 1);
+		meaningfulTerminals.put("FOR", 1);
+		meaningfulTerminals.put("RETURN", 1);
+		meaningfulTerminals.put("OKEYBRACKET", 2);			//Keys with value 2 are for instatiation evaluation
+		meaningfulTerminals.put("OPARENTHESES", 2);
+		meaningfulTerminals.put("CPARENTHESES", 2);
+		meaningfulTerminals.put("COMMA", 2);
+		meaningfulTerminals.put("SEMICOLON", 2);
+		meaningfulTerminals.put("SEMICOLON", 2);
 		
 		tokenFIFO = new TokenFIFOStack(2);
 	}
