@@ -65,4 +65,8 @@ public class tToken {
 	public String getTokenType() {
 		return tokenType;
 	}
+	
+	public String getTokenValue() {
+		return tokenValue;
+	}
 }

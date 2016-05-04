@@ -10,13 +10,13 @@ public class VariableNode extends ExpressionNode{
 		this.variableValue = variableValue;
 	}
 	
-	public VariableNode(String variableType, String variableValue, String variableID) {
+	public VariableNode(String variableType, String variableID, String variableValue) {
 		this(variableType, variableValue);
 		this.variableID = variableID;
 	}
 	
-	public VariableNode(String variableType, String variableValue, String variableID, ASTNode fatherNode) {
-		this(variableType, variableValue, variableID);
+	public VariableNode(String variableType, String variableID, String variableValue,  ASTNode fatherNode) {
+		this(variableType, variableID, variableValue);
 		this.fatherNode = fatherNode;
 	}
 	

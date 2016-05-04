@@ -21,7 +21,7 @@ public class Parser {
 	
 	private HashMap<String, Integer> meaningfulTerminals;
 	
-	private TokenFIFOStack tokenFIFO;
+	private TokenFIFOStack tokenStack;
 	
 	public Parser() {
 		treeStack = new Stack();
@@ -56,7 +56,7 @@ public class Parser {
 		meaningfulTerminals.put("SEMICOLON", 2);
 		meaningfulTerminals.put("SEMICOLON", 2);
 		
-		tokenFIFO = new TokenFIFOStack(2);
+		tokenStack = new TokenFIFOStack(1);
 	}
 	
 	private boolean checkSyntaxRecursive(ArrayList<tToken> tokenList) {
@@ -81,7 +81,7 @@ public class Parser {
 			} else {
 				int productionID = parsingTable.getProductionInt(treeStack.checkTop(), tokenList.get(tokenPosition).getTokenType());
 				if(productionID != -1) {
-					production.produce(productionID, treeStack, actualNode);
+					production.produce(productionID, treeStack, actualNode, tokenStack);
  					return checkSyntaxRecursive(tokenList);
 				}
 			}
@@ -97,8 +97,30 @@ public class Parser {
 	
 	public boolean itMatches(tToken token) {
 		if(token.getTokenType().equals(treeStack.checkTop())) {
-			if(meaningfulTerminals.containsKey(token.getTokenType())) {
-				
+			switch(token.getTokenType()) {
+			case "INTEGER":
+				tokenStack.push(token);
+				break;
+			case "FLOAT":
+				tokenStack.push(token);
+				break;
+			case "VOID":
+				tokenStack.push(token);
+				break;
+			case "NUM":
+				tokenStack.push(token);
+				break;
+			case "REAL":
+				tokenStack.push(token);
+				break;
+			case "ID":
+				tokenStack.push(token);
+				break;
+			case "SEMICOLON":
+				tokenStack.clearStack();
+			case "CKEYBRACKET":
+				tokenStack.clearStack();
+				break;
 			}
 			return true;
 		}

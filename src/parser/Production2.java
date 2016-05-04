@@ -2,8 +2,9 @@ package parser;
 
 import java.util.HashMap;
 
-import parser.definitions.nodes.ASTNode;
+import parser.definitions.nodes.*;
 import parser.tools.Stack;
+import parser.tools.TokenFIFOStack;
 
 public class Production2 {
 	
@@ -91,7 +92,7 @@ public class Production2 {
 		terminalCoding.put("$", 			39);
 	}
 	
-	public void produce(int productionID, Stack productionStack, ASTNode actualNode) {
+	public void produce(int productionID, Stack productionStack, ASTNode actualNode, TokenFIFOStack tokenStack) {
 		switch (productionID) {
 		case 0:
 			//programa -> declaracoes
@@ -123,6 +124,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("SEMICOLON");
 			productionStack.push("lista-nomes");
+			addGlobalVariable((Program) actualNode, tokenStack);
 			break;
 		case 5:
 			//dec-fim -> dec-funcao
@@ -449,6 +451,23 @@ public class Production2 {
 		default:
 			break;
 		}
+	}
+	
+	private void addGlobalVariable(Program program, TokenFIFOStack tokenStack) {
+		String variableID = tokenStack.pop().getTokenValue();
+		String variableType = tokenStack.checkTop().getTokenType();
+		program.addVariable(new VariableNode(variableType, variableID, null, program));
+	}
+	
+	public void addFunction(ASTNode actualNode, TokenFIFOStack tokenStack) {
+		Program program = (Program) actualNode;
+		FunctionNode function = new FunctionNode(program);
+		String functionID = tokenStack.pop().getTokenValue();
+		String returnType = tokenStack.pop().getTokenValue();
+		function.setReturnType(returnType);
+		function.setFunctioID(functionID);
+		program.addFunction(function);
+//		actualNode = 
 	}
 
 }
