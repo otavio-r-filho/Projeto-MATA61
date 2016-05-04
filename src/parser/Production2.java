@@ -138,7 +138,7 @@ public class Production2 {
 			productionStack.push("lista-nomes");
 			productionStack.push("ID");
 			productionStack.push("COMMA");
-			return addVariable(actualNode, tokenStack);
+			return addVariable(actualNode, tokenStack.checkTop().getTokenType(), tokenList.get(tokenPosition + 1).getTokenValue());
 		case 7:
 			//tipo-base -> int
 			productionStack.pop();
@@ -459,6 +459,10 @@ public class Production2 {
 	private ASTNode addVariable(ASTNode actualNode, TokenFIFOStack tokenStack) {
 		String variableID = tokenStack.pop().getTokenValue();
 		String variableType = tokenStack.checkTop().getTokenType();
+		return addVariable(actualNode, variableType, variableID);
+	}
+	
+	private ASTNode addVariable(ASTNode actualNode, String variableType, String variableID) {
 		if(actualNode.getNodeType().equals("PROGRAM")) {
 			Program program = (Program)actualNode;
 			program.addVariable(new VariableNode(variableType, variableID, null, program));
@@ -466,14 +470,14 @@ public class Production2 {
 		}
 		BlockNode block = (BlockNode)actualNode;
 		block.addVariable(new VariableNode(variableType, variableID, null, block));
-		return block;
+		return block;		
 	}
 	
 	public FunctionNode addFunction(ASTNode actualNode, TokenFIFOStack tokenStack) {
 		Program program = (Program) actualNode;
 		FunctionNode function = new FunctionNode(program);
 		String functionID = tokenStack.pop().getTokenValue();
-		String returnType = tokenStack.pop().getTokenValue();
+		String returnType = tokenStack.pop().getTokenType();
 		function.setReturnType(returnType);
 		function.setFunctioID(functionID);
 		program.addFunction(function);
