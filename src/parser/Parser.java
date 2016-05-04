@@ -4,6 +4,7 @@ import parser.definitions.nodes.*;
 import parser.tools.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import lexer.definitions.*;
 
@@ -18,6 +19,10 @@ public class Parser {
 	private Production2 production;
 	private ParsingTable2 parsingTable;
 	
+	private HashMap<String, Integer> meaningfulTerminals;
+	
+	private TokenFIFOStack tokenFIFO;
+	
 	public Parser() {
 		treeStack = new Stack();
 		treeStack.push("$");
@@ -27,6 +32,20 @@ public class Parser {
 		
 		production = new Production2();
 		parsingTable = new ParsingTable2();
+		
+		//Inicializa a AST com o nó Programa;
+		programNode = new Program();
+		actualNode = programNode;
+		
+		meaningfulTerminals = new HashMap<String, Integer>();
+		meaningfulTerminals.put("INTEGER", 0);
+		meaningfulTerminals.put("FLOAT", 0);
+		meaningfulTerminals.put("VOID", 0);
+		meaningfulTerminals.put("ID", 1);
+		meaningfulTerminals.put("NUM", 1);
+		meaningfulTerminals.put("REAL", 1);
+		
+		tokenFIFO = new TokenFIFOStack(2);
 	}
 	
 	private boolean checkSyntaxRecursive(ArrayList<tToken> tokenList) {
@@ -67,6 +86,9 @@ public class Parser {
 	
 	public boolean itMatches(tToken token) {
 		if(token.getTokenType().equals(treeStack.checkTop())) {
+			if(meaningfulTerminals.containsKey(token.getTokenType())) {
+				
+			}
 			return true;
 		}
 		return false;

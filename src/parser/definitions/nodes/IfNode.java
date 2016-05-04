@@ -9,6 +9,11 @@ public class IfNode extends CommandNode{
 		conditionExpression = null;
 		command = null;
 		elseCommand = null;
+		nodeType = "IF";
+	}
+	
+	public IfNode(ASTNode fatherNode) {
+		this.fatherNode = fatherNode;
 	}
 	
 	public void setConditionExpression(ExpressionNode conditionExpression) {

@@ -13,8 +13,13 @@ public class ForNode extends CommandNode{
 		initialExpressionList = new ArrayList<ExpressionNode>();
 		stopExpressionList = new ArrayList<ExpressionNode>();
 		incrementExpressionList = new ArrayList<ExpressionNode>();
-		
 		command = null;
+		nodeType = "FOR";
+	}
+	
+	public ForNode(ASTNode fatherNode) {
+		this();
+		this.fatherNode = fatherNode;
 	}
 	
 	public void addInitialExpression(ExpressionNode expression) {

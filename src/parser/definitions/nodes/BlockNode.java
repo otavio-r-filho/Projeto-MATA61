@@ -9,6 +9,12 @@ public class BlockNode extends CommandNode{
 	public BlockNode() {
 		blockVariables = new ArrayList<VariableNode>();
 		commands = new ArrayList<CommandNode>();
+		nodeType = "BLOCK";
+	}
+	
+	public BlockNode(ASTNode fatherNode) {
+		this();
+		this.fatherNode = fatherNode;
 	}
 	
 	public void addVariable(VariableNode variable) {

@@ -17,7 +17,7 @@ import parser.*;
 public class Compiler_Tester {
 
 	public static void main(String[] args) {
-		File testFile = new File("C:\\arquivoTeste.c");
+		File testFile = new File("resources/arquivoTeste.c");
 		Charset charset = Charset.forName("UTF-8");
 		Lexer lexer = new Lexer();
 		Parser parser = new Parser();
@@ -34,7 +34,7 @@ public class Compiler_Tester {
 	         // buffer for efficiency
 	         Reader buffer = new BufferedReader(reader);
 	        //handleCharacters(buffer);
-			//int r; //Posição antiga do r
+			//int r; //Posiï¿½ï¿½o antiga do r
 			while ((r = buffer.read()) != -1) {
 		        ch = (char) r;
 		        lexer.feedTokenList(Lexeme.getLexemeIndex(String.valueOf(ch)), String.valueOf(ch), line, collumn);
@@ -63,8 +63,8 @@ public class Compiler_Tester {
 			}
 			buffer.close();
 			
-			if(parser.checkSyntax(tokenList)) System.out.println("\nChecagem sintática OK.");
-			else System.out.println("\nEste programa não obedece a sintaxe da gramática.");
+			if(parser.checkSyntax(tokenList)) System.out.println("\nChecagem sintatica OK.");
+			else System.out.println("\nEste programa nao obedece a sintaxe da gramatica.");
 			
 			
 		} catch(IOException e) {

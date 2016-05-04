@@ -5,6 +5,12 @@ public class ElseNode extends CommandNode{
 	
 	public ElseNode() {
 		command = null;
+		nodeType = "ELSE";
+	}
+	
+	public ElseNode(ASTNode fatherNode) {
+		this();
+		this.fatherNode = fatherNode;
 	}
 	
 	public void setCommand(CommandNode command) {

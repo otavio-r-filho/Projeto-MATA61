@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public abstract class ASTNode {
 	
-	private long nodeID;
-	private int nodeTypeID;
-	private String nodeType;
-	private ASTNode fatherNode;
+	protected long nodeID;
+	protected int nodeTypeID;
+	protected String nodeType;
+	protected ASTNode fatherNode;
 	
 	public long getNodeID() {
 		return nodeID;

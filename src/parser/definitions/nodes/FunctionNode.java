@@ -10,6 +10,12 @@ public class FunctionNode extends ASTNode{
 	public FunctionNode() {
 		functionParameters = new ArrayList<VariableNode>();
 		block = null;
+		nodeType = "FUNCTION";
+	}
+	
+	public FunctionNode(ASTNode fatherNode) {
+		this();
+		this.fatherNode = fatherNode;
 	}
 	
 	public String getReturnType() {

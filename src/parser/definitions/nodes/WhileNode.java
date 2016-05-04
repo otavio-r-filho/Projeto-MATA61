@@ -7,6 +7,12 @@ public class WhileNode extends CommandNode{
 	public WhileNode() {
 		conditionExpression = null;
 		command = null;
+		nodeType = "WHILE";
+	}
+	
+	public WhileNode(ASTNode fatherNode) {
+		this();
+		this.fatherNode = fatherNode;
 	}
 	
 	
