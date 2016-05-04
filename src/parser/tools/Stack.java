@@ -35,4 +35,12 @@ public class Stack {
 	public boolean isEmpty() {
 		return stackList.isEmpty();
 	}
+	
+	public String checkIndex(int index) {
+		if(stackList.size() > 0) {
+			return stackList.get(stackList.size() - (1 + index));
+		} else {
+			return null;
+		}
+	}
 }

@@ -2,6 +2,7 @@ package parser;
 
 import java.util.HashMap;
 
+import parser.definitions.nodes.ASTNode;
 import parser.tools.Stack;
 
 public class Production2 {
@@ -90,7 +91,7 @@ public class Production2 {
 		terminalCoding.put("$", 			39);
 	}
 	
-	public void produce(int productionID, Stack productionStack) {
+	public void produce(int productionID, Stack productionStack, ASTNode actualNode) {
 		switch (productionID) {
 		case 0:
 			//programa -> declaracoes

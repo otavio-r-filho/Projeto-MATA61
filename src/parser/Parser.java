@@ -81,7 +81,7 @@ public class Parser {
 			} else {
 				int productionID = parsingTable.getProductionInt(treeStack.checkTop(), tokenList.get(tokenPosition).getTokenType());
 				if(productionID != -1) {
-					production.produce(productionID, treeStack);
+					production.produce(productionID, treeStack, actualNode);
  					return checkSyntaxRecursive(tokenList);
 				}
 			}
