@@ -97,8 +97,6 @@ public class Parser {
 	
 	public boolean itMatches(tToken token) {
 		if(token.getTokenType().equals(treeStack.checkTop())) {
-			Program program;
-			VariableNode variable;
 			switch(token.getTokenType()) {
 			case "INTEGER":
 				tokenStack.push(token);
@@ -114,15 +112,19 @@ public class Parser {
 				break;
 			case "NUM":
 				tokenStack.push(token);
+				addValue(token);
 				break;
 			case "REAL":
 				tokenStack.push(token);
+				addValue(token);
 				break;
 			case "ID":
 				tokenStack.push(token);
+				addID(token);
 				break;
 			case "SEMICOLON":
 				tokenStack.clearStack();
+				break;
 			case "CKEYBRACKET":
 				tokenStack.clearStack();
 				break;
@@ -144,6 +146,10 @@ public class Parser {
 			variable = (VariableNode)actualNode;
 			variable.setVariableType(token);
 			break;
+		case "PARAMETER":
+			variable = (VariableNode)actualNode;
+			variable.setVariableType(token);
+			break;
 		}
 	}
 	
@@ -160,6 +166,10 @@ public class Parser {
 			variable = (VariableNode)actualNode;
 			variable.setVariableID(token);
 			break;
+		case "PARAMETER":
+			variable = (VariableNode)actualNode;
+			variable.setVariableID(token);
+			break;
 		}
 	}
 	
@@ -170,6 +180,7 @@ public class Parser {
 		case "VARIABLE":
 			variable = (VariableNode)actualNode;
 			variable.setVariableValue(token);
+			break;
 		}
 	}
 }
