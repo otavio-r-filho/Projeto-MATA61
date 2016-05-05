@@ -121,24 +121,24 @@ public class Production2 {
 			productionStack.push("ID");
 			productionStack.push("VOID");
 			break;
-		case 4: //Creates a variable in the general scope
+		case 4: //Creates a variable in the main scope - variableType and variableID already in the stack
 			//dec-fim -> lista-nomes ;
 			productionStack.pop();
 			productionStack.push("SEMICOLON");
 			productionStack.push("lista-nomes");
-			return addVariable(actualNode, tokenStack);
+			return addVariable(actualNode, tokenStack); //Will return the actualNode
 		case 5: //Creates a function
 			//dec-fim -> dec-funcao
 			productionStack.pop();
 			productionStack.push("dec-funcao");
-			return addFunction((Program)actualNode, tokenStack);
+			break;
 		case 6:
 			//lista-nomes -> , ID lista-nomes
 			productionStack.pop();
 			productionStack.push("lista-nomes");
 			productionStack.push("ID");
 			productionStack.push("COMMA");
-			return addVariable(actualNode, tokenStack.checkTop().getTokenType(), tokenList.get(tokenPosition + 1).getTokenValue());
+			return addVariable(actualNode, tokenStack.checkTop(), null, null, "VARIABLE"); //Will return a VariableNode to be completed
 		case 7:
 			//tipo-base -> int
 			productionStack.pop();
@@ -156,7 +156,7 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("parametros");
 			productionStack.push("OPARENTHESES");
-			break;
+			return addFunction((Program)actualNode, tokenStack);
 		case 10:
 			//parametros -> parametro opt-parametro
 			productionStack.pop();
@@ -168,8 +168,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("ID");
 			productionStack.push("tipo-base");
-			addParameter((FunctionNode) actualNode, tokenStack, tokenList, tokenPosition);
-			break;
+			return addVariable((FunctionNode) actualNode, null, null, null, "PARAMETER");
 		case 12:
 			//opt-parametro -> , parametro opt-parametro
 			productionStack.pop();
@@ -457,35 +456,36 @@ public class Production2 {
 	}
 	
 	private ASTNode addVariable(ASTNode actualNode, TokenFIFOStack tokenStack) {
-		String variableID = tokenStack.pop().getTokenValue();
-		String variableType = tokenStack.checkTop().getTokenType();
-		return addVariable(actualNode, variableType, variableID);
+		tToken variableID = tokenStack.pop();
+		tToken variableType = tokenStack.checkTop();
+		addVariable(actualNode, variableType, variableID, null, "VARIABLE"); //This function is used to add the variable to the actualNode
+		return actualNode;
 	}
 	
-	private ASTNode addVariable(ASTNode actualNode, String variableType, String variableID) {
+	private VariableNode addVariable(ASTNode actualNode, tToken variableType, tToken variableID, tToken variableValue, String nodeType) {
+		VariableNode variable;
 		if(actualNode.getNodeType().equals("PROGRAM")) {
 			Program program = (Program)actualNode;
-			program.addVariable(new VariableNode(variableType, variableID, null, program));
-			return program;
+			variable = new VariableNode(variableType, variableID, variableValue, program);
+			variable.setNodeType(nodeType);
+			program.addVariable(variable);
+		} else {
+			BlockNode block = (BlockNode)actualNode;
+			variable = new VariableNode(variableType, variableID, variableValue, block);
+			variable.setNodeType(nodeType);
+			block.addVariable(variable);
 		}
-		BlockNode block = (BlockNode)actualNode;
-		block.addVariable(new VariableNode(variableType, variableID, null, block));
-		return block;		
+		return variable;		
 	}
 	
 	public FunctionNode addFunction(ASTNode actualNode, TokenFIFOStack tokenStack) {
 		Program program = (Program) actualNode;
 		FunctionNode function = new FunctionNode(program);
-		String functionID = tokenStack.pop().getTokenValue();
-		String returnType = tokenStack.pop().getTokenType();
-		function.setReturnType(returnType);
-		function.setFunctioID(functionID);
+		function.setFunctionID(tokenStack.pop());
+		function.setReturnType(tokenStack.pop());
+		function.setNodeType("FUNCTION");
 		program.addFunction(function);
 		return function;
-	}
-	
-	public void addParameter(FunctionNode function, TokenFIFOStack tokenStack, ArrayList<tToken> tokenList, int tokenPosition) {
-		function.addParameter(new VariableNode(tokenStack.pop().getTokenType(), tokenList.get(tokenPosition + 1).getTokenValue(), null, function));
 	}
 	
 	public BlockNode addBlock(ASTNode actualNode) {

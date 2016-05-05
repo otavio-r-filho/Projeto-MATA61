@@ -2,9 +2,11 @@ package parser.definitions.nodes;
 
 import java.util.ArrayList;
 
+import lexer.definitions.tToken;
+
 public class FunctionNode extends ASTNode{
-	private String returnType;
-	private String functionID;
+	private tToken returnType;
+	private tToken functionID;
 	private ArrayList<VariableNode> functionParameters;
 	private BlockNode block;
 	
@@ -19,11 +21,11 @@ public class FunctionNode extends ASTNode{
 		this.fatherNode = fatherNode;
 	}
 	
-	public void setReturnType(String returnType) {
+	public void setReturnType(tToken returnType) {
 		this.returnType = returnType;
 	}
 	
-	public String getReturnType() {
+	public tToken getReturnType() {
 		return returnType;
 	}
 	
@@ -31,11 +33,11 @@ public class FunctionNode extends ASTNode{
 		this.block = block;
 	}
 	
-	public void setFunctioID(String functionID) {
+	public void setFunctionID(tToken functionID) {
 		this.functionID = functionID;
 	}
 	
-	public String getFunctioID() {
+	public tToken getFunctioID() {
 		return functionID;
 	}
 	

@@ -97,15 +97,20 @@ public class Parser {
 	
 	public boolean itMatches(tToken token) {
 		if(token.getTokenType().equals(treeStack.checkTop())) {
+			Program program;
+			VariableNode variable;
 			switch(token.getTokenType()) {
 			case "INTEGER":
 				tokenStack.push(token);
+				addType(token);
 				break;
 			case "FLOAT":
 				tokenStack.push(token);
+				addType(token);
 				break;
 			case "VOID":
 				tokenStack.push(token);
+				addType(token);
 				break;
 			case "NUM":
 				tokenStack.push(token);
@@ -125,5 +130,46 @@ public class Parser {
 			return true;
 		}
 		return false;
+	}
+	
+	public void addType(tToken token) {
+		FunctionNode function;
+		VariableNode variable;
+		switch(actualNode.getNodeType()){
+		case "FUNCTION":
+			function = (FunctionNode)actualNode;
+			function.setReturnType(token);
+			break;
+		case "VARIABLE":
+			variable = (VariableNode)actualNode;
+			variable.setVariableType(token);
+			break;
+		}
+	}
+	
+	public void addID(tToken token) {
+		FunctionNode function;
+		VariableNode variable;
+		
+		switch(actualNode.getNodeType()) {
+		case "FUNCTION":
+			function = (FunctionNode)actualNode;
+			function.setFunctionID(token);
+			break;
+		case "VARIABLE":
+			variable = (VariableNode)actualNode;
+			variable.setVariableID(token);
+			break;
+		}
+	}
+	
+	public void addValue(tToken token) {
+		VariableNode variable;
+		
+		switch(actualNode.getNodeType()){
+		case "VARIABLE":
+			variable = (VariableNode)actualNode;
+			variable.setVariableValue(token);
+		}
 	}
 }
