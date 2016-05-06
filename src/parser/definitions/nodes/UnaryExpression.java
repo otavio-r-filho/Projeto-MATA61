@@ -1,16 +1,16 @@
 package parser.definitions.nodes;
 
+import lexer.definitions.tToken;
+
 public class UnaryExpression extends ExpressionNode{
 	private ExpressionNode operand;
-	private String operation;
 	
-	public UnaryExpression(String operation) {
+	public UnaryExpression() {
 		operand = null;
-		this.operation = operation;
 	}
 	
-	public UnaryExpression(String operation, ASTNode fatherNode) {
-		this(operation);
+	public UnaryExpression(tToken expressioType, ASTNode fatherNode) {
+		this();
 		this.fatherNode = fatherNode;
 	}
 	

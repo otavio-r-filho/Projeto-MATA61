@@ -1,18 +1,19 @@
 package parser.definitions.nodes;
 
+import lexer.definitions.tToken;
+
 public class BinaryExpression extends ExpressionNode{
 	private ExpressionNode lhsExpression;
 	private ExpressionNode rhsExpression;
-	private String operation;
 	
-	public BinaryExpression(String operation) {
+	public BinaryExpression(tToken expressionType) {
 		lhsExpression = null;
 		rhsExpression = null;
-		this.operation = operation;
+		this.expressionType = expressionType;
 	}
 	
-	public BinaryExpression(String operation, ASTNode fatherNode) {
-		this(operation);
+	public BinaryExpression(tToken expressionType, ASTNode fatherNode) {
+		this(expressionType);
 		this.fatherNode = fatherNode;
 		nodeType = "BINARYEXPRESSION";
 	}
