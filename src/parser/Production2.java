@@ -695,8 +695,10 @@ public class Production2 {
 			if(expression.getExpressionPrecedence() > binaryExpression.getExpressionPrecedence()) {
 				binaryExpression.setRhsExpression(expression);
 			} else {
-				BinaryExpression be = (BinaryExpression) expression;
-				be.setLhsExpression(binaryExpression);
+				binaryExpression.setLhsExpression(expression);
+				swapExpression(expression, binaryExpression);
+//				binaryExpression.setFatherNode(expression.getFatherNode());
+//				expression.setFatherNode(binaryExpression);
 			}
 			break;
 		case "UNARYEXPRESSION":
@@ -709,7 +711,7 @@ public class Production2 {
 		return expression;
 	}
 	
-	public void changeExpression(ASTNode fatherNode, ExpressionNode oldExpression, ExpressionNode newExpression) {
+	public void swapExpression(ExpressionNode oldExpression, ExpressionNode newExpression) {
 		/*
 		 * Search inside: IfNode, WhileNode, ForNode, ReturnNode, CallExpression, AttributionNode, UnaryExpression, BinaryExpression
 		 */
@@ -722,24 +724,47 @@ public class Production2 {
 		AttributionNode attributionNode;
 		UnaryExpression unaryExpression;
 		BinaryExpression binaryExpression;
+		ArrayList<ExpressionNode> expressions;
 		
-		switch(fatherNode.getNodeType()) {
+		switch(oldExpression.getFatherNode().getNodeType()) {
 		case "IF":
+			ifNode = (IfNode) oldExpression.getFatherNode();
+			ifNode.setConditionExpression(newExpression);
 			break;
 		case "WHILE":
+			whileNode = (WhileNode) oldExpression.getFatherNode();
+			whileNode.setConditionExpression(newExpression);
 			break;
 		case "FOR":
+			forNode = (ForNode) oldExpression.getFatherNode();
+			expressions = forNode.getExpressionList();
+			expressions.add(expressions.indexOf(oldExpression), newExpression);
+			expressions.remove(oldExpression);
 			break;
 		case "RETURN":
+			returnNode = (ReturnNode) oldExpression.getFatherNode();
+			returnNode.setReturnExpression(newExpression);
 			break;
 		case "CALL":
+			callExpression = (CallExpression) oldExpression.getFatherNode();
+			expressions = callExpression.getExpressionList();
+			expressions.add(expressions.indexOf(oldExpression), newExpression);
+			expressions.remove(oldExpression);
 			break;
 		case "ATTRIBUTION":
+			attributionNode = (AttributionNode) oldExpression.getFatherNode();
+			attributionNode.setExpression(newExpression);
 			break;
 		case "UNARYEXPRESSION":
+			unaryExpression = (UnaryExpression) oldExpression.getFatherNode();
+			unaryExpression.setExpression(newExpression);
 			break;
 		case "BINARYEXPRESSION":
+			binaryExpression = (BinaryExpression) oldExpression.getFatherNode();
+			binaryExpression.setLhsExpression(newExpression);
 			break;
 		}
+		newExpression.setFatherNode(oldExpression.getFatherNode());
+		oldExpression.setFatherNode(newExpression);
 	}
 }

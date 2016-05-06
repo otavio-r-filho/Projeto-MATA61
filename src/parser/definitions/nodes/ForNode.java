@@ -51,6 +51,18 @@ public class ForNode extends CommandNode{
 		}
 	}
 	
+	public ArrayList<ExpressionNode> getExpressionList(){
+		switch(actualExpressionList) {
+		case 1:
+			return initialExpressionList;
+		case 2:
+			return stopExpressionList;
+		case 3:
+			return incrementExpressionList;
+		}
+		return null;
+	}
+	
 	public void setCommand(CommandNode command) {
 		this.command = command;
 	}

@@ -7,7 +7,7 @@ import lexer.definitions.tToken;
 public class CallExpression extends ExpressionNode {
 	tToken functionID;
 	ArrayList<ExpressionNode> expressionList;
-	
+
 	public CallExpression() {
 		expressionList = new ArrayList<ExpressionNode>();
 		functionID = null;
@@ -33,5 +33,9 @@ public class CallExpression extends ExpressionNode {
 	
 	public void addExpression(ExpressionNode expression){
 		expressionList.add(expression);
+	}
+	
+	public ArrayList<ExpressionNode> getExpressionList() {
+		return expressionList;
 	}
 }
