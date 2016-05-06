@@ -30,4 +30,8 @@ public class CallExpression extends ExpressionNode {
 	public void setFunctionID(tToken functionID) {
 		this.functionID = functionID;
 	}
+	
+	public void addParameter(ExpressionNode expression){
+		parameterList.add(expression);
+	}
 }

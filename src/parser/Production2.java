@@ -3,6 +3,11 @@ package parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
+
+import jdk.nashorn.internal.ir.BinaryNode;
+import jdk.nashorn.internal.ir.CallNode;
+import jdk.nashorn.internal.ir.UnaryNode;
 import parser.definitions.nodes.*;
 import parser.tools.Stack;
 import parser.tools.TokenFIFOStack;
@@ -616,6 +621,56 @@ public class Production2 {
 			forFather = (ForNode) actualNode;
 			forFather.setCommand(command);
 			command.setFatherNode(forFather);
+			break;
+		}
+	}
+	
+	public VariableNode addConstantExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+		VariableNode constant = null;
+		
+		constant = new VariableNode(tokenList.get(tokenPosition), tokenList.get(tokenPosition), tokenList.get(tokenPosition), actualNode);
+		constant.setNodeType("CONSTANTEXPRESSION");
+		constant.setExpressionType(tokenList.get(tokenPosition));
+		constant.setExpressionPrecedence(0);
+		
+		return constant;
+	}
+	
+	public void setExpression(ASTNode actualNode, ExpressionNode expression) {
+		IfNode ifNode;
+		WhileNode whileNode;
+		ForNode forNode;
+		CallExpression callExpression;
+		AttributionNode attributionNode;
+		ReturnNode returnNode;
+		BinaryExpression binaryExpression;
+		UnaryExpression unaryExpression;
+		VariableNode variableNode;
+
+		switch(actualNode.getNodeType()) {
+		case "IF":
+			ifNode = (IfNode)actualNode;
+			ifNode.setConditionExpression(expression);
+			break;
+		case "WHILE":
+			whileNode = (WhileNode)actualNode;
+			whileNode.setConditionExpression(expression);
+			break;
+		case "FOR":
+			forNode = (ForNode)actualNode;
+			forNode.addExpression(expression);
+			break;
+		case "CALL":
+			callExpression = (CallExpression)actualNode;
+			callExpression.addParameter(expression);
+			break;
+		case "ATTRIBUTION":
+			break;
+		case "BINARYEXPRESSION":
+			break;
+		case "UNARYEXPRESSION":
+			break;
+		case "CONSTANT":
 			break;
 		}
 	}
