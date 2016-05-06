@@ -10,12 +10,12 @@ public class BinaryExpression extends ExpressionNode{
 		lhsExpression = null;
 		rhsExpression = null;
 		this.expressionType = expressionType;
+		nodeType = "BINARYEXPRESSION";
 	}
 	
 	public BinaryExpression(tToken expressionType, ASTNode fatherNode) {
 		this(expressionType);
 		this.fatherNode = fatherNode;
-		nodeType = "BINARYEXPRESSION";
 	}
 	
 	public void setLhsExpression(ExpressionNode lhsExpression) {

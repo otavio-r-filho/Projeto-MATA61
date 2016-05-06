@@ -18,9 +18,12 @@ public class Production2 {
 	private HashMap<String, Integer> nonTerminalCoding;
 	private HashMap<String, Integer> terminalCoding;
 	
+	private int nodeID;
+	
 	public Production2() {
 		nonTerminalCoding = new HashMap<String, Integer>();
 		terminalCoding = new HashMap<String, Integer>();
+		nodeID = 1;
 		
 		nonTerminalCoding.put("programa", 		0);
 		nonTerminalCoding.put("declaracoes", 	1);
@@ -480,6 +483,8 @@ public class Production2 {
 			variable.setNodeType(nodeType);
 			block.addVariable(variable);
 		}
+		variable.setNodeID(nodeID);
+		nodeID++;
 		return variable;		
 	}
 	
@@ -489,6 +494,8 @@ public class Production2 {
 		function.setFunctionID(tokenStack.pop());
 		function.setReturnType(tokenStack.pop());
 		function.setNodeType("FUNCTION");
+		function.setNodeID(nodeID);
+		nodeID++;
 		program.addFunction(function);
 		return function;
 	}
@@ -522,6 +529,8 @@ public class Production2 {
 			forNode.setCommand(block);
 			break;
 		}
+		block.setNodeID(nodeID);
+		nodeID++;
 		return block;
 	}
 	
@@ -536,6 +545,8 @@ public class Production2 {
 		switch(tokenList.get(tokenPosition).getTokenType()) {
 		case "IF":
 			ifNode = new IfNode();
+			ifNode.setNodeID(nodeID);
+			nodeID++;
 			ifNode.setCommandType(tokenList.get(tokenPosition));
 			ifNode.setNodeType("IF");
 			setCommand(actualNode, ifNode);
@@ -543,6 +554,8 @@ public class Production2 {
 			return ifNode;
 		case "ELSE":
 			elseNode = new ElseNode();
+			elseNode.setNodeID(nodeID);
+			nodeID++;
 			elseNode.setCommandType(tokenList.get(tokenPosition));
 			elseNode.setNodeType("ELSE");
 			setCommand(actualNode, elseNode);
@@ -550,6 +563,8 @@ public class Production2 {
 			return elseNode;
 		case "WHILE":
 			whileNode = new WhileNode();
+			whileNode.setNodeID(nodeID);
+			nodeID++;
 			whileNode.setCommandType(tokenList.get(tokenPosition));
 			whileNode.setNodeType("WHILE");
 			setCommand(actualNode, whileNode);
@@ -557,6 +572,8 @@ public class Production2 {
 			return whileNode;
 		case "FOR":
 			forNode = new ForNode();
+			forNode.setNodeID(nodeID);
+			nodeID++;
 			forNode.setCommandType(tokenList.get(tokenPosition));
 			forNode.setNodeType("FOR");
 			setCommand(actualNode, forNode);
@@ -564,6 +581,8 @@ public class Production2 {
 			return forNode;
 		case "RETURN":
 			returnNode = new ReturnNode();
+			returnNode.setNodeID(nodeID);
+			nodeID++;
 			returnNode.setCommandType(tokenList.get(tokenPosition));
 			returnNode.setNodeType("RETURN");
 			setCommand(actualNode, returnNode);
@@ -574,6 +593,8 @@ public class Production2 {
 			return returnNode;
 		case "CALL":
 			callNode = new CallExpression();
+			callNode.setNodeID(nodeID);
+			nodeID++;
 			callNode.setCommandType(tokenStack.pop());
 			callNode.setNodeType("CALL");
 			setCommand(actualNode, callNode);
@@ -581,6 +602,8 @@ public class Production2 {
 			return callNode;
 		case "ATTRIBUTION":
 			attributionNode = new AttributionNode();
+			attributionNode.setNodeID(nodeID);
+			nodeID++;
 			attributionNode.setCommandType(tokenStack.pop());
 			attributionNode.setNodeType("ATTRIBUTION");
 			setCommand(actualNode, attributionNode);
@@ -632,11 +655,10 @@ public class Production2 {
 		constant.setNodeType("CONSTANTEXPRESSION");
 		constant.setExpressionType(tokenList.get(tokenPosition));
 		constant.setExpressionPrecedence(0);
-		
 		return constant;
 	}
 	
-	public void setExpression(ASTNode actualNode, ExpressionNode expression) {
+	public ExpressionNode setExpression(ASTNode actualNode, ExpressionNode expression) {
 		IfNode ifNode;
 		WhileNode whileNode;
 		ForNode forNode;
@@ -661,17 +683,33 @@ public class Production2 {
 			forNode.addExpression(expression);
 			break;
 		case "CALL":
-			callExpression = (CallExpression)actualNode;
-			callExpression.addParameter(expression);
+			callExpression = (CallExpression) actualNode;
+			callExpression.addExpression(expression);
 			break;
 		case "ATTRIBUTION":
+			attributionNode = (AttributionNode) actualNode;
+			attributionNode.setExpression(expression);
 			break;
 		case "BINARYEXPRESSION":
+			binaryExpression = (BinaryExpression) actualNode;
+			if(expression.getExpressionPrecedence() > binaryExpression.getExpressionPrecedence()) {
+				binaryExpression.setRhsExpression(expression);
+			} else {
+				BinaryExpression be = (BinaryExpression) expression;
+				be.setLhsExpression(binaryExpression);
+			}
 			break;
 		case "UNARYEXPRESSION":
+			unaryExpression = (UnaryExpression) actualNode;
+			unaryExpression.setExpression(expression);
 			break;
 		case "CONSTANT":
 			break;
 		}
+		return expression;
+	}
+	
+	public void changeExpression(ASTNode fatherNode, ExpressionNode oldExpression, ExpressionNode newExpression) {
+		
 	}
 }

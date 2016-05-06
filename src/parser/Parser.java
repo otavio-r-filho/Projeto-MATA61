@@ -35,6 +35,8 @@ public class Parser {
 		
 		//Initialize the AST with a program node;
 		programNode = new Program();
+		programNode.setNodeID(0);
+		
 		actualNode = programNode;
 		
 		meaningfulTerminals = new HashMap<String, Integer>();

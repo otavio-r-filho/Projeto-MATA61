@@ -6,10 +6,10 @@ import lexer.definitions.tToken;
 
 public class CallExpression extends ExpressionNode {
 	tToken functionID;
-	ArrayList<ExpressionNode> parameterList;
+	ArrayList<ExpressionNode> expressionList;
 	
 	public CallExpression() {
-		parameterList = new ArrayList<ExpressionNode>();
+		expressionList = new ArrayList<ExpressionNode>();
 		functionID = null;
 	}
 	
@@ -31,7 +31,7 @@ public class CallExpression extends ExpressionNode {
 		this.functionID = functionID;
 	}
 	
-	public void addParameter(ExpressionNode expression){
-		parameterList.add(expression);
+	public void addExpression(ExpressionNode expression){
+		expressionList.add(expression);
 	}
 }

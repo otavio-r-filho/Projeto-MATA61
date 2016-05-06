@@ -3,10 +3,12 @@ package parser.definitions.nodes;
 import lexer.definitions.tToken;
 
 public class UnaryExpression extends ExpressionNode{
-	private ExpressionNode operand;
+	private ExpressionNode expression;
 	
 	public UnaryExpression() {
-		operand = null;
+		expression = null;
+		this.nodeType = "UNARYEXPRESSION";
+		this.expressionPrecedence = 0;
 	}
 	
 	public UnaryExpression(tToken expressioType, ASTNode fatherNode) {
@@ -14,11 +16,11 @@ public class UnaryExpression extends ExpressionNode{
 		this.fatherNode = fatherNode;
 	}
 	
-	public void setOperand(ExpressionNode operand) {
-		this.operand = operand;
+	public void setExpression(ExpressionNode expression) {
+		this.expression = expression;
 	}
 	
-	public ExpressionNode getOperand() {
-		return operand;
+	public ExpressionNode getExpression() {
+		return expression;
 	}
 }
