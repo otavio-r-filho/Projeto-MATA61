@@ -8,9 +8,13 @@ public class CallExpression extends ExpressionNode {
 	tToken functionID;
 	ArrayList<ExpressionNode> parameterList;
 	
-	public CallExpression(ASTNode fatherNode) {
+	public CallExpression() {
 		parameterList = new ArrayList<ExpressionNode>();
 		functionID = null;
+	}
+	
+	public CallExpression(ASTNode fatherNode) {
+		this();
 		this.fatherNode = fatherNode;
 	}
 	

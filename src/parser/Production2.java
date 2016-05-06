@@ -208,7 +208,7 @@ public class Production2 {
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
 			productionStack.push("IF");
-			return addCommand(actualNode, tokenList, tokenPosition);
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 17:
 			//comando -> while ( exp ) comando
 			productionStack.pop();
@@ -217,7 +217,7 @@ public class Production2 {
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
 			productionStack.push("while");
-			return addCommand(actualNode, tokenList, tokenPosition);
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 18:
 			//comando -> for ( lista-exp ; lista-exp ; lista-exp ) comando
 			productionStack.pop();
@@ -230,7 +230,7 @@ public class Production2 {
 			productionStack.push("lista-exp");
 			productionStack.push("OPARENTHESES");
 			productionStack.push("FOR");
-			return addCommand(actualNode, tokenList, tokenPosition);
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 19:
 			//comando -> ID chamada-atr ;
 			productionStack.pop();
@@ -244,7 +244,7 @@ public class Production2 {
 			productionStack.push("SEMICOLON");
 			productionStack.push("retorno");
 			productionStack.push("RETURN");
-			return addReturn(actualNode, tokenList, tokenPosition);
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 21:
 			//comando -> bloco
 			productionStack.pop();
@@ -260,7 +260,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("comando");
 			productionStack.push("ELSE");
-			return addCommand(actualNode, tokenList, tokenPosition);
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 24:
 			//chamada-atr -> chamada
 			productionStack.pop();
@@ -277,13 +277,13 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("lista-exp");
 			productionStack.push("OPARENTHESES");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 27:
 			//atribuicao -> = exp
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("ATTRIBUTION");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 28:
 			//exp -> exp2 exp-p1
 			productionStack.pop();
@@ -455,14 +455,14 @@ public class Production2 {
 		return actualNode;
 	}
 	
-	private ASTNode addVariable(ASTNode actualNode, TokenFIFOStack tokenStack) {
+	public ASTNode addVariable(ASTNode actualNode, TokenFIFOStack tokenStack) {
 		tToken variableID = tokenStack.pop();
 		tToken variableType = tokenStack.checkTop();
 		addVariable(actualNode, variableType, variableID, null, "VARIABLE"); //This function is used to add the variable to the actualNode
 		return actualNode;
 	}
 	
-	private VariableNode addVariable(ASTNode actualNode, tToken variableType, tToken variableID, tToken variableValue, String nodeType) {
+	public VariableNode addVariable(ASTNode actualNode, tToken variableType, tToken variableID, tToken variableValue, String nodeType) {
 		VariableNode variable;
 		if(actualNode.getNodeType().equals("PROGRAM")) {
 			Program program = (Program)actualNode;
@@ -520,171 +520,103 @@ public class Production2 {
 		return block;
 	}
 	
-	public CommandNode addCommand(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+	public CommandNode addCommand(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition, TokenFIFOStack tokenStack) {
+		IfNode ifNode;
+		ElseNode elseNode;
+		WhileNode whileNode;
+		ForNode forNode;
+		ReturnNode returnNode;
+		CallExpression callNode;
+		AttributionNode attributionNode;
 		switch(tokenList.get(tokenPosition).getTokenType()) {
 		case "IF":
-			IfNode ifNode = new IfNode();
-			switch(actualNode.getNodeType()) {
-			case "BLOCK":
-				BlockNode blockFather = (BlockNode) actualNode;
-				blockFather.addCommand(ifNode);
-				ifNode.setFatherNode(blockFather);
-				break;
-			case "IF":
-				IfNode ifFather = (IfNode) actualNode;
-				ifFather.setCommand(ifNode);
-				ifNode.setFatherNode(ifFather);
-				break;
-			case "ELSE":
-				ElseNode elseFather = (ElseNode) actualNode;
-				elseFather.setCommand(ifNode);
-				ifNode.setFatherNode(elseFather);
-				break;
-			case "WHILE":
-				WhileNode whileFather = (WhileNode) actualNode;
-				whileFather.setCommand(ifNode);
-				ifNode.setFatherNode(whileFather);
-				break;
-			case "FOR":
-				ForNode forFather = (ForNode) actualNode;
-				forFather.setCommand(ifNode);
-				ifNode.setFatherNode(forFather);
-				break;
-			}
+			ifNode = new IfNode();
+			ifNode.setCommandType(tokenList.get(tokenPosition));
+			ifNode.setNodeType("IF");
+			setCommand(actualNode, ifNode);
+			ifNode.setFatherNode(actualNode);
 			return ifNode;
 		case "ELSE":
-			ElseNode elseNode = new ElseNode();
-			switch(actualNode.getNodeType()) {
-			case "BLOCK":
-				BlockNode blockFather = (BlockNode) actualNode;
-				blockFather.addCommand(elseNode);
-				elseNode.setFatherNode(blockFather);
-				break;
-			case "IF":
-				IfNode ifFather = (IfNode) actualNode;
-				ifFather.setCommand(elseNode);
-				elseNode.setFatherNode(ifFather);
-				break;
-			case "ELSE":
-				ElseNode elseFather = (ElseNode) actualNode;
-				elseFather.setCommand(elseNode);
-				elseNode.setFatherNode(elseFather);
-				break;
-			case "WHILE":
-				WhileNode whileFather = (WhileNode) actualNode;
-				whileFather.setCommand(elseNode);
-				elseNode.setFatherNode(whileFather);
-				break;
-			case "FOR":
-				ForNode forFather = (ForNode) actualNode;
-				forFather.setCommand(elseNode);
-				elseNode.setFatherNode(forFather);
-				break;
-			}
+			elseNode = new ElseNode();
+			elseNode.setCommandType(tokenList.get(tokenPosition));
+			elseNode.setNodeType("ELSE");
+			setCommand(actualNode, elseNode);
+			elseNode.setFatherNode(actualNode);
 			return elseNode;
 		case "WHILE":
-			WhileNode whileNode = new WhileNode();
-			switch(actualNode.getNodeType()) {
-			case "BLOCK":
-				BlockNode blockFather = (BlockNode) actualNode;
-				blockFather.addCommand(whileNode);
-				whileNode.setFatherNode(blockFather);
-				break;
-			case "IF":
-				IfNode ifFather = (IfNode) actualNode;
-				ifFather.setCommand(whileNode);
-				whileNode.setFatherNode(ifFather);
-				break;
-			case "ELSE":
-				ElseNode elseFather = (ElseNode) actualNode;
-				elseFather.setCommand(whileNode);
-				whileNode.setFatherNode(elseFather);
-				break;
-			case "WHILE":
-				WhileNode whileFather = (WhileNode) actualNode;
-				whileFather.setCommand(whileNode);
-				whileNode.setFatherNode(whileFather);
-				break;
-			case "FOR":
-				ForNode forFather = (ForNode) actualNode;
-				forFather.setCommand(whileNode);
-				whileNode.setFatherNode(forFather);
-				break;
-			}
+			whileNode = new WhileNode();
+			whileNode.setCommandType(tokenList.get(tokenPosition));
+			whileNode.setNodeType("WHILE");
+			setCommand(actualNode, whileNode);
+			whileNode.setFatherNode(actualNode);
 			return whileNode;
 		case "FOR":
-			ForNode forNode = new ForNode();
-			switch(actualNode.getNodeType()) {
-			case "BLOCK":
-				BlockNode blockFather = (BlockNode) actualNode;
-				blockFather.addCommand(forNode);
-				forNode.setFatherNode(blockFather);
-				break;
-			case "IF":
-				IfNode ifFather = (IfNode) actualNode;
-				ifFather.setCommand(forNode);
-				forNode.setFatherNode(ifFather);
-				break;
-			case "ELSE":
-				ElseNode elseFather = (ElseNode) actualNode;
-				elseFather.setCommand(forNode);
-				forNode.setFatherNode(elseFather);
-				break;
-			case "WHILE":
-				WhileNode whileFather = (WhileNode) actualNode;
-				whileFather.setCommand(forNode);
-				forNode.setFatherNode(whileFather);
-				break;
-			case "FOR":
-				ForNode forFather = (ForNode) actualNode;
-				forFather.setCommand(forNode);
-				forNode.setFatherNode(forFather);
-				break;
-			}
+			forNode = new ForNode();
+			forNode.setCommandType(tokenList.get(tokenPosition));
+			forNode.setNodeType("FOR");
+			setCommand(actualNode, forNode);
+			forNode.setFatherNode(actualNode);
 			return forNode;
+		case "RETURN":
+			returnNode = new ReturnNode();
+			returnNode.setCommandType(tokenList.get(tokenPosition));
+			returnNode.setNodeType("RETURN");
+			setCommand(actualNode, returnNode);
+			returnNode.setFatherNode(actualNode);
+			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
+				return (CommandNode)actualNode;
+			}
+			return returnNode;
+		case "CALL":
+			callNode = new CallExpression();
+			callNode.setCommandType(tokenStack.pop());
+			callNode.setNodeType("CALL");
+			setCommand(actualNode, callNode);
+			callNode.setFatherNode(actualNode);
+			return callNode;
+		case "ATTRIBUTION":
+			attributionNode = new AttributionNode();
+			attributionNode.setCommandType(tokenStack.pop());
+			attributionNode.setNodeType("ATTRIBUTION");
+			setCommand(actualNode, attributionNode);
+			attributionNode.setFatherNode(actualNode);
+			return attributionNode;			
 		}
 		return null;
 	}
-
-	public ASTNode addReturn(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
-		ReturnNode returnNode = new ReturnNode();
+	
+	public void setCommand(ASTNode actualNode,CommandNode command) {
+		BlockNode blockFather;
+		IfNode ifFather;
+		ElseNode elseFather;
+		WhileNode whileFather;
+		ForNode forFather;
 		switch(actualNode.getNodeType()) {
 		case "BLOCK":
-			BlockNode block = (BlockNode)actualNode;
-			block.addCommand(returnNode);
-			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
-				return block;
-			}
-			return returnNode;
+			blockFather = (BlockNode) actualNode;
+			blockFather.addCommand(command);
+			command.setFatherNode(blockFather);
+			break;
 		case "IF":
-			IfNode ifNode = (IfNode)actualNode;
-			ifNode.setCommand(returnNode);
-			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
-				return ifNode;
-			}
-			return returnNode;
+			ifFather = (IfNode) actualNode;
+			ifFather.setCommand(command);
+			command.setFatherNode(ifFather);
+			break;
 		case "ELSE":
-			ElseNode elseNode = (ElseNode)actualNode;
-			elseNode.setCommand(returnNode);
-			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
-				return elseNode;
-			}
-			return returnNode;
+			elseFather = (ElseNode) actualNode;
+			elseFather.setCommand(command);
+			command.setFatherNode(elseFather);
+			break;
 		case "WHILE":
-			WhileNode whileNode = (WhileNode)actualNode;
-			whileNode.setCommand(returnNode);
-			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
-				return whileNode;
-			}
-			return returnNode;
+			whileFather = (WhileNode) actualNode;
+			whileFather.setCommand(command);
+			command.setFatherNode(whileFather);
+			break;
 		case "FOR":
-			ForNode forNode = (ForNode)actualNode;
-			forNode.setCommand(returnNode);
-			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
-				return forNode;
-			}
-			return returnNode;
+			forFather = (ForNode) actualNode;
+			forFather.setCommand(command);
+			command.setFatherNode(forFather);
+			break;
 		}
-		return null;
 	}
 }
