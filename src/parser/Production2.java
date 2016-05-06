@@ -387,13 +387,13 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp-p6");
 			productionStack.push("NUM");
-			break;
+			return addConstantExpression(actualNode, tokenList, tokenPosition);
 		case 44:
 			//exp6 -> REAL exp-p6
 			productionStack.pop();
 			productionStack.push("exp-p6");
 			productionStack.push("REAL");
-			break;
+			return addConstantExpression(actualNode, tokenList, tokenPosition);
 		case 45:
 			//exp6 -> ( exp ) exp-p6
 			productionStack.pop();
@@ -441,6 +441,7 @@ public class Production2 {
 			//exp7 -> exp-p6
 			productionStack.pop();
 			productionStack.push("exp-p6");
+			return addConstantExpression(actualNode, tokenList, tokenPosition);
 		case 53:
 			//lista-exp -> exp lista-exp
 			productionStack.pop();
@@ -650,12 +651,63 @@ public class Production2 {
 	
 	public VariableNode addConstantExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
 		VariableNode constant = null;
-		
 		constant = new VariableNode(tokenList.get(tokenPosition), tokenList.get(tokenPosition), tokenList.get(tokenPosition), actualNode);
-		constant.setNodeType("CONSTANTEXPRESSION");
+		constant.setNodeType("CONSTANT");
 		constant.setExpressionType(tokenList.get(tokenPosition));
-		constant.setExpressionPrecedence(0);
-		return constant;
+		constant.setExpressionPrecedence(7);
+		return (VariableNode) setExpression(actualNode, constant);
+	}
+	
+	public BinaryExpression addBinaryExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+		BinaryExpression binaryExpression = new BinaryExpression(tokenList.get(tokenPosition), actualNode);
+		binaryExpression.setNodeType("BINARYEXPRESSION");
+		switch (tokenList.get(tokenPosition).getTokenType()) {
+		case "OR":
+			binaryExpression.setExpressionPrecedence(1);
+			break;
+		case "AND":
+			binaryExpression.setExpressionPrecedence(2);
+			break;
+		case "COMPARISSON":
+			binaryExpression.setExpressionPrecedence(3);
+			break;
+		case "DIFFERENT":
+			binaryExpression.setExpressionPrecedence(3);
+			break;
+		case "SMALLER":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "GREATER":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "SEQUAL":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "GEQUAL":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "PLUS":
+			binaryExpression.setExpressionPrecedence(5);
+			break;
+		case "MINUS":
+			binaryExpression.setExpressionPrecedence(5);
+			break;
+		case "ASTERISK":
+			binaryExpression.setExpressionPrecedence(6);
+			break;
+		case "SLASH":
+			binaryExpression.setExpressionPrecedence(6);
+			break;
+
+		default:
+			break;
+		}
+		return (BinaryExpression) setExpression(actualNode, binaryExpression);
+	}
+	
+	public UnaryExpression addUnaryExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+		UnaryExpression unaryExpression = new UnaryExpression(tokenList.get(tokenPosition), actualNode);
+		return unaryExpression;
 	}
 	
 	public ExpressionNode setExpression(ASTNode actualNode, ExpressionNode expression) {
@@ -667,7 +719,6 @@ public class Production2 {
 		ReturnNode returnNode;
 		BinaryExpression binaryExpression;
 		UnaryExpression unaryExpression;
-		VariableNode variableNode;
 
 		switch(actualNode.getNodeType()) {
 		case "IF":
@@ -690,22 +741,36 @@ public class Production2 {
 			attributionNode = (AttributionNode) actualNode;
 			attributionNode.setExpression(expression);
 			break;
+		case "RETURN":
+			returnNode = (ReturnNode) actualNode;
+			returnNode.setReturnExpression(expression);
+			break;
 		case "BINARYEXPRESSION":
 			binaryExpression = (BinaryExpression) actualNode;
 			if(expression.getExpressionPrecedence() > binaryExpression.getExpressionPrecedence()) {
 				binaryExpression.setRhsExpression(expression);
 			} else {
-				binaryExpression.setLhsExpression(expression);
-				swapExpression(expression, binaryExpression);
-//				binaryExpression.setFatherNode(expression.getFatherNode());
-//				expression.setFatherNode(binaryExpression);
+				binaryExpression = (BinaryExpression) expression;
+				binaryExpression.setLhsExpression((ExpressionNode) actualNode);
+				swapExpression((ExpressionNode) actualNode, expression);
 			}
 			break;
 		case "UNARYEXPRESSION":
 			unaryExpression = (UnaryExpression) actualNode;
-			unaryExpression.setExpression(expression);
+			if((expression.getNodeType().equals("CONSTANT") || 
+				expression.getNodeType().equals("UNARYEXPRESSION") ||
+				expression.getNodeType().equals("CALL")) && (unaryExpression.getExpression() == null)) {
+				unaryExpression.setExpression(expression);
+			} else {
+				binaryExpression = (BinaryExpression) expression;
+				binaryExpression.setLhsExpression(unaryExpression);
+				swapExpression(unaryExpression, expression);
+			}
 			break;
 		case "CONSTANT":
+			binaryExpression = (BinaryExpression) expression;
+			binaryExpression.setLhsExpression((VariableNode) actualNode);
+			swapExpression((VariableNode) actualNode, binaryExpression);
 			break;
 		}
 		return expression;
