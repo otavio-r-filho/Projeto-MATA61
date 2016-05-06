@@ -303,7 +303,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("OR");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 30:
 			//exp2 -> exp3 exp-p2
 			productionStack.pop();
@@ -315,7 +315,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp2");
 			productionStack.push("AND");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 32:
 			//exp3 -> exp4 exp-p3
 			productionStack.pop();
@@ -327,13 +327,13 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp3");
 			productionStack.push("COMPARISSON");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 34:
 			//exp-p3 -> != exp3
 			productionStack.pop();
 			productionStack.push("exp3");
 			productionStack.push("DIFFERENT");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 35:
 			//exp4 -> exp5 exp-p4
 			productionStack.pop();
@@ -345,25 +345,25 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("SMALLER");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 37:
 			//exp-p4 -> > exp4
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("GREATER");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 38:
 			//exp-p4 -> <= exp4
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("SEQUAL");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 39:
 			//exp-p4 -> >= exp4
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("GEQUAL");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 40:
 			//exp5 -> exp6 exp-p5
 			productionStack.pop();
@@ -375,13 +375,13 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp5");
 			productionStack.push("MINUS");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 42:
 			//exp-p5 -> + exp-p5
 			productionStack.pop();
 			productionStack.push("exp5");
 			productionStack.push("PLUS");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 43:
 			//exp6 -> NUM exp-p6
 			productionStack.pop();
@@ -401,7 +401,7 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
-			break;
+			return addUnaryExpression(actualNode, tokenList, tokenPosition);
 		case 46:
 			//exp6 -> ID exp7
 			productionStack.pop();
@@ -413,30 +413,30 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("EXCLAMATION");
-			break;
+			return addUnaryExpression(actualNode, tokenList, tokenPosition);
 		case 48:
 			//exp6 -> - exp
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("MINUS");
-			break;
+			return addUnaryExpression(actualNode, tokenList, tokenPosition);
 		case 49:
 			//exp-p6 -> / exp6
 			productionStack.pop();
 			productionStack.push("exp6");
 			productionStack.push("SLASH");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 50:
 			//exp-p6 -> * exp6
 			productionStack.pop();
 			productionStack.push("exp6");
 			productionStack.push("ASTERISK");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 51:
 			//exp7 -> chamada
 			productionStack.pop();
 			productionStack.push("chamada");
-			break;
+			return addCallExpression(actualNode, tokenStack);
 		case 52:
 			//exp7 -> exp-p6
 			productionStack.pop();
@@ -653,6 +653,8 @@ public class Production2 {
 		VariableNode constant = null;
 		constant = new VariableNode(tokenList.get(tokenPosition), tokenList.get(tokenPosition), tokenList.get(tokenPosition), actualNode);
 		constant.setNodeType("CONSTANT");
+		constant.setNodeID(nodeID);
+		nodeID++;
 		constant.setExpressionType(tokenList.get(tokenPosition));
 		constant.setExpressionPrecedence(7);
 		return (VariableNode) setExpression(actualNode, constant);
@@ -661,6 +663,8 @@ public class Production2 {
 	public BinaryExpression addBinaryExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
 		BinaryExpression binaryExpression = new BinaryExpression(tokenList.get(tokenPosition), actualNode);
 		binaryExpression.setNodeType("BINARYEXPRESSION");
+		binaryExpression.setNodeID(nodeID);
+		nodeID++;
 		switch (tokenList.get(tokenPosition).getTokenType()) {
 		case "OR":
 			binaryExpression.setExpressionPrecedence(1);
@@ -707,7 +711,20 @@ public class Production2 {
 	
 	public UnaryExpression addUnaryExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
 		UnaryExpression unaryExpression = new UnaryExpression(tokenList.get(tokenPosition), actualNode);
-		return unaryExpression;
+		unaryExpression.setExpressionPrecedence(7);
+		unaryExpression.setNodeType("UNARYEXPRESSION");
+		unaryExpression.setNodeID(nodeID);
+		nodeID++;
+		return (UnaryExpression) setExpression(actualNode, unaryExpression);
+	}
+	
+	public CallExpression addCallExpression(ASTNode actualNode, TokenFIFOStack tokenStack) {
+		CallExpression callExpression = new CallExpression(actualNode, tokenStack.pop());
+		callExpression.setExpressionPrecedence(7);
+		callExpression.setNodeType("CALLEXPRESSION");
+		callExpression.setNodeID(nodeID);
+		nodeID++;
+		return (CallExpression) setExpression(actualNode, callExpression);
 	}
 	
 	public ExpressionNode setExpression(ASTNode actualNode, ExpressionNode expression) {
