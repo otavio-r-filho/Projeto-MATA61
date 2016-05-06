@@ -710,6 +710,36 @@ public class Production2 {
 	}
 	
 	public void changeExpression(ASTNode fatherNode, ExpressionNode oldExpression, ExpressionNode newExpression) {
+		/*
+		 * Search inside: IfNode, WhileNode, ForNode, ReturnNode, CallExpression, AttributionNode, UnaryExpression, BinaryExpression
+		 */
 		
+		IfNode ifNode;
+		WhileNode whileNode;
+		ForNode forNode;
+		ReturnNode returnNode;
+		CallExpression callExpression;
+		AttributionNode attributionNode;
+		UnaryExpression unaryExpression;
+		BinaryExpression binaryExpression;
+		
+		switch(fatherNode.getNodeType()) {
+		case "IF":
+			break;
+		case "WHILE":
+			break;
+		case "FOR":
+			break;
+		case "RETURN":
+			break;
+		case "CALL":
+			break;
+		case "ATTRIBUTION":
+			break;
+		case "UNARYEXPRESSION":
+			break;
+		case "BINARYEXPRESSION":
+			break;
+		}
 	}
 }
