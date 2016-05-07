@@ -788,7 +788,16 @@ public class Production2 {
 					binaryExpression.setLhsExpression((ExpressionNode) actualNode);
 					swapExpression((ExpressionNode) actualNode, binaryExpression);					
 				} else {
-					while()
+					ASTNode nextNode = actualNode.getFatherNode();
+					while(nextNode.getNodeType().equals("BINARYEXPRESSION")) {
+						actualExpression = (BinaryExpression) nextNode;
+						if(actualExpression.getExpressionPrecedence() < binaryExpression.getExpressionPrecedence()) {
+							binaryExpression.setLhsExpression(actualExpression.getRhsExpression());
+							actualExpression.setRhsExpression(binaryExpression);
+							swapExpression(actualExpression, binaryExpression);
+							return binaryExpression;
+						}
+					}
 				}
 			}
 			break;

@@ -25,4 +25,12 @@ public class BinaryExpression extends ExpressionNode{
 	public void setRhsExpression(ExpressionNode rhsExpression) {
 		this.rhsExpression = rhsExpression;
 	}
+	
+	public ExpressionNode getLhsExpression() {
+		return this.lhsExpression;
+	}
+	
+	public ExpressionNode getRhsExpression() {
+		return this.rhsExpression;
+	}
 }
