@@ -656,7 +656,7 @@ public class Production2 {
 		constant.setNodeID(nodeID);
 		nodeID++;
 		constant.setExpressionType(tokenList.get(tokenPosition));
-		constant.setExpressionPrecedence(7);
+		constant.setExpressionPrecedence(0);
 		return (VariableNode) setExpression(actualNode, constant);
 	}
 	
@@ -764,30 +764,25 @@ public class Production2 {
 			break;
 		case "BINARYEXPRESSION":
 			binaryExpression = (BinaryExpression) actualNode;
-			if(expression.getExpressionPrecedence() > binaryExpression.getExpressionPrecedence()) {
-				binaryExpression.setRhsExpression(expression);
-			} else {
-				binaryExpression = (BinaryExpression) expression;
-				binaryExpression.setLhsExpression((ExpressionNode) actualNode);
-				swapExpression((ExpressionNode) actualNode, expression);
-			}
+			binaryExpression.setRhsExpression(expression);
 			break;
 		case "UNARYEXPRESSION":
 			unaryExpression = (UnaryExpression) actualNode;
-			if((expression.getNodeType().equals("CONSTANT") || 
-				expression.getNodeType().equals("UNARYEXPRESSION") ||
-				expression.getNodeType().equals("CALL")) && (unaryExpression.getExpression() == null)) {
-				unaryExpression.setExpression(expression);
-			} else {
+			if(expression.getNodeType().equals("BINARYEXPRESSION")) {
 				binaryExpression = (BinaryExpression) expression;
 				binaryExpression.setLhsExpression(unaryExpression);
-				swapExpression(unaryExpression, expression);
+				swapExpression(unaryExpression, binaryExpression);
+			} else {
+				unaryExpression.setExpression(expression);
 			}
-			break;
 		case "CONSTANT":
-			binaryExpression = (BinaryExpression) expression;
-			binaryExpression.setLhsExpression((VariableNode) actualNode);
-			swapExpression((VariableNode) actualNode, binaryExpression);
+			if(!actualNode.getFatherNode().equals("BINARYEXPRESSION")) {
+				binaryExpression = (BinaryExpression) expression;
+				binaryExpression.setLhsExpression((VariableNode) actualNode);
+				swapExpression((ExpressionNode) actualNode, expression);
+			} else {
+				
+			}
 			break;
 		}
 		return expression;
