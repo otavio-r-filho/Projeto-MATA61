@@ -98,6 +98,7 @@ public class Parser {
 	}
 	
 	public boolean itMatches(tToken token) {
+		ForNode forNode;
 		if(token.getTokenType().equals(treeStack.checkTop())) {
 			switch(token.getTokenType()) {
 			case "INTEGER":
@@ -126,9 +127,24 @@ public class Parser {
 				break;
 			case "SEMICOLON":
 				tokenStack.clearStack();
+				switch(actualNode.getNodeType()) {
+				case "FOR":
+					forNode = (ForNode) actualNode;
+					forNode.nextExpressionList();
+					break;
+				case "CALL":
+					actualNode = actualNode.getFatherNode();
+					break;
+				case "ATTRIBUTION":
+					actualNode = actualNode.getFatherNode();
+				}
 				break;
 			case "CKEYBRACKET":
 				tokenStack.clearStack();
+				actualNode = actualNode.getFatherNode();
+				break;
+			case "CPARENTHESES":
+				if(actualNode.getNodeType().equals("BINARYEXPRESSION"))
 				break;
 			}
 			return true;
