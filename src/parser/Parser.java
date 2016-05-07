@@ -143,7 +143,7 @@ public class Parser {
 				tokenStack.clearStack();
 				actualNode = actualNode.getFatherNode();
 				break;
-			case "CPARENTHESES":
+			case "CPARENTHESES":  //Must stop until a command or a parentheses expression is found
 				if(actualNode.getNodeType().equals("BINARYEXPRESSION"))
 				break;
 			}
