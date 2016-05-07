@@ -775,13 +775,21 @@ public class Production2 {
 			} else {
 				unaryExpression.setExpression(expression);
 			}
+			break;
 		case "CONSTANT":
-			if(!actualNode.getFatherNode().equals("BINARYEXPRESSION")) {
+			if(!actualNode.getFatherNode().getNodeType().equals("BINARYEXPRESSION")) {
 				binaryExpression = (BinaryExpression) expression;
 				binaryExpression.setLhsExpression((VariableNode) actualNode);
 				swapExpression((ExpressionNode) actualNode, expression);
 			} else {
-				
+				BinaryExpression actualExpression = (BinaryExpression) actualNode.getFatherNode();
+				binaryExpression = (BinaryExpression) expression;
+				if(actualExpression.getExpressionPrecedence() < expression.getExpressionPrecedence()) {
+					binaryExpression.setLhsExpression((ExpressionNode) actualNode);
+					swapExpression((ExpressionNode) actualNode, binaryExpression);					
+				} else {
+					while()
+				}
 			}
 			break;
 		}
