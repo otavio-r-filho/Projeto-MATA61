@@ -563,7 +563,9 @@ public class Production2 {
 			nodeID++;
 			elseNode.setCommandType(tokenList.get(tokenPosition));
 			elseNode.setNodeType("ELSE");
-			setCommand(actualNode, elseNode);
+//			setCommand(actualNode, elseNode);
+			ifNode = (IfNode) actualNode;
+			ifNode.setElseCommand(elseNode);
 			elseNode.setFatherNode(actualNode);
 			return elseNode;
 		case "WHILE":
@@ -804,11 +806,11 @@ public class Production2 {
 							swapExpression(actualExpression, binaryExpression);
 							return binaryExpression;
 						}
-						binaryExpression.setLhsExpression(actualExpression.getRhsExpression());
-						actualExpression.setRhsExpression(binaryExpression);
-						swapExpression(actualExpression, binaryExpression);
-						return binaryExpression;
+						nextNode = actualExpression.getFatherNode();
 					}
+					binaryExpression.setLhsExpression(actualExpression);
+					swapExpression(actualExpression, binaryExpression);
+					return binaryExpression;
 				}
 			}
 			break;

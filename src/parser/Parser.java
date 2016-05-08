@@ -133,7 +133,11 @@ public class Parser {
 					forNode.nextExpressionList();
 					break;
 				default:
-					actualNode = actualNode.getFatherNode();
+					while(!actualNode.getNodeType().equals("PROGRAM") && !actualNode.getNodeType().equals("FUNCTION") &&
+						  !actualNode.getNodeType().equals("IF") && !actualNode.getNodeType().equals("WHILE") &&
+						  !actualNode.getNodeType().equals("FOR") && !actualNode.getNodeType().equals("BLOCK")) {
+						actualNode = actualNode.getFatherNode();
+					}
 					break;
 				}
 				break;
