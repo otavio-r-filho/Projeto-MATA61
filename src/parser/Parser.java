@@ -143,6 +143,9 @@ public class Parser {
 				break;
 			case "CKEYBRACKET":
 				tokenStack.clearStack();
+				if(actualNode.getFatherNode().equals("ELSE")) {
+					actualNode = actualNode.getFatherNode();
+				}
 				actualNode = actualNode.getFatherNode();
 				actualNode = actualNode.getFatherNode();
 				break;
