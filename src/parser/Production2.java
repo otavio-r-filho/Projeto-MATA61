@@ -257,7 +257,7 @@ public class Production2 {
 			//comando -> bloco
 			productionStack.pop();
 			productionStack.push("bloco");
-			return addBlock(actualNode);
+			break;
 		case 22:
 			//retorno -> exp
 			productionStack.pop();
@@ -598,7 +598,7 @@ public class Production2 {
 				return (CommandNode)actualNode;
 			}
 			return returnNode;
-		case "CALL":
+		case "OPARENTHESES":
 			callNode = new CallExpression();
 			callNode.setNodeID(nodeID);
 			nodeID++;
