@@ -200,7 +200,7 @@ public class Production2 {
 			productionStack.push("lista-nomes");
 			productionStack.push("ID");
 			productionStack.push("tipo-base");
-			break;
+			return addVariable(actualNode, null, null, null, "VARIABLE");
 		case 15:
 			//comandos -> comando comandos
 			productionStack.pop();

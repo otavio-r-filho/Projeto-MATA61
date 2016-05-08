@@ -140,6 +140,7 @@ public class Parser {
 			case "CKEYBRACKET":
 				tokenStack.clearStack();
 				actualNode = actualNode.getFatherNode();
+				actualNode = actualNode.getFatherNode();
 				break;
 			case "CPARENTHESES":  //Must stop until a command or a parentheses expression is found
 				tokenStack.clearStack();
@@ -155,6 +156,8 @@ public class Parser {
 						}
 						actualNode = expression.getFatherNode();
 					}
+				} else if(!actualNode.getNodeType().equals("FUNCTION")){
+					actualNode = actualNode.getFatherNode();
 				}
 				break;
 			case "COMMA":
