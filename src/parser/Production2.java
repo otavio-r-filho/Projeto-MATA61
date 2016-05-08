@@ -472,20 +472,24 @@ public class Production2 {
 	}
 	
 	public VariableNode addVariable(ASTNode actualNode, tToken variableType, tToken variableID, tToken variableValue, String nodeType) {
-		VariableNode variable;
-		if(actualNode.getNodeType().equals("PROGRAM")) {
-			Program program = (Program)actualNode;
-			variable = new VariableNode(variableType, variableID, variableValue, program);
-			variable.setNodeType(nodeType);
-			program.addVariable(variable);
-		} else {
-			BlockNode block = (BlockNode)actualNode;
-			variable = new VariableNode(variableType, variableID, variableValue, block);
-			variable.setNodeType(nodeType);
-			block.addVariable(variable);
-		}
+		VariableNode variable = new VariableNode(variableType, variableID, variableValue, actualNode);
+		variable.setNodeType(nodeType);
 		variable.setNodeID(nodeID);
 		nodeID++;
+		switch(actualNode.getNodeType()) {
+		case "PROGRAM":
+			Program program = (Program)actualNode;
+			program.addVariable(variable);
+			break;
+		case "BLOCK":
+			BlockNode block = (BlockNode)actualNode;
+			block.addVariable(variable);
+			break;
+		case "FUNCTION":
+			FunctionNode function = (FunctionNode) actualNode;
+			function.addParameter(variable);
+			break;
+		}
 		return variable;		
 	}
 	

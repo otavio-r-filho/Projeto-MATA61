@@ -103,27 +103,27 @@ public class Parser {
 			switch(token.getTokenType()) {
 			case "INTEGER":
 				tokenStack.push(token);
-				addType(token);
+				addType();
 				break;
 			case "FLOAT":
 				tokenStack.push(token);
-				addType(token);
+				addType();
 				break;
 			case "VOID":
 				tokenStack.push(token);
-				addType(token);
+				addType();
 				break;
 			case "NUM":
 				tokenStack.push(token);
-				addValue(token);
+				addValue();
 				break;
 			case "REAL":
 				tokenStack.push(token);
-				addValue(token);
+				addValue();
 				break;
 			case "ID":
 				tokenStack.push(token);
-				addID(token);
+				addID();
 				break;
 			case "SEMICOLON":
 				tokenStack.clearStack();
@@ -132,11 +132,9 @@ public class Parser {
 					forNode = (ForNode) actualNode;
 					forNode.nextExpressionList();
 					break;
-				case "CALL":
+				default:
 					actualNode = actualNode.getFatherNode();
 					break;
-				case "ATTRIBUTION":
-					actualNode = actualNode.getFatherNode();
 				}
 				break;
 			case "CKEYBRACKET":
@@ -144,6 +142,7 @@ public class Parser {
 				actualNode = actualNode.getFatherNode();
 				break;
 			case "CPARENTHESES":  //Must stop until a command or a parentheses expression is found
+				tokenStack.clearStack();
 				if(actualNode.getNodeType().equals("BINARYEXPRESSION") || actualNode.getNodeType().equals("CONSTANT") ||
 				   actualNode.getNodeType().equals("UNARYEXPRESSION") || actualNode.getNodeType().equals("CALL")) {
 					while(!actualNode.getNodeType().equals("IF") && !actualNode.getNodeType().equals("WHILE") &&
@@ -158,58 +157,64 @@ public class Parser {
 					}
 				}
 				break;
+			case "COMMA":
+				if(actualNode.getNodeType().equals("PARAMETER")) {
+					tokenStack.clearStack();
+					actualNode = actualNode.getFatherNode();
+				}
+				break;
 			}
 			return true;
 		}
 		return false;
 	}
 	
-	public void addType(tToken token) {
+	public void addType() {
 		FunctionNode function;
 		VariableNode variable;
 		switch(actualNode.getNodeType()){
 		case "FUNCTION":
 			function = (FunctionNode)actualNode;
-			function.setReturnType(token);
+			function.setReturnType(tokenStack.pop());
 			break;
 		case "VARIABLE":
 			variable = (VariableNode)actualNode;
-			variable.setVariableType(token);
+			variable.setVariableType(tokenStack.checkTop());
 			break;
 		case "PARAMETER":
 			variable = (VariableNode)actualNode;
-			variable.setVariableType(token);
+			variable.setVariableType(tokenStack.pop());
 			break;
 		}
 	}
 	
-	public void addID(tToken token) {
+	public void addID() {
 		FunctionNode function;
 		VariableNode variable;
 		
 		switch(actualNode.getNodeType()) {
 		case "FUNCTION":
 			function = (FunctionNode)actualNode;
-			function.setFunctionID(token);
+			function.setFunctionID(tokenStack.pop());
 			break;
 		case "VARIABLE":
 			variable = (VariableNode)actualNode;
-			variable.setVariableID(token);
+			variable.setVariableID(tokenStack.pop());
 			break;
 		case "PARAMETER":
 			variable = (VariableNode)actualNode;
-			variable.setVariableID(token);
+			variable.setVariableID(tokenStack.pop());
 			break;
 		}
 	}
 	
-	public void addValue(tToken token) {
+	public void addValue() {
 		VariableNode variable;
 		
 		switch(actualNode.getNodeType()){
 		case "VARIABLE":
 			variable = (VariableNode)actualNode;
-			variable.setVariableValue(token);
+			variable.setVariableValue(tokenStack.pop());
 			break;
 		}
 	}
