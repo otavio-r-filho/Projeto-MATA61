@@ -144,7 +144,19 @@ public class Parser {
 				actualNode = actualNode.getFatherNode();
 				break;
 			case "CPARENTHESES":  //Must stop until a command or a parentheses expression is found
-				if(actualNode.getNodeType().equals("BINARYEXPRESSION"))
+				if(actualNode.getNodeType().equals("BINARYEXPRESSION") || actualNode.getNodeType().equals("CONSTANT") ||
+				   actualNode.getNodeType().equals("UNARYEXPRESSION") || actualNode.getNodeType().equals("CALL")) {
+					while(!actualNode.getNodeType().equals("IF") && !actualNode.getNodeType().equals("WHILE") &&
+						  !actualNode.getNodeType().equals("FOR") && !actualNode.getNodeType().equals("RETURN") &&
+						  !actualNode.getNodeType().equals("BLOCK") && !actualNode.getNodeType().equals("CALL") &&
+						  !actualNode.getNodeType().equals("ATTRIBUTION")) {
+						ExpressionNode expression = (ExpressionNode) actualNode;
+						if(expression.getExpressionType().getTokenType().equals("OPARENTHESES")) {
+							return true;
+						}
+						actualNode = expression.getFatherNode();
+					}
+				}
 				break;
 			}
 			return true;
