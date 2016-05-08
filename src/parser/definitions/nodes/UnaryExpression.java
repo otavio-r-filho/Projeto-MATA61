@@ -14,6 +14,7 @@ public class UnaryExpression extends ExpressionNode{
 	public UnaryExpression(tToken expressioType, ASTNode fatherNode) {
 		this();
 		this.fatherNode = fatherNode;
+		this.expressionType = expressioType;
 	}
 	
 	public void setExpression(ExpressionNode expression) {

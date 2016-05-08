@@ -789,8 +789,11 @@ public class Production2 {
 				BinaryExpression actualExpression = (BinaryExpression) actualNode.getFatherNode();
 				binaryExpression = (BinaryExpression) expression;
 				if(actualExpression.getExpressionPrecedence() < expression.getExpressionPrecedence()) {
-					binaryExpression.setLhsExpression((ExpressionNode) actualNode);
-					swapExpression(actualExpression, binaryExpression);					
+					binaryExpression.setLhsExpression(actualExpression.getRhsExpression());
+					actualExpression.getRhsExpression().setFatherNode(binaryExpression);
+					binaryExpression.setFatherNode(actualExpression);
+					actualExpression.setRhsExpression(binaryExpression);
+//					swapExpression(actualExpression, binaryExpression);					
 				} else {
 					ASTNode nextNode = actualExpression.getFatherNode();
 					while(nextNode.getNodeType().equals("BINARYEXPRESSION")) {
