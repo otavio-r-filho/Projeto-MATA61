@@ -20,5 +20,13 @@ public class Program extends ASTNode{
 	public void addFunction(FunctionNode function) {
 		functions.add(function);
 	}
+
+	public ArrayList<VariableNode> getGlobalVariables() {
+		return this.globalVariables;
+	}
+
+	public ArrayList<FunctionNode> getFunctions() {
+		return this.functions;
+	}
 	
 }
