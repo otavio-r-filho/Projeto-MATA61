@@ -1,17 +1,26 @@
-package semantic.semantic;
+package semantic;
 
 /*
     Semantic Analyzer:
 
     This will receive the program node and process the tree based on the grammar
     This is part of the subject MATA61 - Compilers of the Federal Univery of Bahia
+
+    Types of analyses:
+    1 - Check declaration
+    2 - Check types
+    3 - Check parameters
+
+    The idea behind this code:
+    1 - Fill up the symbol table with the symbols of the actual node;
+    2 -
  */
 
 import parser.definitions.nodes.ASTNode;
 import parser.definitions.nodes.FunctionNode;
 import parser.definitions.nodes.Program;
 import parser.definitions.nodes.VariableNode;
-import semantic.semantic.definitions.Symbol;
+import semantic.definitions.Symbol;
 
 import java.util.ArrayList;
 

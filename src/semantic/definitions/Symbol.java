@@ -1,4 +1,4 @@
-package semantic.semantic.definitions;
+package semantic.definitions;
 
 import lexer.definitions.tToken;
 
