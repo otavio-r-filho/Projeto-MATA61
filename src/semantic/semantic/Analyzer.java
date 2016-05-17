@@ -39,7 +39,7 @@ public class Analyzer {
                 }
                 ArrayList<FunctionNode> functionNodes = programNode.getFunctions();
                 for(FunctionNode functionNode : functionNodes) {
-                    Symbol newSymbol = new Symbol(functionNode.getFunctioID().getTokenValue(), functionNode.getReturnType().getTokenType(), false)
+                    Symbol newSymbol = new Symbol(functionNode.getFunctioID().getTokenValue(), functionNode.getReturnType().getTokenType(), false);
                 }
                 break;
         }

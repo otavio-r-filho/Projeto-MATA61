@@ -50,7 +50,7 @@ public class Symbol {
     }
 
     public Symbol(String symbolID, String symbolType, boolean isFree) {
-        this(SymbolID, symbolType);
+        this(symbolID, symbolType);
         this.isFree = isFree;
     }
 }
