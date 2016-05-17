@@ -8,8 +8,6 @@ import lexer.definitions.*;
 public class Lexer {
 	private Tokens tokens;
 	
-	private States states;
-	
 	private int actualState = 1;
 	private int lastFinalState = 0;
 	private String actualChain;
@@ -332,7 +330,7 @@ public class Lexer {
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     spitToken     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//spittoken modificado a partir da função spitToken2
+//spittoken modificado a partir da funï¿½ï¿½o spitToken2
 
 	public String spitTokenString(int lexemeIndex, String lexeme, int line, int collumn) {
 		switch(actualState){
@@ -392,7 +390,7 @@ public class Lexer {
 			if(lexemeIndex != -1) {
 				if(((lexemeIndex > 61) && (lexemeIndex != 72)) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
-					//Eliminando 0 à esquerda;
+					//Eliminando 0 ï¿½ esquerda;
 //					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
 					tToken numToken = new tToken("NUM", actualChain, 36);
 					actualChain = lexeme;
@@ -409,7 +407,7 @@ public class Lexer {
 				actualState = 0;
 				return null;
 			}
-		case 8: //REAL0 - estado intermediário entre NUM e REAL - não é um estado final
+		case 8: //REAL0 - estado intermediï¿½rio entre NUM e REAL - nï¿½o ï¿½ um estado final
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
 				actualChain = actualChain + lexeme;
@@ -871,7 +869,7 @@ public class Lexer {
 				if(((lexemeIndex > 61) && (lexemeIndex != 72)) || (edges[actualState][lexemeIndex] == 1)) {
 					actualState = edges[actualState][lexemeIndex];
 					//Tokens.NUM.setTokenValue(actualChain);
-					//Eliminando 0 à esquerda;
+					//Eliminando 0 ï¿½ esquerda;
 //					Tokens.NUM.setTokenValue(actualChain.replaceFirst("^0+(?!$)", ""));
 					tToken numToken = new tToken("NUM", actualChain.replaceFirst("^0+(?!$)", ""), 38, line, collumn - actualChain.length());
 					actualChain = lexeme;
@@ -887,7 +885,7 @@ public class Lexer {
 				actualState = 0;
 				return null;
 			}
-		case 8: //REAL0 - estado intermediário entre NUM e REAL - não é um estado final
+		case 8: //REAL0 - estado intermediï¿½rio entre NUM e REAL - nï¿½o ï¿½ um estado final
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
 				actualChain = actualChain + lexeme;
