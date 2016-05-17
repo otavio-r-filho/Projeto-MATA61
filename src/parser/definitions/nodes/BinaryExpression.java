@@ -1,20 +1,21 @@
 package parser.definitions.nodes;
 
+import lexer.definitions.tToken;
+
 public class BinaryExpression extends ExpressionNode{
 	private ExpressionNode lhsExpression;
 	private ExpressionNode rhsExpression;
-	private String operation;
 	
-	public BinaryExpression(String operation) {
+	public BinaryExpression(tToken expressionType) {
 		lhsExpression = null;
 		rhsExpression = null;
-		this.operation = operation;
+		this.expressionType = expressionType;
+		nodeType = "BINARYEXPRESSION";
 	}
 	
-	public BinaryExpression(String operation, ASTNode fatherNode) {
-		this(operation);
+	public BinaryExpression(tToken expressionType, ASTNode fatherNode) {
+		this(expressionType);
 		this.fatherNode = fatherNode;
-		nodeType = "BINARYEXPRESSION";
 	}
 	
 	public void setLhsExpression(ExpressionNode lhsExpression) {
@@ -23,5 +24,13 @@ public class BinaryExpression extends ExpressionNode{
 	
 	public void setRhsExpression(ExpressionNode rhsExpression) {
 		this.rhsExpression = rhsExpression;
+	}
+	
+	public ExpressionNode getLhsExpression() {
+		return this.lhsExpression;
+	}
+	
+	public ExpressionNode getRhsExpression() {
+		return this.rhsExpression;
 	}
 }

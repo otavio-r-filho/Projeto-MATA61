@@ -10,7 +10,7 @@ public class Program extends ASTNode{
 		globalVariables = new ArrayList<VariableNode>();
 		functions = new ArrayList<FunctionNode>();
 		fatherNode = null;
-		nodeType = "Program";
+		nodeType = "PROGRAM";
 	}
 	
 	public void addVariable(VariableNode variable) {

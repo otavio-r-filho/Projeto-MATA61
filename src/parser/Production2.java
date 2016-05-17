@@ -1,18 +1,29 @@
 package parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import parser.definitions.nodes.ASTNode;
+import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
+
+import jdk.nashorn.internal.ir.BinaryNode;
+import jdk.nashorn.internal.ir.CallNode;
+import jdk.nashorn.internal.ir.UnaryNode;
+import parser.definitions.nodes.*;
 import parser.tools.Stack;
+import parser.tools.TokenFIFOStack;
+import lexer.definitions.*;
 
 public class Production2 {
 	
 	private HashMap<String, Integer> nonTerminalCoding;
 	private HashMap<String, Integer> terminalCoding;
 	
+	private int nodeID;
+	
 	public Production2() {
 		nonTerminalCoding = new HashMap<String, Integer>();
 		terminalCoding = new HashMap<String, Integer>();
+		nodeID = 1;
 		
 		nonTerminalCoding.put("programa", 		0);
 		nonTerminalCoding.put("declaracoes", 	1);
@@ -91,7 +102,7 @@ public class Production2 {
 		terminalCoding.put("$", 			39);
 	}
 	
-	public void produce(int productionID, Stack productionStack, ASTNode actualNode) {
+	public ASTNode produce(int productionID, Stack productionStack, ASTNode actualNode, TokenFIFOStack tokenStack, ArrayList<tToken> tokenList, int tokenPosition) {
 		switch (productionID) {
 		case 0:
 			//programa -> declaracoes
@@ -109,7 +120,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("dec-fim");
 			productionStack.push("ID");
-			productionStack.push("tipo-base");			
+			productionStack.push("tipo-base");
 			break;
 		case 3:
 			//declaracao - >void ID dec-funcao
@@ -118,13 +129,13 @@ public class Production2 {
 			productionStack.push("ID");
 			productionStack.push("VOID");
 			break;
-		case 4:
+		case 4: //Creates a variable in the main scope - variableType and variableID already in the stack
 			//dec-fim -> lista-nomes ;
 			productionStack.pop();
 			productionStack.push("SEMICOLON");
 			productionStack.push("lista-nomes");
-			break;
-		case 5:
+			return addVariable(actualNode, tokenStack); //Will return the actualNode
+		case 5: //Creates a function
 			//dec-fim -> dec-funcao
 			productionStack.pop();
 			productionStack.push("dec-funcao");
@@ -135,7 +146,7 @@ public class Production2 {
 			productionStack.push("lista-nomes");
 			productionStack.push("ID");
 			productionStack.push("COMMA");
-			break;
+			return addVariable(actualNode, tokenStack.checkTop(), null, null, "VARIABLE"); //Will return a VariableNode to be completed
 		case 7:
 			//tipo-base -> int
 			productionStack.pop();
@@ -153,7 +164,7 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("parametros");
 			productionStack.push("OPARENTHESES");
-			break;
+			return addFunction((Program)actualNode, tokenStack);
 		case 10:
 			//parametros -> parametro opt-parametro
 			productionStack.pop();
@@ -165,7 +176,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("ID");
 			productionStack.push("tipo-base");
-			break;
+			return addVariable((FunctionNode) actualNode, null, null, null, "PARAMETER");
 		case 12:
 			//opt-parametro -> , parametro opt-parametro
 			productionStack.pop();
@@ -180,7 +191,7 @@ public class Production2 {
 			productionStack.push("comandos");
 			productionStack.push("dec-variavel");
 			productionStack.push("OKEYBRACKET");
-			break;
+			return addBlock(actualNode);
 		case 14:
 			//dec-variavel -> tipo-base ID lista-nomes ; dec-variavel
 			productionStack.pop();
@@ -189,7 +200,7 @@ public class Production2 {
 			productionStack.push("lista-nomes");
 			productionStack.push("ID");
 			productionStack.push("tipo-base");
-			break;
+			return addVariable(actualNode, null, null, null, "VARIABLE");
 		case 15:
 			//comandos -> comando comandos
 			productionStack.pop();
@@ -205,7 +216,7 @@ public class Production2 {
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
 			productionStack.push("IF");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 17:
 			//comando -> while ( exp ) comando
 			productionStack.pop();
@@ -214,7 +225,7 @@ public class Production2 {
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
 			productionStack.push("while");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 18:
 			//comando -> for ( lista-exp ; lista-exp ; lista-exp ) comando
 			productionStack.pop();
@@ -227,7 +238,7 @@ public class Production2 {
 			productionStack.push("lista-exp");
 			productionStack.push("OPARENTHESES");
 			productionStack.push("FOR");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 19:
 			//comando -> ID chamada-atr ;
 			productionStack.pop();
@@ -241,7 +252,7 @@ public class Production2 {
 			productionStack.push("SEMICOLON");
 			productionStack.push("retorno");
 			productionStack.push("RETURN");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 21:
 			//comando -> bloco
 			productionStack.pop();
@@ -257,7 +268,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("comando");
 			productionStack.push("ELSE");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 24:
 			//chamada-atr -> chamada
 			productionStack.pop();
@@ -274,13 +285,13 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("lista-exp");
 			productionStack.push("OPARENTHESES");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 27:
 			//atribuicao -> = exp
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("ATTRIBUTION");
-			break;
+			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 28:
 			//exp -> exp2 exp-p1
 			productionStack.pop();
@@ -292,7 +303,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("OR");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 30:
 			//exp2 -> exp3 exp-p2
 			productionStack.pop();
@@ -304,7 +315,7 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp2");
 			productionStack.push("AND");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 32:
 			//exp3 -> exp4 exp-p3
 			productionStack.pop();
@@ -316,13 +327,13 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp3");
 			productionStack.push("COMPARISSON");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 34:
 			//exp-p3 -> != exp3
 			productionStack.pop();
 			productionStack.push("exp3");
 			productionStack.push("DIFFERENT");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 35:
 			//exp4 -> exp5 exp-p4
 			productionStack.pop();
@@ -334,25 +345,25 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("SMALLER");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 37:
 			//exp-p4 -> > exp4
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("GREATER");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 38:
 			//exp-p4 -> <= exp4
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("SEQUAL");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 39:
 			//exp-p4 -> >= exp4
 			productionStack.pop();
 			productionStack.push("exp4");
 			productionStack.push("GEQUAL");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 40:
 			//exp5 -> exp6 exp-p5
 			productionStack.pop();
@@ -364,25 +375,25 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp5");
 			productionStack.push("MINUS");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 42:
 			//exp-p5 -> + exp-p5
 			productionStack.pop();
 			productionStack.push("exp5");
 			productionStack.push("PLUS");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 43:
 			//exp6 -> NUM exp-p6
 			productionStack.pop();
 			productionStack.push("exp-p6");
 			productionStack.push("NUM");
-			break;
+			return addConstantExpression(actualNode, tokenList, tokenPosition);
 		case 44:
 			//exp6 -> REAL exp-p6
 			productionStack.pop();
 			productionStack.push("exp-p6");
 			productionStack.push("REAL");
-			break;
+			return addConstantExpression(actualNode, tokenList, tokenPosition);
 		case 45:
 			//exp6 -> ( exp ) exp-p6
 			productionStack.pop();
@@ -390,7 +401,7 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
-			break;
+			return addUnaryExpression(actualNode, tokenList, tokenPosition);
 		case 46:
 			//exp6 -> ID exp7
 			productionStack.pop();
@@ -402,34 +413,35 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("EXCLAMATION");
-			break;
+			return addUnaryExpression(actualNode, tokenList, tokenPosition);
 		case 48:
 			//exp6 -> - exp
 			productionStack.pop();
 			productionStack.push("exp");
 			productionStack.push("MINUS");
-			break;
+			return addUnaryExpression(actualNode, tokenList, tokenPosition);
 		case 49:
 			//exp-p6 -> / exp6
 			productionStack.pop();
 			productionStack.push("exp6");
 			productionStack.push("SLASH");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 50:
 			//exp-p6 -> * exp6
 			productionStack.pop();
 			productionStack.push("exp6");
 			productionStack.push("ASTERISK");
-			break;
+			return addBinaryExpression(actualNode, tokenList, tokenPosition);
 		case 51:
 			//exp7 -> chamada
 			productionStack.pop();
 			productionStack.push("chamada");
-			break;
+			return addCallExpression(actualNode, tokenStack);
 		case 52:
 			//exp7 -> exp-p6
 			productionStack.pop();
 			productionStack.push("exp-p6");
+			return addConstantExpression(actualNode, tokenList, tokenPosition);
 		case 53:
 			//lista-exp -> exp lista-exp
 			productionStack.pop();
@@ -449,6 +461,417 @@ public class Production2 {
 		default:
 			break;
 		}
+		return actualNode;
 	}
+	
+	public ASTNode addVariable(ASTNode actualNode, TokenFIFOStack tokenStack) {
+		tToken variableID = tokenStack.pop();
+		tToken variableType = tokenStack.checkTop();
+		addVariable(actualNode, variableType, variableID, null, "VARIABLE"); //This function is used to add the variable to the actualNode
+		return actualNode;
+	}
+	
+	public VariableNode addVariable(ASTNode actualNode, tToken variableType, tToken variableID, tToken variableValue, String nodeType) {
+		VariableNode variable = new VariableNode(variableType, variableID, variableValue, actualNode);
+		variable.setNodeType(nodeType);
+		variable.setNodeID(nodeID);
+		nodeID++;
+		switch(actualNode.getNodeType()) {
+		case "PROGRAM":
+			Program program = (Program)actualNode;
+			program.addVariable(variable);
+			break;
+		case "BLOCK":
+			BlockNode block = (BlockNode)actualNode;
+			block.addVariable(variable);
+			break;
+		case "FUNCTION":
+			FunctionNode function = (FunctionNode) actualNode;
+			function.addParameter(variable);
+			break;
+		}
+		return variable;		
+	}
+	
+	public FunctionNode addFunction(ASTNode actualNode, TokenFIFOStack tokenStack) {
+		Program program = (Program) actualNode;
+		FunctionNode function = new FunctionNode(program);
+		function.setFunctionID(tokenStack.pop());
+		function.setReturnType(tokenStack.pop());
+		function.setNodeType("FUNCTION");
+		function.setNodeID(nodeID);
+		nodeID++;
+		program.addFunction(function);
+		return function;
+	}
+	
+	public BlockNode addBlock(ASTNode actualNode) {
+		BlockNode block = null;
+		switch(actualNode.getNodeType()) {
+		case "FUNCTION":
+			FunctionNode function = (FunctionNode) actualNode;
+			block = new BlockNode(function);
+			function.setBlock(block);
+			break;
+		case "IF":
+			IfNode ifNode = (IfNode) actualNode;
+			block = new BlockNode(actualNode);
+			ifNode.setCommand(block);
+			break;
+		case "ELSE":
+			ElseNode elseNode = (ElseNode) actualNode;
+			block = new BlockNode(elseNode);
+			elseNode.setCommand(block);
+			break;
+		case "WHILE":
+			WhileNode whileNode = (WhileNode) actualNode;
+			block = new BlockNode(whileNode);
+			whileNode.setCommand(block);
+			break;
+		case "FOR":
+			ForNode forNode = (ForNode) actualNode;
+			block = new BlockNode(forNode);
+			forNode.setCommand(block);
+			break;
+		}
+		block.setNodeID(nodeID);
+		nodeID++;
+		return block;
+	}
+	
+	public CommandNode addCommand(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition, TokenFIFOStack tokenStack) {
+		IfNode ifNode;
+		ElseNode elseNode;
+		WhileNode whileNode;
+		ForNode forNode;
+		ReturnNode returnNode;
+		CallExpression callNode;
+		AttributionNode attributionNode;
+		switch(tokenList.get(tokenPosition).getTokenType()) {
+		case "IF":
+			ifNode = new IfNode();
+			ifNode.setNodeID(nodeID);
+			nodeID++;
+			ifNode.setCommandType(tokenList.get(tokenPosition));
+			ifNode.setNodeType("IF");
+			setCommand(actualNode, ifNode);
+			ifNode.setFatherNode(actualNode);
+			return ifNode;
+		case "ELSE":
+			elseNode = new ElseNode();
+			elseNode.setNodeID(nodeID);
+			nodeID++;
+			elseNode.setCommandType(tokenList.get(tokenPosition));
+			elseNode.setNodeType("ELSE");
+//			setCommand(actualNode, elseNode);
+			ifNode = (IfNode) actualNode;
+			ifNode.setElseCommand(elseNode);
+			elseNode.setFatherNode(actualNode);
+			return elseNode;
+		case "WHILE":
+			whileNode = new WhileNode();
+			whileNode.setNodeID(nodeID);
+			nodeID++;
+			whileNode.setCommandType(tokenList.get(tokenPosition));
+			whileNode.setNodeType("WHILE");
+			setCommand(actualNode, whileNode);
+			whileNode.setFatherNode(actualNode);
+			return whileNode;
+		case "FOR":
+			forNode = new ForNode();
+			forNode.setNodeID(nodeID);
+			nodeID++;
+			forNode.setCommandType(tokenList.get(tokenPosition));
+			forNode.setNodeType("FOR");
+			setCommand(actualNode, forNode);
+			forNode.setFatherNode(actualNode);
+			return forNode;
+		case "RETURN":
+			returnNode = new ReturnNode();
+			returnNode.setNodeID(nodeID);
+			nodeID++;
+			returnNode.setCommandType(tokenList.get(tokenPosition));
+			returnNode.setNodeType("RETURN");
+			setCommand(actualNode, returnNode);
+			returnNode.setFatherNode(actualNode);
+			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")){
+				return (CommandNode)actualNode;
+			}
+			return returnNode;
+		case "OPARENTHESES":
+			callNode = new CallExpression();
+			callNode.setNodeID(nodeID);
+			nodeID++;
+			callNode.setCommandType(tokenStack.pop());
+			callNode.setNodeType("CALL");
+			setCommand(actualNode, callNode);
+			callNode.setFatherNode(actualNode);
+			return callNode;
+		case "ATTRIBUTION":
+			attributionNode = new AttributionNode();
+			attributionNode.setNodeID(nodeID);
+			nodeID++;
+			attributionNode.setCommandType(tokenStack.pop());
+			attributionNode.setNodeType("ATTRIBUTION");
+			setCommand(actualNode, attributionNode);
+			attributionNode.setFatherNode(actualNode);
+			return attributionNode;			
+		}
+		return null;
+	}
+	
+	public void setCommand(ASTNode actualNode,CommandNode command) {
+		BlockNode blockFather;
+		IfNode ifFather;
+		ElseNode elseFather;
+		WhileNode whileFather;
+		ForNode forFather;
+		switch(actualNode.getNodeType()) {
+		case "BLOCK":
+			blockFather = (BlockNode) actualNode;
+			blockFather.addCommand(command);
+			command.setFatherNode(blockFather);
+			break;
+		case "IF":
+			ifFather = (IfNode) actualNode;
+			ifFather.setCommand(command);
+			command.setFatherNode(ifFather);
+			break;
+		case "ELSE":
+			elseFather = (ElseNode) actualNode;
+			elseFather.setCommand(command);
+			command.setFatherNode(elseFather);
+			break;
+		case "WHILE":
+			whileFather = (WhileNode) actualNode;
+			whileFather.setCommand(command);
+			command.setFatherNode(whileFather);
+			break;
+		case "FOR":
+			forFather = (ForNode) actualNode;
+			forFather.setCommand(command);
+			command.setFatherNode(forFather);
+			break;
+		}
+	}
+	
+	public VariableNode addConstantExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+		VariableNode constant = null;
+		constant = new VariableNode(tokenList.get(tokenPosition), tokenList.get(tokenPosition), tokenList.get(tokenPosition), actualNode);
+		constant.setNodeType("CONSTANT");
+		constant.setNodeID(nodeID);
+		nodeID++;
+		constant.setExpressionType(tokenList.get(tokenPosition));
+		constant.setExpressionPrecedence(0);
+		return (VariableNode) setExpression(actualNode, constant);
+	}
+	
+	public BinaryExpression addBinaryExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+		BinaryExpression binaryExpression = new BinaryExpression(tokenList.get(tokenPosition), actualNode);
+		binaryExpression.setNodeType("BINARYEXPRESSION");
+		binaryExpression.setNodeID(nodeID);
+		nodeID++;
+		switch (tokenList.get(tokenPosition).getTokenType()) {
+		case "OR":
+			binaryExpression.setExpressionPrecedence(1);
+			break;
+		case "AND":
+			binaryExpression.setExpressionPrecedence(2);
+			break;
+		case "COMPARISSON":
+			binaryExpression.setExpressionPrecedence(3);
+			break;
+		case "DIFFERENT":
+			binaryExpression.setExpressionPrecedence(3);
+			break;
+		case "SMALLER":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "GREATER":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "SEQUAL":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "GEQUAL":
+			binaryExpression.setExpressionPrecedence(4);
+			break;
+		case "PLUS":
+			binaryExpression.setExpressionPrecedence(5);
+			break;
+		case "MINUS":
+			binaryExpression.setExpressionPrecedence(5);
+			break;
+		case "ASTERISK":
+			binaryExpression.setExpressionPrecedence(6);
+			break;
+		case "SLASH":
+			binaryExpression.setExpressionPrecedence(6);
+			break;
 
+		default:
+			break;
+		}
+		return (BinaryExpression) setExpression(actualNode, binaryExpression);
+	}
+	
+	public UnaryExpression addUnaryExpression(ASTNode actualNode, ArrayList<tToken> tokenList, int tokenPosition) {
+		UnaryExpression unaryExpression = new UnaryExpression(tokenList.get(tokenPosition), actualNode);
+		unaryExpression.setExpressionPrecedence(7);
+		unaryExpression.setNodeType("UNARYEXPRESSION");
+		unaryExpression.setNodeID(nodeID);
+		nodeID++;
+		return (UnaryExpression) setExpression(actualNode, unaryExpression);
+	}
+	
+	public CallExpression addCallExpression(ASTNode actualNode, TokenFIFOStack tokenStack) {
+		CallExpression callExpression = new CallExpression(actualNode, tokenStack.pop());
+		callExpression.setExpressionPrecedence(7);
+		callExpression.setNodeType("CALLEXPRESSION");
+		callExpression.setNodeID(nodeID);
+		nodeID++;
+		return (CallExpression) setExpression(actualNode, callExpression);
+	}
+	
+	public ExpressionNode setExpression(ASTNode actualNode, ExpressionNode expression) {
+		IfNode ifNode;
+		WhileNode whileNode;
+		ForNode forNode;
+		CallExpression callExpression;
+		AttributionNode attributionNode;
+		ReturnNode returnNode;
+		BinaryExpression binaryExpression;
+		UnaryExpression unaryExpression;
+
+		switch(actualNode.getNodeType()) {
+		case "IF":
+			ifNode = (IfNode)actualNode;
+			ifNode.setConditionExpression(expression);
+			break;
+		case "WHILE":
+			whileNode = (WhileNode)actualNode;
+			whileNode.setConditionExpression(expression);
+			break;
+		case "FOR":
+			forNode = (ForNode)actualNode;
+			forNode.addExpression(expression);
+			break;
+		case "CALL":
+			callExpression = (CallExpression) actualNode;
+			callExpression.addExpression(expression);
+			break;
+		case "ATTRIBUTION":
+			attributionNode = (AttributionNode) actualNode;
+			attributionNode.setExpression(expression);
+			break;
+		case "RETURN":
+			returnNode = (ReturnNode) actualNode;
+			returnNode.setReturnExpression(expression);
+			break;
+		case "BINARYEXPRESSION":
+			binaryExpression = (BinaryExpression) actualNode;
+			binaryExpression.setRhsExpression(expression);
+			break;
+		case "UNARYEXPRESSION":
+			unaryExpression = (UnaryExpression) actualNode;
+			if(expression.getNodeType().equals("BINARYEXPRESSION")) {
+				binaryExpression = (BinaryExpression) expression;
+				binaryExpression.setLhsExpression(unaryExpression);
+				swapExpression(unaryExpression, binaryExpression);
+			} else {
+				unaryExpression.setExpression(expression);
+			}
+			break;
+		case "CONSTANT":
+			if(!actualNode.getFatherNode().getNodeType().equals("BINARYEXPRESSION")) {
+				binaryExpression = (BinaryExpression) expression;
+				binaryExpression.setLhsExpression((VariableNode) actualNode);
+				swapExpression((ExpressionNode) actualNode, expression);
+			} else {
+				BinaryExpression actualExpression = (BinaryExpression) actualNode.getFatherNode();
+				binaryExpression = (BinaryExpression) expression;
+				if(actualExpression.getExpressionPrecedence() < expression.getExpressionPrecedence()) {
+					binaryExpression.setLhsExpression(actualExpression.getRhsExpression());
+					actualExpression.getRhsExpression().setFatherNode(binaryExpression);
+					binaryExpression.setFatherNode(actualExpression);
+					actualExpression.setRhsExpression(binaryExpression);
+//					swapExpression(actualExpression, binaryExpression);					
+				} else {
+					ASTNode nextNode = actualExpression.getFatherNode();
+					while(nextNode.getNodeType().equals("BINARYEXPRESSION")) {
+						actualExpression = (BinaryExpression) nextNode;
+						if(actualExpression.getExpressionPrecedence() < binaryExpression.getExpressionPrecedence()) {
+							binaryExpression.setLhsExpression(actualExpression.getRhsExpression());
+							actualExpression.setRhsExpression(binaryExpression);
+							swapExpression(actualExpression, binaryExpression);
+							return binaryExpression;
+						}
+						nextNode = actualExpression.getFatherNode();
+					}
+					binaryExpression.setLhsExpression(actualExpression);
+					swapExpression(actualExpression, binaryExpression);
+					return binaryExpression;
+				}
+			}
+			break;
+		}
+		return expression;
+	}
+	
+	public void swapExpression(ExpressionNode oldExpression, ExpressionNode newExpression) {
+		/*
+		 * Search inside: IfNode, WhileNode, ForNode, ReturnNode, CallExpression, AttributionNode, UnaryExpression, BinaryExpression
+		 */
+		
+		IfNode ifNode;
+		WhileNode whileNode;
+		ForNode forNode;
+		ReturnNode returnNode;
+		CallExpression callExpression;
+		AttributionNode attributionNode;
+		UnaryExpression unaryExpression;
+		BinaryExpression binaryExpression;
+		ArrayList<ExpressionNode> expressions;
+		
+		switch(oldExpression.getFatherNode().getNodeType()) {
+		case "IF":
+			ifNode = (IfNode) oldExpression.getFatherNode();
+			ifNode.setConditionExpression(newExpression);
+			break;
+		case "WHILE":
+			whileNode = (WhileNode) oldExpression.getFatherNode();
+			whileNode.setConditionExpression(newExpression);
+			break;
+		case "FOR":
+			forNode = (ForNode) oldExpression.getFatherNode();
+			expressions = forNode.getExpressionList();
+			expressions.add(expressions.indexOf(oldExpression), newExpression);
+			expressions.remove(oldExpression);
+			break;
+		case "RETURN":
+			returnNode = (ReturnNode) oldExpression.getFatherNode();
+			returnNode.setReturnExpression(newExpression);
+			break;
+		case "CALL":
+			callExpression = (CallExpression) oldExpression.getFatherNode();
+			expressions = callExpression.getExpressionList();
+			expressions.add(expressions.indexOf(oldExpression), newExpression);
+			expressions.remove(oldExpression);
+			break;
+		case "ATTRIBUTION":
+			attributionNode = (AttributionNode) oldExpression.getFatherNode();
+			attributionNode.setExpression(newExpression);
+			break;
+		case "UNARYEXPRESSION":
+			unaryExpression = (UnaryExpression) oldExpression.getFatherNode();
+			unaryExpression.setExpression(newExpression);
+			break;
+		case "BINARYEXPRESSION":
+			binaryExpression = (BinaryExpression) oldExpression.getFatherNode();
+			binaryExpression.setLhsExpression(newExpression);
+			break;
+		}
+		newExpression.setFatherNode(oldExpression.getFatherNode());
+		oldExpression.setFatherNode(newExpression);
+	}
 }

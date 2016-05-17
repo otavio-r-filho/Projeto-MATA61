@@ -21,7 +21,7 @@ public class Parser {
 	
 	private HashMap<String, Integer> meaningfulTerminals;
 	
-	private TokenFIFOStack tokenFIFO;
+	private TokenFIFOStack tokenStack;
 	
 	public Parser() {
 		treeStack = new Stack();
@@ -35,6 +35,8 @@ public class Parser {
 		
 		//Initialize the AST with a program node;
 		programNode = new Program();
+		programNode.setNodeID(0);
+		
 		actualNode = programNode;
 		
 		meaningfulTerminals = new HashMap<String, Integer>();
@@ -56,7 +58,7 @@ public class Parser {
 		meaningfulTerminals.put("SEMICOLON", 2);
 		meaningfulTerminals.put("SEMICOLON", 2);
 		
-		tokenFIFO = new TokenFIFOStack(2);
+		tokenStack = new TokenFIFOStack(1);
 	}
 	
 	private boolean checkSyntaxRecursive(ArrayList<tToken> tokenList) {
@@ -81,7 +83,7 @@ public class Parser {
 			} else {
 				int productionID = parsingTable.getProductionInt(treeStack.checkTop(), tokenList.get(tokenPosition).getTokenType());
 				if(productionID != -1) {
-					production.produce(productionID, treeStack, actualNode);
+					actualNode = production.produce(productionID, treeStack, actualNode, tokenStack, tokenList, tokenPosition);
  					return checkSyntaxRecursive(tokenList);
 				}
 			}
@@ -96,12 +98,134 @@ public class Parser {
 	}
 	
 	public boolean itMatches(tToken token) {
+		ForNode forNode;
 		if(token.getTokenType().equals(treeStack.checkTop())) {
-			if(meaningfulTerminals.containsKey(token.getTokenType())) {
-				
+			switch(token.getTokenType()) {
+			case "INTEGER":
+				tokenStack.push(token);
+				addType();
+				break;
+			case "FLOAT":
+				tokenStack.push(token);
+				addType();
+				break;
+			case "VOID":
+				tokenStack.push(token);
+				addType();
+				break;
+			case "NUM":
+				tokenStack.push(token);
+				addValue();
+				break;
+			case "REAL":
+				tokenStack.push(token);
+				addValue();
+				break;
+			case "ID":
+				tokenStack.push(token);
+				addID();
+				break;
+			case "SEMICOLON":
+				tokenStack.clearStack();
+				switch(actualNode.getNodeType()) {
+				case "FOR":
+					forNode = (ForNode) actualNode;
+					forNode.nextExpressionList();
+					break;
+				default:
+					while(!actualNode.getNodeType().equals("PROGRAM") && !actualNode.getNodeType().equals("FUNCTION") &&
+						  !actualNode.getNodeType().equals("IF") && !actualNode.getNodeType().equals("WHILE") &&
+						  !actualNode.getNodeType().equals("FOR") && !actualNode.getNodeType().equals("BLOCK")) {
+						actualNode = actualNode.getFatherNode();
+					}
+					break;
+				}
+				break;
+			case "CKEYBRACKET":
+				tokenStack.clearStack();
+				if(actualNode.getFatherNode().equals("ELSE")) {
+					actualNode = actualNode.getFatherNode();
+				}
+				actualNode = actualNode.getFatherNode();
+				actualNode = actualNode.getFatherNode();
+				break;
+			case "CPARENTHESES":  //Must stop until a command or a parentheses expression is found
+				tokenStack.clearStack();
+				if(actualNode.getNodeType().equals("BINARYEXPRESSION") || actualNode.getNodeType().equals("CONSTANT") ||
+				   actualNode.getNodeType().equals("UNARYEXPRESSION") || actualNode.getNodeType().equals("CALL")) {
+					while(!actualNode.getNodeType().equals("IF") && !actualNode.getNodeType().equals("WHILE") &&
+						  !actualNode.getNodeType().equals("FOR") && !actualNode.getNodeType().equals("RETURN") &&
+						  !actualNode.getNodeType().equals("BLOCK") && !actualNode.getNodeType().equals("CALL") &&
+						  !actualNode.getNodeType().equals("ATTRIBUTION")) {
+						ExpressionNode expression = (ExpressionNode) actualNode;
+						if(expression.getExpressionType().getTokenType().equals("OPARENTHESES")) {
+							return true;
+						}
+						actualNode = expression.getFatherNode();
+					}
+				} else if(!actualNode.getNodeType().equals("FUNCTION")){
+					actualNode = actualNode.getFatherNode();
+				}
+				break;
+			case "COMMA":
+				if(actualNode.getNodeType().equals("PARAMETER")) {
+					tokenStack.clearStack();
+					actualNode = actualNode.getFatherNode();
+				}
+				break;
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	public void addType() {
+		FunctionNode function;
+		VariableNode variable;
+		switch(actualNode.getNodeType()){
+		case "FUNCTION":
+			function = (FunctionNode)actualNode;
+			function.setReturnType(tokenStack.pop());
+			break;
+		case "VARIABLE":
+			variable = (VariableNode)actualNode;
+			variable.setVariableType(tokenStack.checkTop());
+			break;
+		case "PARAMETER":
+			variable = (VariableNode)actualNode;
+			variable.setVariableType(tokenStack.pop());
+			break;
+		}
+	}
+	
+	public void addID() {
+		FunctionNode function;
+		VariableNode variable;
+		
+		switch(actualNode.getNodeType()) {
+		case "FUNCTION":
+			function = (FunctionNode)actualNode;
+			function.setFunctionID(tokenStack.pop());
+			break;
+		case "VARIABLE":
+			variable = (VariableNode)actualNode;
+			variable.setVariableID(tokenStack.pop());
+			break;
+		case "PARAMETER":
+			variable = (VariableNode)actualNode;
+			variable.setVariableID(tokenStack.pop());
+			break;
+		}
+	}
+	
+	public void addValue() {
+		VariableNode variable;
+		
+		switch(actualNode.getNodeType()){
+		case "VARIABLE":
+			variable = (VariableNode)actualNode;
+			variable.setVariableValue(tokenStack.pop());
+			break;
+		}
 	}
 }

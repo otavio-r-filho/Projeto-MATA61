@@ -1,24 +1,27 @@
 package parser.definitions.nodes;
 
+import lexer.definitions.tToken;
+
 public class UnaryExpression extends ExpressionNode{
-	private ExpressionNode operand;
-	private String operation;
+	private ExpressionNode expression;
 	
-	public UnaryExpression(String operation) {
-		operand = null;
-		this.operation = operation;
+	public UnaryExpression() {
+		expression = null;
+		this.nodeType = "UNARYEXPRESSION";
+		this.expressionPrecedence = 0;
 	}
 	
-	public UnaryExpression(String operation, ASTNode fatherNode) {
-		this(operation);
+	public UnaryExpression(tToken expressioType, ASTNode fatherNode) {
+		this();
 		this.fatherNode = fatherNode;
+		this.expressionType = expressioType;
 	}
 	
-	public void setOperand(ExpressionNode operand) {
-		this.operand = operand;
+	public void setExpression(ExpressionNode expression) {
+		this.expression = expression;
 	}
 	
-	public ExpressionNode getOperand() {
-		return operand;
+	public ExpressionNode getExpression() {
+		return expression;
 	}
 }

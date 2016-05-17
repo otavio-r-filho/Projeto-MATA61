@@ -79,4 +79,8 @@ public class StringStackFIFO {
 		}
 		this.operationMode = 2;
 	}
+	
+	public void clearStack() {
+		this.stringList.clear();
+	}
 }

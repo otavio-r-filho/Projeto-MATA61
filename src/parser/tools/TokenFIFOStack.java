@@ -81,4 +81,8 @@ public class TokenFIFOStack {
 		}
 		this.operationMode = 2;
 	}
+	
+	public void clearStack() {
+		this.tokenList.clear();
+	}
 }
