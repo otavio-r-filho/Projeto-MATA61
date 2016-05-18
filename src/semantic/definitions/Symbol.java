@@ -36,6 +36,10 @@ public class Symbol {
         isFree = free;
     }
 
+    public boolean isFunction() {
+        return isFunction;
+    }
+
     public Symbol() {
 
     }
@@ -52,5 +56,10 @@ public class Symbol {
     public Symbol(String symbolID, String symbolType, boolean isFree) {
         this(symbolID, symbolType);
         this.isFree = isFree;
+    }
+
+    public Symbol(String symbolID, String symbolType, boolean isFree, boolean isFunction) {
+        this(symbolID, symbolType, isFree);
+        this.isFunction = isFunction;
     }
 }

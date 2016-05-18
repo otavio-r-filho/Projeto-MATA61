@@ -44,4 +44,8 @@ public class FunctionNode extends ASTNode{
 	public void addParameter(VariableNode parameter) {
 		functionParameters.add(parameter);
 	}
+
+	public ArrayList<VariableNode> getFunctionParameters() {
+		return this.functionParameters;
+	}
 }

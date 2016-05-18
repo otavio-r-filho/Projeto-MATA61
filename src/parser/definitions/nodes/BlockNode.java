@@ -24,4 +24,8 @@ public class BlockNode extends CommandNode{
 	public void addCommand(CommandNode command) {
 		commands.add(command);
 	}
+
+	public ArrayList<VariableNode> getBlockVariables() {
+		return this.blockVariables;
+	}
 }
