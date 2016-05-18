@@ -1,10 +1,5 @@
 package semantic.semantic.definitions;
 
-import lexer.definitions.tToken;
-
-/**
- * Created by Otávio on 17/05/2016.
- */
 public class Symbol {
 
     private String symbolID;

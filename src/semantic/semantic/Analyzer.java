@@ -42,6 +42,20 @@ public class Analyzer {
                     Symbol newSymbol = new Symbol(functionNode.getFunctioID().getTokenValue(), functionNode.getReturnType().getTokenType(), false);
                 }
                 break;
+            case "IF":
+                break;
+            case "ELSE":
+                break;
+            case "BLOCK":
+                break;
+            case "VARIABLENODE":
+                break;
+            case "BINARYEXPRESSION":
+                break;
+            case "UNARYEXPRESSION":
+                break;
+            case "WHILE":
+                break;
         }
     }
 }
