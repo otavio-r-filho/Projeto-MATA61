@@ -35,7 +35,6 @@ package semantic;
  * @param node
  */
 
-import jdk.nashorn.internal.ir.Block;
 import lexer.definitions.tToken;
 import parser.definitions.nodes.*;
 import semantic.definitions.Symbol;
@@ -97,12 +96,11 @@ public class Analyzer {
         }
     }
 
-    //TODO Add removeSymbol(ASTNode node) method
     public void removeSymbols(ASTNode node) {
-        Program programNode = null;
-        FunctionNode functionNode = null;
-        BlockNode blockNode = null;
-        ArrayList<VariableNode> variableNodes = null;
+        Program programNode;
+        FunctionNode functionNode;
+        BlockNode blockNode;
+        ArrayList<VariableNode> variableNodes;
 
         switch (node.getNodeType()) {
             case "PROGRAM":
@@ -138,4 +136,132 @@ public class Analyzer {
                 break;
         }
     }
+
+    public boolean checkMultiDeclaration(ASTNode node) {
+        int symbolCounter = 0; //this will count the number of equal symbols ocurrencies;
+
+        Program program;
+        BlockNode blockNode;
+        ArrayList<FunctionNode> functionNodes;
+        ArrayList<VariableNode> variableNodes;
+
+        //Take each variable from the node and compare with the list
+        //TODO make it multiple thread
+        switch (node.getNodeType()) {
+            case "PROGRAM":
+                program = (Program) node;
+                functionNodes = program.getFunctions();
+                for(FunctionNode functionNode: functionNodes) {
+                    for(Symbol symbol: symbolTable)
+                        if(functionNode.getFunctioID().getTokenValue().equals(symbol.getSymbolID()) && symbol.isFunction()) {
+                            symbolCounter++;
+                    }
+                }
+                break;
+            case "BLOCK":
+                blockNode = (BlockNode) node;
+                variableNodes = blockNode.getBlockVariables();
+                for(VariableNode variableNode: variableNodes) {
+                    for(Symbol symbol: symbolTable) {
+                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isFunction()) {
+                            symbolCounter++;
+                        }
+                    }
+                }
+                break;
+        }
+
+        if(symbolCounter < 2) { return true; }
+        return false;
+    }
+
+    //TODO Add checkParams(ASTNode node) for CALL
+    public boolean checkParams(ASTNode node) {
+        if(node.getNodeType().equals("CALL")) {
+            CallExpression callExpression = (CallExpression) node;
+            while(!node.getNodeType().equals("PROGRAM")) { node = node.getFatherNode(); } //Go to the program node to find the definition of the function
+            Program program = (Program) node;
+            ArrayList<FunctionNode> functionNodes = program.getFunctions();
+            for(FunctionNode functionNode: functionNodes) {
+                if(functionNode.getFunctioID().getTokenValue().equals(callExpression.getCommandType().getTokenType())) {
+                    if(functionNode.getFunctionParameters().size() == callExpression.getExpressionList().size()) { //Checking if the number of parameters are the same
+                        for(int i = 0; i < functionNode.getFunctionParameters().size(); i++) {
+                            //TODO finish this function
+//                            if(functionNode.getFunctionParameters().get(i).getVariableType().)
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    //TODO Add checkType(ASTNode node) for ATTRIBUTION, BINARYNODE, UNARYNODE and CONSTANT(with ID or no type)
+    public String checkType(ASTNode node) {
+        BinaryExpression binaryExpression;
+        switch (node.getNodeType()) {
+            case "BINARYEXPRESSION":
+                binaryExpression = (BinaryExpression) node;
+                switch (binaryExpression.getExpressionType().getToken()) {
+                    case "OR":
+                        if(checkType(binaryExpression.getLhsExpression()).equals("BOOLEAN") && checkType(binaryExpression.getRhsExpression()).equals("BOOLEAN")) { return "BOOLEAN"; }
+                        break;
+                    case "AND":
+                        if(checkType(binaryExpression.getLhsExpression()).equals("BOOLEAN") && checkType(binaryExpression.getRhsExpression()).equals("BOOLEAN")) { return "BOOLEAN"; }
+                        break;
+                    case "COMPARISSON":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        break;
+                    case "DIFFERENT":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        break;
+                    case "SMALLER":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        break;
+                    case "GREATER":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        break;
+                    case "GEQUAL":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        break;
+                    case "SEQUAL":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        break;
+                    case "PLUS":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        break;
+                    case "MINUS":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        break;
+                    case "ASTERISK":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        break;
+                    case "SLASH":
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
+                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        break;
+                }
+                break;
+            case "UNARYEXPRESSION":
+                break;
+            case "CALL":
+                break;
+            case "ATTRIBUTION":
+                break;
+            case "CONSTANT":
+                break;
+        }
+        return "ERROR";
+    }
+    //TODO Add checkDeclaration(ASTNode node) for CALL and ATTRIBUTION
 }
