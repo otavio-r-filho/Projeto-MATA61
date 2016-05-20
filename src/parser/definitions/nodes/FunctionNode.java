@@ -48,4 +48,8 @@ public class FunctionNode extends ASTNode{
 	public ArrayList<VariableNode> getFunctionParameters() {
 		return this.functionParameters;
 	}
+
+	public BlockNode getBlock(){
+		return this.block;
+	}
 }

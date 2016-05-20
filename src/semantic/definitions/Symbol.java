@@ -9,7 +9,7 @@ public class Symbol {
 
     private String symbolID;
     private String symbolType;
-    private boolean isFree;
+    private boolean isGlobal;
     private boolean isFunction;
 
     public String getSymbolID() {
@@ -28,12 +28,12 @@ public class Symbol {
         this.symbolType = symbolType;
     }
 
-    public boolean isFree() {
-        return isFree;
+    public boolean isGlobal() {
+        return isGlobal;
     }
 
-    public void setFree(boolean free) {
-        isFree = free;
+    public void setGlobal(boolean global) {
+        isGlobal = global;
     }
 
     public boolean isFunction() {
@@ -53,13 +53,13 @@ public class Symbol {
         this.symbolType = symbolType;
     }
 
-    public Symbol(String symbolID, String symbolType, boolean isFree) {
+    public Symbol(String symbolID, String symbolType, boolean isGlobal) {
         this(symbolID, symbolType);
-        this.isFree = isFree;
+        this.isGlobal = isGlobal;
     }
 
-    public Symbol(String symbolID, String symbolType, boolean isFree, boolean isFunction) {
-        this(symbolID, symbolType, isFree);
+    public Symbol(String symbolID, String symbolType, boolean isGlobal, boolean isFunction) {
+        this(symbolID, symbolType, isGlobal);
         this.isFunction = isFunction;
     }
 }

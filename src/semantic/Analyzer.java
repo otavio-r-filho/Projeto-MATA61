@@ -53,8 +53,47 @@ public class Analyzer {
 
 
     //This method is responsible for arrangin the appropriate checks for each type of node
-    public boolean analyzeTree(Program program) {
-
+    public boolean analyzeTree(ASTNode node) {
+        switch (node.getNodeType()) {
+            case "PROGRAM":
+                //First check for multiple declarations, then we can add the symbols to the symbol table
+                if(checkMultiDeclaration(node)) {
+                    fillSymbols(node);
+                    Program program = (Program) node;
+                    for(FunctionNode functionNode: program.getFunctions()) {
+                        if(!analyzeTree(functionNode)) {
+                            return false;
+                        }
+                    }
+                    removeSymbols(node);
+                    return true;
+                }
+                break;
+            case "FUNCTION":
+                if(checkMultiDeclaration(node)) {
+                    fillSymbols(node);
+                    FunctionNode functionNode = (FunctionNode) node;
+                    if(analyzeTree(functionNode.getBlock())) {
+                        removeSymbols(node);
+                        return true;
+                    }
+                }
+                break;
+            case "BLOCK":
+                if(checkMultiDeclaration(node)) {
+                    fillSymbols(node);
+                    BlockNode blockNode = (BlockNode) node;
+                    for (CommandNode commandNode : blockNode.getCommands()) {
+                        if (!analyzeTree(commandNode)) {
+                            return false;
+                        }
+                    }
+                    removeSymbols(node);
+                    return true;
+                }
+                break;
+            case 
+        }
         return false;
     }
 
@@ -69,28 +108,24 @@ public class Analyzer {
             case "PROGRAM":
                 //Inserting the global variables symbols
                 programNode = (Program) node;
-                variableNodes = programNode.getGlobalVariables();
-                for(VariableNode variableNode : variableNodes) {
-                    Symbol newSymbol = new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false);
+                for(VariableNode variableNode : programNode.getGlobalVariables()) {
+                    Symbol newSymbol = new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), true, false);
                     symbolTable.add(newSymbol);
                 }
                 //Inserting the function symbols
-                ArrayList<FunctionNode> functionNodes = programNode.getFunctions();
-                for(FunctionNode function: functionNodes) {
+                for(FunctionNode function: programNode.getFunctions()) {
                     symbolTable.add(new Symbol(function.getFunctioID().getTokenValue(), function.getReturnType().getTokenType(), false, true));
                     break;
                 }
             case "FUNCTION":
                 functionNode = (FunctionNode)node;
-                variableNodes = functionNode.getFunctionParameters();
-                for(VariableNode variableNode : variableNodes) {
+                for(VariableNode variableNode : functionNode.getFunctionParameters()) {
                     symbolTable.add(new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false));
                 }
                 break;
             case "BLOCK":
                 blockNode = (BlockNode) node;
-                variableNodes = blockNode.getBlockVariables();
-                for(VariableNode variableNode : variableNodes) {
+                for(VariableNode variableNode : blockNode.getBlockVariables()) {
                     symbolTable.add(new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false));
                 }
                 break;
@@ -143,44 +178,64 @@ public class Analyzer {
 
         Program program;
         BlockNode blockNode;
-        ArrayList<FunctionNode> functionNodes;
-        ArrayList<VariableNode> variableNodes;
-
         //Take each variable from the node and compare with the list
         //TODO make it multiple thread
         //TODO add error treatment
         switch (node.getNodeType()) {
             case "PROGRAM":
+                //Checking for double function declaration
                 program = (Program) node;
-                functionNodes = program.getFunctions();
-                for(FunctionNode functionNode: functionNodes) {
-                    for(Symbol symbol: symbolTable)
-                        if(functionNode.getFunctioID().getTokenValue().equals(symbol.getSymbolID()) && symbol.isFunction()) {
+                for(FunctionNode functionNode: program.getFunctions()) {
+                    symbolCounter = 0;
+                    for(FunctionNode functionNode1: program.getFunctions())
+                        if(functionNode.getFunctioID().getTokenValue().equals(functionNode1.getFunctioID().getTokenValue())) {
                             symbolCounter++;
                     }
+                    if(symbolCounter > 1) { return false;}
                 }
-                variableNodes = program.getGlobalVariables();
-                for(VariableNode variableNode: variableNodes) {
-                    for(Symbol symbol: symbolTable)
-                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isFunction()) {
+                //Checking for double global variable declaration
+                for(VariableNode variableNode: program.getGlobalVariables()) {
+                    symbolCounter = 0;
+                    for (VariableNode variableNode1 : program.getGlobalVariables()){
+                        if (variableNode.getVariableID().getTokenValue().equals(variableNode1.getVariableID().getTokenValue())) {
                             symbolCounter++;
                         }
+                    }
+                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
                 }
-                break;
+                return true;
             case "BLOCK":
+                //Check variables in the function parameters
                 blockNode = (BlockNode) node;
-                variableNodes = blockNode.getBlockVariables();
-                for(VariableNode variableNode: variableNodes) {
+                for(VariableNode variableNode: blockNode.getBlockVariables()) {
+                    symbolCounter = 0;
                     for(Symbol symbol: symbolTable) {
-                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isFunction()) {
+                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isFunction() && !symbol.isGlobal()) {
                             symbolCounter++;
                         }
                     }
+                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
                 }
-                break;
+                return true;
+            case "FUNCTION":
+                FunctionNode functionNode = (FunctionNode) node;
+                //Checking for multiple declarations in the parameters
+                for(VariableNode variableNode: functionNode.getFunctionParameters()) {
+                    symbolCounter = 0;
+                    //Checking for multiple declarations in the parameters
+                    for(VariableNode variableNode1: functionNode.getFunctionParameters()) {
+                        if(variableNode.getVariableID().getTokenValue().equals(variableNode1.getVariableID().getTokenValue())) { symbolCounter++; }
+                    }
+                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
+                    symbolCounter = 0;
+                    //Checking for double declarations in the symbol table
+                    for(Symbol symbol: symbolTable) {
+                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isGlobal()) { symbolCounter++; }
+                    }
+                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
+                }
+                return true;
         }
-
-        if(symbolCounter < 2) { return true; }
         return false;
     }
 

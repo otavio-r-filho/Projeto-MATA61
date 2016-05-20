@@ -28,4 +28,8 @@ public class BlockNode extends CommandNode{
 	public ArrayList<VariableNode> getBlockVariables() {
 		return this.blockVariables;
 	}
+
+	public ArrayList<CommandNode> getCommands() {
+		return commands;
+	}
 }
