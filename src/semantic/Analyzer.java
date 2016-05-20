@@ -148,6 +148,7 @@ public class Analyzer {
 
         //Take each variable from the node and compare with the list
         //TODO make it multiple thread
+        //TODO add error treatment
         switch (node.getNodeType()) {
             case "PROGRAM":
                 program = (Program) node;
@@ -157,6 +158,13 @@ public class Analyzer {
                         if(functionNode.getFunctioID().getTokenValue().equals(symbol.getSymbolID()) && symbol.isFunction()) {
                             symbolCounter++;
                     }
+                }
+                variableNodes = program.getGlobalVariables();
+                for(VariableNode variableNode: variableNodes) {
+                    for(Symbol symbol: symbolTable)
+                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isFunction()) {
+                            symbolCounter++;
+                        }
                 }
                 break;
             case "BLOCK":
@@ -176,7 +184,8 @@ public class Analyzer {
         return false;
     }
 
-    //TODO Add checkParams(ASTNode node) for CALL
+    //This function checks the number and types of the call parameters
+    //It assumes that the function declaration has already been done
     public boolean checkParams(ASTNode node) {
         if(node.getNodeType().equals("CALL")) {
             CallExpression callExpression = (CallExpression) node;
@@ -184,21 +193,20 @@ public class Analyzer {
             Program program = (Program) node;
             ArrayList<FunctionNode> functionNodes = program.getFunctions();
             for(FunctionNode functionNode: functionNodes) {
-                if(functionNode.getFunctioID().getTokenValue().equals(callExpression.getCommandType().getTokenType())) {
+                if(functionNode.getFunctioID().getTokenValue().equals(callExpression.getCommandType().getTokenValue())) {
                     if(functionNode.getFunctionParameters().size() == callExpression.getExpressionList().size()) { //Checking if the number of parameters are the same
                         for(int i = 0; i < functionNode.getFunctionParameters().size(); i++) {
-                            //TODO finish this function
-//                            if(functionNode.getFunctionParameters().get(i).getVariableType().)
+                            if(!functionNode.getFunctionParameters().get(i).getVariableType().getTokenType().equals(checkType(callExpression.getExpressionList().get(i)))) { return false; }
                         }
+                        return true;
                     }
-                    return false;
+                    return false; //TODO add error treatment here
                 }
             }
         }
         return false;
     }
 
-    //TODO Add checkType(ASTNode node) for ATTRIBUTION, BINARYNODE, UNARYNODE and CONSTANT(with ID or no type)
     public String checkType(ASTNode node) {
         BinaryExpression binaryExpression;
         UnaryExpression unaryExpression;
@@ -303,12 +311,31 @@ public class Analyzer {
                         return "FLOAT";
                     case "ID":
                         int i = symbolTable.size() - 1;
-                        while(i >= 0 &&)
-                        break;
+                        while(i >= 0 || (!symbolTable.get(i).getSymbolID().equals(constantNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction())) { i++; }
+                        return symbolTable.get(i).getSymbolType();
                 }
                 break;
         }
         return "ERROR";
     }
-    //TODO Add checkDeclaration(ASTNode node) for CALL and ATTRIBUTION
+    
+    public boolean checkDeclaration(ASTNode node) {
+        CallExpression callExpression;
+        AttributionNode attributionNode;
+        switch(node.getNodeType()) {
+            case "CALL":
+                callExpression = (CallExpression) node;
+                for(Symbol symbol: symbolTable) {
+                    if(symbol.getSymbolID().equals(callExpression.getFunctionID().getTokenValue()) && symbol.isFunction()) { return true; }
+                }
+                break;
+            case "ATTRIBUTION":
+                attributionNode = (AttributionNode) node;
+                for (Symbol symbol: symbolTable) {
+                    if (symbol.getSymbolID().equals(attributionNode.getVariableID().getTokenValue()) && !symbol.isFunction()) { return true; }
+                }
+                break;
+        }
+        return false;
+    }
 }
