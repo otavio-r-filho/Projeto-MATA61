@@ -200,6 +200,9 @@ public class Analyzer {
     //TODO Add checkType(ASTNode node) for ATTRIBUTION, BINARYNODE, UNARYNODE and CONSTANT(with ID or no type)
     public String checkType(ASTNode node) {
         BinaryExpression binaryExpression;
+        UnaryExpression unaryExpression;
+        CallExpression callExpression;
+
         switch (node.getNodeType()) {
             case "BINARYEXPRESSION":
                 binaryExpression = (BinaryExpression) node;
@@ -253,8 +256,29 @@ public class Analyzer {
                 }
                 break;
             case "UNARYEXPRESSION":
+                unaryExpression = (UnaryExpression) node;
+                switch (unaryExpression.getExpressionType().getTokenType()) {
+                    case "MINUS":
+                        if(checkType(unaryExpression.getExpression()).equals("INTEGER") || checkType(unaryExpression.getExpression()).equals("FLOAT")) { return checkType(unaryExpression.getExpression()); }
+                        break;
+                    case "EXCLAMATION":
+                        if(checkType(unaryExpression.getExpression()).equals("BOOLEAN")) { return checkType(unaryExpression.getExpression()); }
+                        break;
+                    case "OPARENTHESES":
+                        return checkType(unaryExpression.getExpression());
+                }
                 break;
             case "CALL":
+                //Go to the program node, and check the type of the function
+                callExpression = (CallExpression) node;
+                while(!node.getNodeType().equals("PROGRAM")) { node = node.getFatherNode(); }
+                Program program = (Program) node;
+                ArrayList<FunctionNode> functionNodes = program.getFunctions();
+                for(FunctionNode functionNode: functionNodes) {
+                    if(functionNode.getFunctioID().getTokenValue().equals(callExpression.getFunctionID().getTokenValue())) {
+                        return functionNode.getReturnType().getTokenValue();
+                    }
+                }
                 break;
             case "ATTRIBUTION":
                 break;
