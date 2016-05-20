@@ -318,7 +318,7 @@ public class Analyzer {
         }
         return "ERROR";
     }
-    
+
     public boolean checkDeclaration(ASTNode node) {
         CallExpression callExpression;
         AttributionNode attributionNode;
