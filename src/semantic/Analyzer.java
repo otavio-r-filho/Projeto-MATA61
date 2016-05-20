@@ -207,7 +207,7 @@ public class Analyzer {
         switch (node.getNodeType()) {
             case "BINARYEXPRESSION":
                 binaryExpression = (BinaryExpression) node;
-                switch (binaryExpression.getExpressionType().getToken()) {
+                switch (binaryExpression.getExpressionType().getTokenType()) {
                     case "OR":
                         if(checkType(binaryExpression.getLhsExpression()).equals("BOOLEAN") && checkType(binaryExpression.getRhsExpression()).equals("BOOLEAN")) { return "BOOLEAN"; }
                         break;
@@ -295,6 +295,17 @@ public class Analyzer {
                 if(checkType(attributionNode.getExpression()).equals(variableType)) { return "BOOLEAN"; }
                 break;
             case "CONSTANT":
+                VariableNode constantNode = (VariableNode) node;
+                switch(constantNode.getVariableType().getTokenType()) {
+                    case "NUM":
+                        return "INTEGER";
+                    case "REAL":
+                        return "FLOAT";
+                    case "ID":
+                        int i = symbolTable.size() - 1;
+                        while(i >= 0 &&)
+                        break;
+                }
                 break;
         }
         return "ERROR";
