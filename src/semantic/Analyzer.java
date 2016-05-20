@@ -38,6 +38,7 @@ package semantic;
 import lexer.definitions.tToken;
 import parser.definitions.nodes.*;
 import semantic.definitions.Symbol;
+
 import java.util.ArrayList;
 
 public class Analyzer {
@@ -281,6 +282,17 @@ public class Analyzer {
                 }
                 break;
             case "ATTRIBUTION":
+                AttributionNode attributionNode = (AttributionNode) node;
+                //The attribution returns boolean type true
+                //This check assumes that the declaration check has already been done
+                String variableType = null;
+                for(int i = symbolTable.size() - 1; i >= 0; i--) {
+                    if(symbolTable.get(i).getSymbolID().equals(attributionNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction()) {
+                        variableType = symbolTable.get(i).getSymbolType();
+                        break;
+                    }
+                }
+                if(checkType(attributionNode.getExpression()).equals(variableType)) { return "BOOLEAN"; }
                 break;
             case "CONSTANT":
                 break;
