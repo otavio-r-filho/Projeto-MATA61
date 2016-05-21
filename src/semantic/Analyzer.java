@@ -104,6 +104,14 @@ public class Analyzer {
                 break;
             case "ATTRIBUTION":
                 break;
+            case "CONSTANT":
+                break;
+            case "UNARYEXPRESSION":
+                break;
+            case "BINARYEXPRESSION":
+                break;
+            case "CALLEXPRESSION":
+                break;
         }
         return false;
     }
