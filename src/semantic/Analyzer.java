@@ -92,7 +92,18 @@ public class Analyzer {
                     return true;
                 }
                 break;
-            case ""
+            case "IF":
+                break;
+            case "WHILE":
+                break;
+            case "FOR":
+                break;
+            case "ELSE":
+                break;
+            case "RETURN":
+                break;
+            case "ATTRIBUTION":
+                break;
         }
         return false;
     }
