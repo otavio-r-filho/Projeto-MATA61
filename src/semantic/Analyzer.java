@@ -92,7 +92,7 @@ public class Analyzer {
                     return true;
                 }
                 break;
-            case 
+            case ""
         }
         return false;
     }
