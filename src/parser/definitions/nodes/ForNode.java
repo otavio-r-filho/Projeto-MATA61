@@ -88,4 +88,8 @@ public class ForNode extends CommandNode{
 	public ArrayList<ExpressionNode> getIncrementExpressionList() {
 		return incrementExpressionList;
 	}
+
+	public CommandNode getCommand() {
+		return command;
+	}
 }

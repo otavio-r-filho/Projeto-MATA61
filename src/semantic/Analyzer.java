@@ -71,11 +71,21 @@ public class Analyzer {
                 break;
             case "FUNCTION":
                 if(checkMultiDeclaration(node)) {
-                    fillSymbols(node);
                     FunctionNode functionNode = (FunctionNode) node;
-                    if(analyzeTree(functionNode.getBlock())) {
-                        removeSymbols(node);
-                        return true;
+                    if(!functionNode.getReturnType().getTokenType().equals("VOID")) {
+                        if(checkReturn(functionNode.getBlock())) {
+                            fillSymbols(node);
+                            if(analyzeTree(functionNode.getBlock())) {
+                                removeSymbols(node);
+                                return true;
+                            }
+                        }
+                    } else {
+                        fillSymbols(node);
+                        if (analyzeTree(functionNode.getBlock())) {
+                            removeSymbols(node);
+                            return true;
+                        }
                     }
                 }
                 break;
@@ -120,17 +130,24 @@ public class Analyzer {
                 break;
             case "ELSE":
                 ElseNode elseNode = (ElseNode) node;
-                return analyzeTree(elseNode.get)
+                return analyzeTree(elseNode.getCommand());
                 break;
             case "RETURN":
+                ReturnNode returnNode = (ReturnNode) node;
+                //Getting the function so we can compare the return;
+                while(!node.getNodeType().equals("FUNCTION")) {
+                    node = node.getFatherNode();
+                }
+                FunctionNode functionNode = (FunctionNode) node;
+                if(functionNode.getReturnType().getTokenType().equals("VOID")) {
+                    if(returnNode.getReturnExpression() == null) { return true; }
+                } else {
+                    if(returnNode.getReturnExpression() != null && checkType(returnNode.getReturnExpression()).equals(functionNode.getReturnType().getTokenType())) { return true; }
+                }
                 break;
             case "ATTRIBUTION":
-                break;
-            case "CONSTANT":
-                break;
-            case "UNARYEXPRESSION":
-                break;
-            case "BINARYEXPRESSION":
+                AttributionNode attributionNode = (AttributionNode) node;
+                if(checkDeclaration(node) && checkType(node).equals("BOOLEAN")) { return true; }
                 break;
             case "CALLEXPRESSION":
                 break;
@@ -433,5 +450,55 @@ public class Analyzer {
                 break;
         }
         return false;
+    }
+
+    public boolean checkReturn(ASTNode node) {
+        switch (node.getNodeType()) {
+            case "BLOCK":
+                BlockNode blockNode = (BlockNode) node;
+                for(CommandNode commandNode: blockNode.getCommands()) {
+                    if(commandNode.getNodeType().equals("RETURN")) { return true; }
+                }
+
+                for(CommandNode commandNode: blockNode.getCommands()) {
+                    if(commandNode.getCommandType().equals("IF") || commandNode.getCommandType().equals("WHILE") || commandNode.getCommandType().equals("FOR")) {
+                        if(checkReturn(commandNode)) { return true; }
+                    }
+                }
+                return false;
+            case "IF":
+                IfNode ifNode = (IfNode) node;
+                switch(ifNode.getCommand().getNodeType()) {
+                    case "RETURN":
+                        return true;
+                    case "BLOCK":
+                        return checkReturn(ifNode.getCommand());
+                    default:
+                        return false;
+                }
+                break;
+            case "WHILE":
+                WhileNode whileNode = (WhileNode) node;
+                switch(whileNode.getCommand().getNodeType()) {
+                    case "RETURN":
+                        return true;
+                    case "BLOCK":
+                        return checkReturn(whileNode.getCommand());
+                    default:
+                        return false;
+                }
+                break;
+            case "FOR":
+                ForNode forNode = (ForNode) node;
+                switch(forNode.getCommand().getNodeType()) {
+                    case "RETURN":
+                        return true;
+                    case "BLOCK":
+                        return checkReturn(forNode.getCommand());
+                    default:
+                        return false;
+                }
+                break;
+        }
     }
 }
