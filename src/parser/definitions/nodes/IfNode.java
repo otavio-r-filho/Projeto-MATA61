@@ -27,4 +27,16 @@ public class IfNode extends CommandNode{
 	public void setCommand(CommandNode command) {
 		this.command = command;
 	}
+
+	public ExpressionNode getConditionExpression() {
+		return conditionExpression;
+	}
+
+	public CommandNode getCommand() {
+		return command;
+	}
+
+	public ElseNode getElseCommand() {
+		return elseCommand;
+	}
 }

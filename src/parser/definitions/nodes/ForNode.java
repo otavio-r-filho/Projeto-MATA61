@@ -76,4 +76,16 @@ public class ForNode extends CommandNode{
 	public int getActualExpressionList(){
 		return actualExpressionList;
 	}
+
+	public ArrayList<ExpressionNode> getInitialExpressionList() {
+		return initialExpressionList;
+	}
+
+	public ArrayList<ExpressionNode> getStopExpressionList() {
+		return stopExpressionList;
+	}
+
+	public ArrayList<ExpressionNode> getIncrementExpressionList() {
+		return incrementExpressionList;
+	}
 }

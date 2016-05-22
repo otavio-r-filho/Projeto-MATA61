@@ -93,12 +93,34 @@ public class Analyzer {
                 }
                 break;
             case "IF":
+                //Condition expressions should return only boolean
+                IfNode ifNode = (IfNode) node;
+                if(!ifNode.getConditionExpression().getNodeType().equals("ATTRIBUTION") && checkType(ifNode.getConditionExpression()).equals("BOOLEAN")) {
+                    return analyzeTree(ifNode.getCommand()) && analyzeTree(ifNode.getElseCommand());
+                } //TODO add error treatment here
                 break;
             case "WHILE":
+                //Condition expressions should return only boolean
+                WhileNode whileNode = (WhileNode) node;
+                if(!whileNode.getConditionExpression().getNodeType().equals("ATTRIBUTION") && checkType(whileNode.getConditionExpression()).equals("BOOLEAN")) {
+                    return analyzeTree(whileNode.getCommand());
+                } //TODO add error treatment here
                 break;
             case "FOR":
+                ForNode forNode = (ForNode) node;
+                //Checking if the number of expressions are the same;
+                if(forNode.getInitialExpressionList().size() != forNode.getStopExpressionList().size() || forNode.getInitialExpressionList().size() != forNode.getIncrementExpressionList().size() || forNode.getInitialExpressionList().size() == 0) {
+                    return false; //TODO add error treatment here
+                }
+
+                for(int i = 0; i < forNode.getInitialExpressionList().size(); i++) {
+                    //Checking for expression with different IDs
+                    if(forNode.getInitialExpressionList().get(i).getNodeType().equals("ATTRIBUTION") && checkType(forNode.getStopExpressionList().get(i)).equals("BOOLEAN") && forNode.getIncrementExpressionList().get(i).getNodeType().equals("ATTRIBUTION"))
+                }
                 break;
             case "ELSE":
+                ElseNode elseNode = (ElseNode) node;
+                return analyzeTree(elseNode.get)
                 break;
             case "RETURN":
                 break;
