@@ -1,7 +1,8 @@
 int var1, var2;
 
 float func2(int param1, float param2) {
-	int var2;
+	float var2;
+	return var2;
 }
 
 void func3() {

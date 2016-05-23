@@ -407,6 +407,9 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp7");
 			productionStack.push("ID");
+			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")) {
+				addConstantExpression(actualNode, tokenList, tokenPosition);
+			}
 			break;
 		case 47:
 			//exp6 -> ! exp 

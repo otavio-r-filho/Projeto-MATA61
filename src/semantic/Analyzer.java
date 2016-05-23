@@ -211,36 +211,37 @@ public class Analyzer {
         BlockNode blockNode;
         ArrayList<VariableNode> variableNodes;
 
+        int stop;
+
         switch (node.getNodeType()) {
             case "PROGRAM":
                 programNode = (Program) node;
                 variableNodes = programNode.getGlobalVariables();
-                for(VariableNode variableNode : variableNodes) {
-                    Symbol symbol = new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false);
-                    if(symbolTable.contains(symbol)) { symbolTable.remove(symbolTable.lastIndexOf(symbol)); } //As the symbol table works as a stack, this will remove the last ocurrency of the symbol
-                    else { System.out.println("REMOVE ERROR! No symbol was found"); }  //If no symbol is found this means an error, a strange symbol will stay at the stack
-                }
                 //Removing function IDs
-                for(FunctionNode function: programNode.getFunctions()) {
-                    Symbol symbol = new Symbol(function.getFunctioID().getTokenValue(), function.getReturnType().getTokenType(), false, true);
-                    if(symbolTable.contains(symbol)) { symbolTable.remove(symbolTable.lastIndexOf(symbol)); }
-                    else { System.out.println("REMOVE ERROR! No symbol was found"); }
+                stop = (symbolTable.size() - 1) - programNode.getFunctions().size();
+                for(int i = symbolTable.size() - 1; i > stop ; i--) {
+                    symbolTable.remove(i);
+                }
+                //Removing global variables
+                stop = (symbolTable.size() - 1) - programNode.getGlobalVariables().size();
+                for(int i = symbolTable.size() - 1; i > stop; i--) {
+                    symbolTable.remove(i);
                 }
                 break;
             case "FUNCTION":
                 functionNode = (FunctionNode) node;
-                for(VariableNode variableNode: functionNode.getFunctionParameters()) {
-                    Symbol symbol = new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false);
-                    if(symbolTable.contains(symbol)) { symbolTable.remove(symbolTable.lastIndexOf(symbol)); }
-                    else { System.out.println("REMOVE ERROR! No symbol was found"); }
+                stop = (symbolTable.size() - 1) - functionNode.getFunctionParameters().size();
+                for(int i = symbolTable.size() - 1; i > stop ; i--) {
+                    symbolTable.remove(i);
                 }
                 break;
             case "BLOCK":
                 blockNode = (BlockNode) node;
-                for(VariableNode variableNode: blockNode.getBlockVariables()) {
-                    Symbol symbol = new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false);
-                    if(symbolTable.contains(symbol)) { symbolTable.remove(symbolTable.lastIndexOf(symbol)); }
-                    else { System.out.println("REMOVE ERROR! No symbol was found"); }
+//                int qtd = blockNode.getBlockVariables().size();
+//                int lastIndex = symbolTable.size() - 1;
+                stop = (symbolTable.size() - 1) - blockNode.getBlockVariables().size();
+                for(int i = symbolTable.size() - 1 ; i > stop ; i--) {
+                    symbolTable.remove(i);
                 }
                 break;
         }
@@ -471,7 +472,7 @@ public class Analyzer {
                         return "FLOAT";
                     case "ID":
                         int i = symbolTable.size() - 1;
-                        while(i >= 0 || (!symbolTable.get(i).getSymbolID().equals(constantNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction())) { i++; }
+                        while(i >= 0 && (!symbolTable.get(i).getSymbolID().equals(constantNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction())) { i--; }
                         return symbolTable.get(i).getSymbolType();
                 }
                 break;
