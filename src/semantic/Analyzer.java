@@ -125,13 +125,13 @@ public class Analyzer {
 
                 for(int i = 0; i < forNode.getInitialExpressionList().size(); i++) {
                     //Checking for expression with different IDs
-                    if(forNode.getInitialExpressionList().get(i).getNodeType().equals("ATTRIBUTION") && checkType(forNode.getStopExpressionList().get(i)).equals("BOOLEAN") && forNode.getIncrementExpressionList().get(i).getNodeType().equals("ATTRIBUTION"))
+                    //TODO fix this check
+                    if(forNode.getInitialExpressionList().get(i).getNodeType().equals("ATTRIBUTION") && checkType(forNode.getStopExpressionList().get(i)).equals("BOOLEAN") && forNode.getIncrementExpressionList().get(i).getNodeType().equals("ATTRIBUTION"));
                 }
                 break;
             case "ELSE":
                 ElseNode elseNode = (ElseNode) node;
                 return analyzeTree(elseNode.getCommand());
-                break;
             case "RETURN":
                 ReturnNode returnNode = (ReturnNode) node;
                 //Getting the function so we can compare the return;
@@ -149,8 +149,17 @@ public class Analyzer {
                 AttributionNode attributionNode = (AttributionNode) node;
                 if(checkDeclaration(node) && checkType(node).equals("BOOLEAN")) { return true; }
                 break;
-            case "CALLEXPRESSION":
+            case "CALL":
+                if(checkDeclaration(node) && checkParams(node)) { return true; }
                 break;
+            case "BINARYEXPRESSION":
+                BinaryExpression binaryExpression = (BinaryExpression) node;
+                return analyzeTree(binaryExpression);
+            case "UNARYEXPRESSION":
+                UnaryExpression unaryExpression = (UnaryExpression) node;
+                return analyzeTree(unaryExpression.getExpression());
+            case "CONSTANT":
+                return true;
         }
         return false;
     }
@@ -336,44 +345,76 @@ public class Analyzer {
                         if(checkType(binaryExpression.getLhsExpression()).equals("BOOLEAN") && checkType(binaryExpression.getRhsExpression()).equals("BOOLEAN")) { return "BOOLEAN"; }
                         break;
                     case "COMPARISSON":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                            (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "BOOLEAN";
+                        }
                         break;
                     case "DIFFERENT":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "BOOLEAN";
+                        }
                         break;
                     case "SMALLER":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "BOOLEAN";
+                        }
                         break;
                     case "GREATER":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "BOOLEAN";
+                        }
                         break;
                     case "GEQUAL":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "BOOLEAN";
+                        }
                         break;
                     case "SEQUAL":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return "BOOLEAN"; }
+                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "BOOLEAN";
+                        }
                         break;
                     case "PLUS":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        if(checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) && (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT"))) {
+                            return checkType(binaryExpression.getLhsExpression());
+                        } else if(!checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) &&
+                                (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "FLOAT";
+                        }
                         break;
                     case "MINUS":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        if(checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) && (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT"))) {
+                            return checkType(binaryExpression.getLhsExpression());
+                        } else if(!checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) &&
+                                (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "FLOAT";
+                        }
                         break;
                     case "ASTERISK":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        if(checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) && (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT"))) {
+                            return checkType(binaryExpression.getLhsExpression());
+                        } else if(!checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) &&
+                                (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "FLOAT";
+                        }
                         break;
                     case "SLASH":
-                        if((checkType(binaryExpression.getLhsExpression()).equals("INTEGER") && checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) ||
-                                checkType(binaryExpression.getLhsExpression()).equals("FLOAT") && checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) { return checkType(binaryExpression.getRhsExpression()); }
+                        if(checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) && (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT"))) {
+                            return checkType(binaryExpression.getLhsExpression());
+                        } else if(!checkType(binaryExpression.getLhsExpression()).equals(checkType(binaryExpression.getRhsExpression())) &&
+                                (checkType(binaryExpression.getLhsExpression()).equals("INTEGER") || checkType(binaryExpression.getLhsExpression()).equals("FLOAT")) &&
+                                (checkType(binaryExpression.getRhsExpression()).equals("INTEGER") || checkType(binaryExpression.getRhsExpression()).equals("FLOAT"))) {
+                            return "FLOAT";
+                        }
                         break;
                 }
                 break;
@@ -402,19 +443,19 @@ public class Analyzer {
                     }
                 }
                 break;
-            case "ATTRIBUTION":
-                AttributionNode attributionNode = (AttributionNode) node;
-                //The attribution returns boolean type true
-                //This check assumes that the declaration check has already been done
-                String variableType = null;
-                for(int i = symbolTable.size() - 1; i >= 0; i--) {
-                    if(symbolTable.get(i).getSymbolID().equals(attributionNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction()) {
-                        variableType = symbolTable.get(i).getSymbolType();
-                        break;
-                    }
-                }
-                if(checkType(attributionNode.getExpression()).equals(variableType)) { return "BOOLEAN"; }
-                break;
+//            case "ATTRIBUTION":
+//                AttributionNode attributionNode = (AttributionNode) node;
+//                //The attribution returns boolean type true
+//                //This check assumes that the declaration check has already been done
+//                String variableType = null;
+//                for(int i = symbolTable.size() - 1; i >= 0; i--) {
+//                    if(symbolTable.get(i).getSymbolID().equals(attributionNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction()) {
+//                        variableType = symbolTable.get(i).getSymbolType();
+//                        break;
+//                    }
+//                }
+//                if(checkType(attributionNode.getExpression()).equals(variableType)) { return "BOOLEAN"; }
+//                break;
             case "CONSTANT":
                 VariableNode constantNode = (VariableNode) node;
                 switch(constantNode.getVariableType().getTokenType()) {
@@ -473,8 +514,6 @@ public class Analyzer {
                         return true;
                     case "BLOCK":
                         return checkReturn(ifNode.getCommand());
-                    default:
-                        return false;
                 }
                 break;
             case "WHILE":
@@ -484,8 +523,6 @@ public class Analyzer {
                         return true;
                     case "BLOCK":
                         return checkReturn(whileNode.getCommand());
-                    default:
-                        return false;
                 }
                 break;
             case "FOR":
@@ -495,10 +532,9 @@ public class Analyzer {
                         return true;
                     case "BLOCK":
                         return checkReturn(forNode.getCommand());
-                    default:
-                        return false;
                 }
                 break;
         }
+        return false;
     }
 }
