@@ -43,12 +43,18 @@ import java.util.ArrayList;
 
 public class Analyzer {
 
+    private Program program;
     private ArrayList<Symbol> symbolTable;
     private String errorDescription;
     private tToken errorToken;
 
     public Analyzer() {
         symbolTable = new ArrayList<Symbol>();
+    }
+
+    public Analyzer(Program program) {
+        this();
+        this.program = program;
     }
 
 
@@ -182,8 +188,8 @@ public class Analyzer {
                 //Inserting the function symbols
                 for(FunctionNode function: programNode.getFunctions()) {
                     symbolTable.add(new Symbol(function.getFunctioID().getTokenValue(), function.getReturnType().getTokenType(), false, true));
-                    break;
                 }
+                break;
             case "FUNCTION":
                 functionNode = (FunctionNode)node;
                 for(VariableNode variableNode : functionNode.getFunctionParameters()) {

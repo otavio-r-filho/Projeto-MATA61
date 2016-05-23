@@ -13,6 +13,7 @@ import java.util.List;
 import lexer.definitions.*;
 import lexer.Lexer;
 import parser.*;
+import semantic.Analyzer;
 
 public class Compiler_Tester {
 
@@ -21,6 +22,7 @@ public class Compiler_Tester {
 		Charset charset = Charset.forName("UTF-8");
 		Lexer lexer = new Lexer();
 		Parser parser = new Parser();
+		Analyzer analyzer;
 		//String lexerResult = null;
 		char ch = 0;
 		int r = 0;
@@ -65,6 +67,10 @@ public class Compiler_Tester {
 			
 			if(parser.checkSyntax(tokenList)) System.out.println("\nChecagem sintatica OK.");
 			else System.out.println("\nEste programa nao obedece a sintaxe da gramatica.");
+
+			analyzer = new Analyzer(parser.getASTTree());
+
+			if(analyzer.analyzeTree(parser.getASTTree()));
 			
 			
 		} catch(IOException e) {

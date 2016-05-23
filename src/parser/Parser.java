@@ -228,4 +228,8 @@ public class Parser {
 			break;
 		}
 	}
+
+	public Program getASTTree() {
+		return programNode;
+	}
 }
