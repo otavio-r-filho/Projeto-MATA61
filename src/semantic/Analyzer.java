@@ -37,6 +37,7 @@ package semantic;
 
 import lexer.definitions.tToken;
 import parser.definitions.nodes.*;
+import semantic.definitions.Error;
 import semantic.definitions.Symbol;
 
 import java.util.ArrayList;
@@ -47,9 +48,11 @@ public class Analyzer {
     private ArrayList<Symbol> symbolTable;
     private String errorDescription;
     private tToken errorToken;
+    private Error error;
 
     public Analyzer() {
         symbolTable = new ArrayList<Symbol>();
+        error = new Error();
     }
 
     public Analyzer(Program program) {
@@ -216,7 +219,6 @@ public class Analyzer {
         switch (node.getNodeType()) {
             case "PROGRAM":
                 programNode = (Program) node;
-                variableNodes = programNode.getGlobalVariables();
                 //Removing function IDs
                 stop = (symbolTable.size() - 1) - programNode.getFunctions().size();
                 for(int i = symbolTable.size() - 1; i > stop ; i--) {
@@ -237,8 +239,6 @@ public class Analyzer {
                 break;
             case "BLOCK":
                 blockNode = (BlockNode) node;
-//                int qtd = blockNode.getBlockVariables().size();
-//                int lastIndex = symbolTable.size() - 1;
                 stop = (symbolTable.size() - 1) - blockNode.getBlockVariables().size();
                 for(int i = symbolTable.size() - 1 ; i > stop ; i--) {
                     symbolTable.remove(i);
@@ -486,15 +486,18 @@ public class Analyzer {
         switch(node.getNodeType()) {
             case "CALL":
                 callExpression = (CallExpression) node;
-                for(Symbol symbol: symbolTable) {
-                    if(symbol.getSymbolID().equals(callExpression.getFunctionID().getTokenValue()) && symbol.isFunction()) { return true; }
-                }
+                //Make it search from the last symbols towards the first
+                for(int i = symbolTable.size() - 1 ; i >= 0 ; i--) {
+                    if(symbolTable.get(i).getSymbolID().equals(callExpression.getFunctionID().getTokenValue()) && symbolTable.get(i).isFunction()) { return true; }
+                } //TODO add error treatment here
+                this.errorDescription = "Funcao nao declarada. Linha: " + callExpression.getFunctionID().getLine() + ". Coluna: " + callExpression.getFunctionID().getCollumn() +".\n";
                 break;
             case "ATTRIBUTION":
                 attributionNode = (AttributionNode) node;
-                for (Symbol symbol: symbolTable) {
-                    if (symbol.getSymbolID().equals(attributionNode.getVariableID().getTokenValue()) && !symbol.isFunction()) { return true; }
-                }
+                for(int i = symbolTable.size() - 1 ; i >= 0 ; i--) {
+                    if (symbolTable.get(i).getSymbolID().equals(attributionNode.getCommandType().getTokenValue()) && !symbolTable.get(i).isFunction()) { return true; }
+                } //TODO add error treatment here
+                this.errorDescription = "Variavel não declarada. Linha: " + attributionNode.getCommandType().getLine() + ". Coluna: " + attributionNode.getCommandType().getCollumn() + ".\n";
                 break;
         }
         return false;
