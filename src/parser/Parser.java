@@ -94,10 +94,13 @@ public class Parser {
 	
 	public boolean checkSyntax(ArrayList<tToken> tokenList) {
 		tokenPosition = 0;
-		return checkSyntaxRecursive(tokenList);
+		if(checkSyntaxRecursive(tokenList)){
+			eliminateParentheses(programNode);
+			return true;
+		} else { return false; }
 	}
 	
-	public boolean itMatches(tToken token) {
+	private boolean itMatches(tToken token) {
 		ForNode forNode;
 		if(token.getTokenType().equals(treeStack.checkTop())) {
 			switch(token.getTokenType()) {
@@ -179,7 +182,7 @@ public class Parser {
 		return false;
 	}
 	
-	public void addType() {
+	private void addType() {
 		FunctionNode function;
 		VariableNode variable;
 		switch(actualNode.getNodeType()){
@@ -198,7 +201,7 @@ public class Parser {
 		}
 	}
 	
-	public void addID() {
+	private void addID() {
 		FunctionNode function;
 		VariableNode variable;
 		
@@ -218,7 +221,7 @@ public class Parser {
 		}
 	}
 	
-	public void addValue() {
+	private void addValue() {
 		VariableNode variable;
 		
 		switch(actualNode.getNodeType()){
@@ -231,5 +234,123 @@ public class Parser {
 
 	public Program getASTTree() {
 		return programNode;
+	}
+
+	private void eliminateParentheses(ASTNode node) {
+
+		switch (node.getNodeType()) {
+			case "PROGRAM":
+				for(FunctionNode functionNode: ((Program) node).getFunctions()) {
+					eliminateParentheses(functionNode);
+				}
+				break;
+			case "FUNCTION":
+				eliminateParentheses(((FunctionNode) node).getBlock());
+				break;
+			case "BLOCK":
+				for(CommandNode commandNode: ((BlockNode) node).getCommands()) {
+					eliminateParentheses(commandNode);
+				}
+				break;
+			case "IF":
+				eliminateParentheses(((IfNode) node).getConditionExpression());
+				eliminateParentheses(((IfNode) node).getCommand());
+				if(((IfNode) node).getElseCommand() != null) {
+					eliminateParentheses(((IfNode) node).getElseCommand());
+				}
+				break;
+			case "ELSE":
+				eliminateParentheses(((ElseNode) node).getCommand());
+				break;
+			case "WHILE":
+				eliminateParentheses(((WhileNode) node).getConditionExpression());
+				eliminateParentheses(((WhileNode) node).getCommand());
+				break;
+			case "FOR":
+				for(ExpressionNode expressionNode: ((ForNode) node).getInitialExpressionList()) {
+					eliminateParentheses(expressionNode);
+				}
+				for(ExpressionNode expressionNode: ((ForNode) node).getStopExpressionList()) {
+					eliminateParentheses(expressionNode);
+				}
+				for(ExpressionNode expressionNode: ((ForNode) node).getIncrementExpressionList()) {
+					eliminateParentheses(expressionNode);
+				}
+				eliminateParentheses(((ForNode) node).getCommand());
+				break;
+			case "RETURN":
+				if(((ReturnNode) node).getReturnExpression() != null) {
+					eliminateParentheses(((ReturnNode) node).getReturnExpression());
+				}
+				break;
+			case "CALL":
+				for(ExpressionNode expressionNode: ((CallExpression) node).getExpressionList()) {
+					eliminateParentheses(expressionNode);
+				}
+				break;
+			case "UNARYEXPRESSION":
+				if(((UnaryExpression) node).getExpressionType().getTokenType().equals("OPARENTHESES")) {
+					ASTNode fatherNode = node.getFatherNode();
+					switch(fatherNode.getNodeType()) {
+						case "IF":
+							//Change the expression of the if to the expression inside the parentheses;
+							((IfNode) fatherNode).setConditionExpression(((UnaryExpression) node).getExpression());
+							//Set the if as the father node of the expression inside the parentheses
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+						case "WHILE":
+							//Change the expression of the while to the expression inside the parentheses;
+							((WhileNode) fatherNode).setConditionExpression(((UnaryExpression) node).getExpression());
+							//Set the if as the father node of the expression inside the parentheses
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+						case "FOR":
+							if(((ForNode) fatherNode).getInitialExpressionList().contains(node)) {
+								((ForNode) fatherNode).getInitialExpressionList().add(((ForNode) fatherNode).getInitialExpressionList().indexOf(node), ((UnaryExpression) node).getExpression());
+								((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+								((ForNode) fatherNode).getInitialExpressionList().remove(node);
+							} else if(((ForNode) fatherNode).getStopExpressionList().contains(node)) {
+								((ForNode) fatherNode).getStopExpressionList().add(((ForNode) fatherNode).getStopExpressionList().indexOf(node), ((UnaryExpression) node).getExpression());
+								((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+								((ForNode) fatherNode).getStopExpressionList().remove(node);
+							} else if(((ForNode) fatherNode).getIncrementExpressionList().contains(node)) {
+								((ForNode) fatherNode).getIncrementExpressionList().add(((ForNode) fatherNode).getStopExpressionList().indexOf(node), ((UnaryExpression) node).getExpression());
+								((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+								((ForNode) fatherNode).getIncrementExpressionList().remove(node);
+							}
+							break;
+						case "RETURN":
+							((ReturnNode) fatherNode).setReturnExpression(((UnaryExpression) node).getExpression());
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+						case "CALL":
+							((CallExpression) fatherNode).getExpressionList().add(((CallExpression) fatherNode).getExpressionList().indexOf(node), ((UnaryExpression) node).getExpression());
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+						case "ATTRIBUTION":
+							((AttributionNode) fatherNode).setExpression(((UnaryExpression) node).getExpression());
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+						case "UNARYEXPRESSION":
+							((UnaryExpression) fatherNode).setExpression(((UnaryExpression) node).getExpression());
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+						case "BINARYEXPRESSION":
+							if(((BinaryExpression) fatherNode).getLhsExpression() == node) {
+								((BinaryExpression) fatherNode).setLhsExpression(((UnaryExpression) node).getExpression());
+							} else {
+								((BinaryExpression) fatherNode).setLhsExpression(((UnaryExpression) node).getExpression());
+							}
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
+					}
+				}
+				eliminateParentheses(((UnaryExpression)node).getExpression());
+				break;
+			case "BINARYEXPRESSION":
+				eliminateParentheses(((BinaryExpression) node).getLhsExpression());
+				eliminateParentheses(((BinaryExpression) node).getRhsExpression());
+				break;
+		}
 	}
 }
