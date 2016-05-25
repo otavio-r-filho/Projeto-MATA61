@@ -2,12 +2,15 @@ package generator;
 
 import parser.definitions.nodes.*;
 
+import java.util.ArrayList;
+
 public class Generator {
 
-    private String asmCode;
+//    private String asmCode;
+    private ArrayList<String> asmCode;
 
     public Generator() {
-        this.asmCode = null;
+        asmCode = new ArrayList<String>();
     }
 
     public String cgen(ASTNode node) {
@@ -45,11 +48,23 @@ public class Generator {
     }
 
     private void cgenProgram(Program program) {
+        asmCode.add(".data");
+        //Adding global variables
+        for(VariableNode variableNode: program.getGlobalVariables()) {
+            if(variableNode.getVariableType().getTokenType().equals("INTEGER")) {
+                asmCode.add("_" + variableNode.getVariableID().getTokenValue() + ": .word 0");
+            } else {
+                asmCode.add("_" + variableNode.getVariableID().getTokenValue() + ": .float 0");
+            }
+        }
 
-    }
+        asmCode.add(".text");
+        asmCode.add(".globl main");
 
-    private void cgenGlobalVariable(VariableNode variableNode) {
-
+        //Adding the other functions to global scope
+        for(FunctionNode functionNode: program.getFunctions()) {
+            asmCode.add(".globl " + functionNode.getFunctioID().getTokenValue());
+        }
     }
 
     private void cgenFunction(FunctionNode functionNode) {
