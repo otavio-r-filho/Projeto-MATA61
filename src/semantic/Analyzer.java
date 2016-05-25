@@ -547,4 +547,8 @@ public class Analyzer {
         }
         return false;
     }
+
+    public String getErrorDescription() {
+        return errorDescription;
+    }
 }

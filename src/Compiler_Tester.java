@@ -70,8 +70,11 @@ public class Compiler_Tester {
 
 			analyzer = new Analyzer(parser.getASTTree());
 
-			if(analyzer.analyzeTree(parser.getASTTree()));
-			
+			if(analyzer.analyzeTree(parser.getASTTree())) {
+				System.out.println("Análise semântica OK");
+			} else {
+				System.out.println(analyzer.getErrorDescription());
+			}
 			
 		} catch(IOException e) {
 			System.out.println("Algo deu errado.");
