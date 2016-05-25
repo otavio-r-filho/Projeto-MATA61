@@ -13,14 +13,17 @@ public class Generator {
         asmCode = new ArrayList<String>();
     }
 
-    public String cgen(ASTNode node) {
+    public ArrayList<String> cgen(ASTNode node) {
 
         switch(node.getNodeType()) {
             case "PROGRAM":
+                cgenProgram((Program) node);
                 break;
             case "FUNCTION":
+                cgenFunction((FunctionNode) node);
                 break;
             case "BLOCK":
+                cgenBlock((BlockNode) node);
                 break;
             case "IF":
                 break;
@@ -31,14 +34,17 @@ public class Generator {
             case "FOR":
                 break;
             case "ATTRIBUTION":
+                //TODO add cgen for float and integer attribution
                 break;
             case "CALL":
                 break;
             case "RETURN":
                 break;
             case "BINARYEXPRESSION":
+                //TODO add cgen for float and integer binary expression
                 break;
             case "UNARYEXPRESSION":
+                //TODO add cgen for float and integer unary expression
                 break;
             case "CONSTANT":
                 break;
@@ -59,11 +65,17 @@ public class Generator {
         }
 
         asmCode.add(".text");
-        asmCode.add(".globl main");
-
-        //Adding the other functions to global scope
+        int size = asmCode.size();
         for(FunctionNode functionNode: program.getFunctions()) {
-            asmCode.add(".globl " + functionNode.getFunctioID().getTokenValue());
+            if(functionNode.getFunctioID().getTokenValue().equals("main")) {
+                asmCode.add(size - 1, ".globl main");
+            } else {
+                asmCode.add(".globl " + functionNode.getFunctioID().getTokenValue());
+            }
+        }
+
+        for(FunctionNode functionNode: program.getFunctions()) {
+            cgen(functionNode);
         }
     }
 
