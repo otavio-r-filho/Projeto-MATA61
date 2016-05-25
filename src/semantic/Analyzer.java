@@ -208,6 +208,7 @@ public class Analyzer {
         }
     }
 
+    //Remove symbols from the symbol table
     public void removeSymbols(ASTNode node) {
         Program programNode;
         FunctionNode functionNode;
@@ -261,11 +262,15 @@ public class Analyzer {
                 program = (Program) node;
                 for(FunctionNode functionNode: program.getFunctions()) {
                     symbolCounter = 0;
-                    for(FunctionNode functionNode1: program.getFunctions())
-                        if(functionNode.getFunctioID().getTokenValue().equals(functionNode1.getFunctioID().getTokenValue())) {
+                    for(FunctionNode functionNode1: program.getFunctions()) {
+                        if (functionNode.getFunctioID().getTokenValue().equals(functionNode1.getFunctioID().getTokenValue())) {
                             symbolCounter++;
+                        }
+                        if(symbolCounter > 1) {
+                            errorDescription = "Declaracao multipla da funcao " + functionNode1.getFunctioID().getTokenValue() + " .Linha: " + functionNode1.getFunctioID().getLine() + " .Coluna: " + functionNode1.getFunctioID().getCollumn();
+                            return false;
+                        }
                     }
-                    if(symbolCounter > 1) { return false;}
                 }
                 //Checking for double global variable declaration
                 for(VariableNode variableNode: program.getGlobalVariables()) {
@@ -274,8 +279,12 @@ public class Analyzer {
                         if (variableNode.getVariableID().getTokenValue().equals(variableNode1.getVariableID().getTokenValue())) {
                             symbolCounter++;
                         }
+                        if(symbolCounter > 1) {
+                            errorDescription = "Declaração multipla da variavel " + variableNode1.getVariableID().getTokenValue() + " .Linha: " + variableNode1.getVariableID().getLine() + " .Coluna: " + variableNode1.getVariableID().getCollumn();
+                            return false;
+                        }
                     }
-                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
+
                 }
                 return true;
             case "BLOCK":
@@ -287,8 +296,11 @@ public class Analyzer {
                         if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isFunction() && !symbol.isGlobal()) {
                             symbolCounter++;
                         }
+                        if(symbolCounter > 1) {
+                            errorDescription = "Declaração multipla da variavel " + variableNode.getVariableID().getTokenValue() + " .Linha: " + variableNode.getVariableID().getLine() + " .Coluna: " + variableNode.getVariableID().getCollumn();
+                            return false;
+                        }
                     }
-                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
                 }
                 return true;
             case "FUNCTION":
@@ -299,8 +311,11 @@ public class Analyzer {
                     //Checking for multiple declarations in the parameters
                     for(VariableNode variableNode1: functionNode.getFunctionParameters()) {
                         if(variableNode.getVariableID().getTokenValue().equals(variableNode1.getVariableID().getTokenValue())) { symbolCounter++; }
+                        if(symbolCounter > 1) {
+                            errorDescription = "Multideclaracao do parametro " + variableNode1.getVariableID().getTokenValue() + ". Linha: " + variableNode1.getVariableID().getLine() + " .Coluna: " + variableNode1.getVariableID().getCollumn();
+                            return false;
+                        }
                     }
-                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
                     symbolCounter = 0;
                     //Checking for double declarations in the symbol table
                     for(Symbol symbol: symbolTable) {
@@ -325,10 +340,14 @@ public class Analyzer {
                 if(functionNode.getFunctioID().getTokenValue().equals(callExpression.getCommandType().getTokenValue())) {
                     if(functionNode.getFunctionParameters().size() == callExpression.getExpressionList().size()) { //Checking if the number of parameters are the same
                         for(int i = 0; i < functionNode.getFunctionParameters().size(); i++) {
-                            if(!functionNode.getFunctionParameters().get(i).getVariableType().getTokenType().equals(checkType(callExpression.getExpressionList().get(i)))) { return false; }
+                            if(!functionNode.getFunctionParameters().get(i).getVariableType().getTokenType().equals(checkType(callExpression.getExpressionList().get(i)))) {
+                                errorDescription = "Tipo incorreto de parametros " + callExpression.getFunctionID().getLine() + " .Coluna: " + callExpression.getFunctionID().getCollumn();
+                                return false;
+                            }
                         }
                         return true;
                     }
+                    errorDescription = "Numero incorreto de parametros. Linha: " + callExpression.getFunctionID().getLine() + " .Coluna: " + callExpression.getFunctionID().getCollumn();
                     return false; //TODO add error treatment here
                 }
             }
@@ -477,7 +496,7 @@ public class Analyzer {
                 }
                 break;
         }
-        return "ERROR";
+        return "ERROR"; //TODO define what error is to be generated
     }
 
     public boolean checkDeclaration(ASTNode node) {
@@ -514,6 +533,14 @@ public class Analyzer {
                 for(CommandNode commandNode: blockNode.getCommands()) {
                     if(commandNode.getCommandType().equals("IF") || commandNode.getCommandType().equals("WHILE") || commandNode.getCommandType().equals("FOR")) {
                         if(checkReturn(commandNode)) { return true; }
+                    }
+                }
+                if(blockNode.getFatherNode().getNodeType().equals("FUNCTION")) {
+                    errorDescription = "A funcao " + ((FunctionNode) blockNode.getFatherNode()).getFunctioID().getTokenValue() + " deve retornar um ";
+                    if(((FunctionNode) blockNode.getFatherNode()).getReturnType().getTokenType().equals("INTEGER")) {
+                        errorDescription = errorDescription + "inteiro. Linha: " + ((FunctionNode) blockNode.getFatherNode()).getFunctioID().getLine() + ". Coluna: " + ((FunctionNode) blockNode.getFatherNode()).getFunctioID().getCollumn();
+                    } else {
+                        errorDescription = errorDescription + "decimal. Linha: " + ((FunctionNode) blockNode.getFatherNode()).getFunctioID().getLine() + ". Coluna: " + ((FunctionNode) blockNode.getFatherNode()).getFunctioID().getCollumn();
                     }
                 }
                 return false;
