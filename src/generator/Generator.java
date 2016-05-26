@@ -41,7 +41,7 @@ public class Generator {
             case "FOR":
                 break;
             case "ATTRIBUTION":
-                //TODO add cgen for float and integer attribution
+                cgenAttribution((AttributionNode) node);
                 break;
             case "CALL":
                 break;
@@ -113,7 +113,8 @@ public class Generator {
     }
 
     private void cgenAttribution(AttributionNode attributionNode) {
-
+        cgen(attributionNode.getExpression());
+        
     }
 
     private void cgenCall(CallExpression callExpression) {
