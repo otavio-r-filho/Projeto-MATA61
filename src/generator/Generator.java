@@ -1,6 +1,7 @@
 package generator;
 
 import parser.definitions.nodes.*;
+import semantic.Analyzer;
 import semantic.definitions.Symbol;
 
 import java.lang.reflect.Array;
@@ -11,9 +12,12 @@ public class Generator {
 //    private String asmCode;
     private ArrayList<String> asmCode;
     private ArrayList<Symbol> symbolTable;
+    private Analyzer analyzer;
 
     public Generator() {
-        asmCode = new ArrayList<String>();
+        analyzer = new Analyzer();
+        asmCode = new ArrayList<>();
+        symbolTable = new ArrayList<>();
     }
 
     public ArrayList<String> cgen(ASTNode node) {
@@ -44,12 +48,13 @@ public class Generator {
             case "RETURN":
                 break;
             case "BINARYEXPRESSION":
-                //TODO add cgen for float and integer binary expression
+                cgenBinaryExpression((BinaryExpression) node);
                 break;
             case "UNARYEXPRESSION":
-                //TODO add cgen for float and integer unary expression
+                cgenUnaryExpression((UnaryExpression) node);
                 break;
             case "CONSTANT":
+                cgenConstant((VariableNode) node);
                 break;
         }
 
@@ -123,7 +128,55 @@ public class Generator {
     }
 
     private void cgenBinaryExpression(BinaryExpression binaryExpression) {
-
+        switch(binaryExpression.getExpressionType().getTokenType()) {
+            case "OR:":
+                cgen(binaryExpression.getLhsExpression());
+                asmCode.add("sw $a0, 0($sp)");
+                asmCode.add("subu $sp, $sp, 4");
+                cgen(binaryExpression.getRhsExpression());
+                asmCode.add("lw $t0, 4($sp)");
+                asmCode.add("addiu $sp, $sp, 4");
+                asmCode.add("or $a0, $t0, $a0");
+                break;
+            case "AND":
+                cgen(binaryExpression.getLhsExpression());
+                asmCode.add("sw $a0, 0($sp)");
+                asmCode.add("subu $sp, $sp, 4");
+                cgen(binaryExpression.getRhsExpression());
+                asmCode.add("lw $t0, 4($sp)");
+                asmCode.add("addiu $sp, $sp, 4");
+                asmCode.add("or $a0, $t0, $a0");
+                break;
+            case "COMPARISSON":
+                if(analyzer.checkType(binaryExpression.getLhsExpression()).equals("FLOAT") || analyzer.checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) {
+                    if(analyzer.checkType(binaryExpression.getLhsExpression()).equals("INTEGER")) {
+                        asmCode.add("mtc1 $a0, $f0");
+                        //TODO add conversion to float here;
+                    }
+                    cgen(binaryExpression.getLhsExpression());
+                    asmCode.add("sw $a0, 0($sp)");
+                    asmCode.add("subu $sp, $sp, 4");
+                }
+                break;
+            case "DIFFERENT":
+                break;
+            case "GREATER":
+                break;
+            case "SMALLER":
+                break;
+            case "GEQUAL":
+                break;
+            case "SEQUAL":
+                break;
+            case "PLUS":
+                break;
+            case "MINUS":
+                break;
+            case "ASTERISK":
+                break;
+            case "SLASH":
+                break;
+        }
     }
 
     private void cgenConstant(VariableNode constant) {
@@ -157,5 +210,9 @@ public class Generator {
                 asmCode.add("li $a0, " + constant.getVariableValue().getTokenValue());
                 break;
         }
+    }
+
+    private void cgenPrint(ASTNode node) {
+        
     }
 }
