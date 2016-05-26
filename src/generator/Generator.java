@@ -2,9 +2,7 @@ package generator;
 
 import parser.definitions.nodes.*;
 import semantic.Analyzer;
-import semantic.definitions.Symbol;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Generator {
@@ -44,6 +42,7 @@ public class Generator {
                 cgenAttribution((AttributionNode) node);
                 break;
             case "CALL":
+                cgenCall((CallExpression) node);
                 break;
             case "RETURN":
                 cgenReturn((ReturnNode) node);
@@ -114,19 +113,59 @@ public class Generator {
 
     private void cgenAttribution(AttributionNode attributionNode) {
         cgen(attributionNode.getExpression());
-        
+        for(int i = analyzer.getSymbolTable().size() - 1 ; i >= 0 ; i--) {
+            if(analyzer.getSymbolTable().get(i).getSymbolID().equals(attributionNode.getCommandType().getToken())) {
+                if(analyzer.getSymbolTable().get(i).getSymbolType().equals("INTEGER")) {
+                    if (analyzer.checkType(attributionNode.getExpression()).equals("FLOAT")) {
+                        asmCode.add("mtc1 $a0, $f0");
+                        asmCode.add("cvt.w.s $f0, $f0");
+                        asmCode.add("mfc1 $a0, $f0");
+                    }
+                } else {
+                    if (analyzer.checkType(attributionNode.getExpression()).equals("INTEGER")) {
+                        asmCode.add("mtc1 $a0, $f0");
+                        asmCode.add("cvt.s.w $f0, $f0");
+                        asmCode.add("mfc1 $a0, $f0");
+                    }
+                }
+                if(analyzer.getSymbolTable().get(i).isGlobal()) {
+
+                } else {
+                    asmCode.add("sw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                }
+            }
+        }
     }
 
     private void cgenCall(CallExpression callExpression) {
-
+        asmCode.add("sw $fp, 0($sp)");
+        asmCode.add("subu $sp, $sp, 4");
+        for(ExpressionNode expressionNode: callExpression.getExpressionList()) {
+            cgen(expressionNode);
+            asmCode.add("sw $a0, 0($sp)");
+            asmCode.add("subu $sp, $sp, 4");
+        }
+        asmCode.add("jal " + callExpression.getFunctionID() + "_entry:");
     }
 
     private void cgenReturn(ReturnNode returnNode) {
         if(returnNode.getReturnExpression() != null ) {
             cgen(returnNode.getReturnExpression());
         }
-        //TODO add part to pop the stack
-        asmCode.add("j $ra");
+        ASTNode node = returnNode;
+        int variableCount = 0;
+        while(!node.getNodeType().equals("FUNCTION")) {
+            if(node.getNodeType().equals("BLOCK")) {
+                variableCount = variableCount + ((BlockNode) node).getBlockVariables().size();
+            }
+            node = node.getFatherNode();
+        }
+        asmCode.add("addiu $sp, $sp, " + (variableCount * 4)); //popping function variables
+        variableCount = ((FunctionNode) node).getFunctionParameters().size();
+        asmCode.add("lw $ra, 4($ra)");
+        asmCode.add("addiu $sp, $sp, " + ((variableCount * 4) + 8)); //popping the AR
+        asmCode.add("lw $fp, 0($sp)");
+        asmCode.add("jr $ra");
 
     }
 
@@ -138,7 +177,13 @@ public class Generator {
                 break;
             case "MINUS":
                 cgen(unaryExpression.getExpression());
-                asmCode.add("neg $a0, $a0");
+                if(analyzer.checkType(unaryExpression.getExpression()).equals("INTEGER")) {
+                    asmCode.add("neg $a0, $a0");
+                } else {
+                    asmCode.add("mtc1 $a0, $f0");
+                    asmCode.add("neg.s $f0, $f0");
+                    asmCode.add("mfc1 $a0, $f0");
+                }
                 break;
         }
     }
@@ -493,16 +538,20 @@ public class Generator {
                         if(!analyzer.getSymbolTable().get(i).isGlobal()) {
                             if (analyzer.getSymbolTable().get(i).getSymbolType().equals("INTEGER")) {
                                 asmCode.add("lw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                                break;
                             } else {
                                 asmCode.add("lwc1.s $f0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
                                 asmCode.add("mfc1 $a0, $f0");
+                                break;
                             }
                         } else {
                             if (analyzer.getSymbolTable().get(i).getSymbolType().equals("INTEGER")) {
                                 asmCode.add("lw $a0, " + constant.getVariableID().getTokenValue());
+                                break;
                             } else {
                                 asmCode.add("lwc1 $f0, " + constant.getVariableID().getTokenValue());
                                 asmCode.add("mfc1 $a0, $f0");
+                                break;
                             }
                         }
                     }

@@ -602,7 +602,7 @@ public class Production2 {
 			}
 			return returnNode;
 		case "OPARENTHESES":
-			callNode = new CallExpression();
+			callNode = new CallExpression(actualNode, tokenStack.checkTop());
 			callNode.setNodeID(nodeID);
 			nodeID++;
 			callNode.setCommandType(tokenStack.pop());
