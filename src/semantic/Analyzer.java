@@ -35,6 +35,7 @@ package semantic;
  * @param node
  */
 
+import com.sun.org.apache.xerces.internal.util.SymbolTable;
 import lexer.definitions.tToken;
 import parser.definitions.nodes.*;
 import semantic.definitions.Error;
@@ -577,5 +578,9 @@ public class Analyzer {
 
     public String getErrorDescription() {
         return errorDescription;
+    }
+
+    public ArrayList<Symbol> getSymbolTable() {
+        return symbolTable;
     }
 }
