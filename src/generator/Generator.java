@@ -1,13 +1,16 @@
 package generator;
 
 import parser.definitions.nodes.*;
+import semantic.definitions.Symbol;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Generator {
 
 //    private String asmCode;
     private ArrayList<String> asmCode;
+    private ArrayList<Symbol> symbolTable;
 
     public Generator() {
         asmCode = new ArrayList<String>();
@@ -124,6 +127,32 @@ public class Generator {
     }
 
     private void cgenConstant(VariableNode constant) {
-        
+        switch(constant.getVariableType().getTokenType()) {
+            case "ID":
+                for(int i = symbolTable.size() - 1 ; i >= 0 ; i--) {
+                    if(symbolTable.get(i).getSymbolID().equals(constant.getVariableID().getTokenValue())) {
+                        if(!symbolTable.get(i).isGlobal()) {
+                            if (symbolTable.get(i).getSymbolType().equals("INTEGER")) {
+                                asmCode.add("lw $a0, " + ((i * 4) + 4) + "($sp)");
+                            } else {
+                                asmCode.add("l.s $f0, " + ((i * 4) + 4) + "($sp)");
+                            }
+                        } else {
+                            if (symbolTable.get(i).getSymbolType().equals("INTEGER")) {
+                                asmCode.add("lw $a0, " + constant.getVariableID().getTokenValue());
+                            } else {
+                                asmCode.add("l.s $f0, " + constant.getVariableID().getTokenValue());
+                            }
+                        }
+                    }
+                }
+                break;
+            case "REAL":
+                asmCode.add("li.s $f0, " + constant.getVariableValue().getTokenValue());
+                break;
+            case "NUM":
+                asmCode.add("li $a0, " + constant.getVariableValue().getTokenValue());
+                break;
+        }
     }
 }
