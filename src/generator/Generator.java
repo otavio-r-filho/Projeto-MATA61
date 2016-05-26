@@ -135,13 +135,15 @@ public class Generator {
                             if (symbolTable.get(i).getSymbolType().equals("INTEGER")) {
                                 asmCode.add("lw $a0, " + ((i * 4) + 4) + "($sp)");
                             } else {
-                                asmCode.add("l.s $f0, " + ((i * 4) + 4) + "($sp)");
+                                asmCode.add("lwc1.s $f0, " + ((i * 4) + 4) + "($sp)");
+                                asmCode.add("mfc1 $a0, $f0");
                             }
                         } else {
                             if (symbolTable.get(i).getSymbolType().equals("INTEGER")) {
                                 asmCode.add("lw $a0, " + constant.getVariableID().getTokenValue());
                             } else {
-                                asmCode.add("l.s $f0, " + constant.getVariableID().getTokenValue());
+                                asmCode.add("lwc1 $f0, " + constant.getVariableID().getTokenValue());
+                                asmCode.add("mfc1 $a0, $f0");
                             }
                         }
                     }
@@ -149,6 +151,7 @@ public class Generator {
                 break;
             case "REAL":
                 asmCode.add("li.s $f0, " + constant.getVariableValue().getTokenValue());
+                asmCode.add("mfc1 $a0, $f0");
                 break;
             case "NUM":
                 asmCode.add("li $a0, " + constant.getVariableValue().getTokenValue());
