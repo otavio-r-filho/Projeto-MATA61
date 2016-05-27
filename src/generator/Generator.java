@@ -133,7 +133,7 @@ public class Generator {
                     }
                 }
                 if(analyzer.getSymbolTable().get(i).isGlobal()) {
-
+                    asmCode.add("sw $a0, _" + analyzer.getSymbolTable().get(i).getSymbolID());
                 } else {
                     asmCode.add("sw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
                 }
@@ -376,7 +376,6 @@ public class Generator {
                     asmCode.add("addiu $sp, $sp, 4");
                     asmCode.add("sge $a0, $t0, $a0");
                 }
-                break;
                 break;
             case "SEQUAL":
                 if(analyzer.checkType(binaryExpression.getLhsExpression()).equals("FLOAT") || analyzer.checkType(binaryExpression.getRhsExpression()).equals("FLOAT")) {
