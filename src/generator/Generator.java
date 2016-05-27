@@ -31,12 +31,16 @@ public class Generator {
                 cgenBlock((BlockNode) node);
                 break;
             case "IF":
+                cgenIf((IfNode) node);
                 break;
             case "ELSE":
+                cgenElse((ElseNode) node);
                 break;
             case "WHILE":
+                cgenWhile((WhileNode) node);
                 break;
             case "FOR":
+                cgenFor((ForNode) node);
                 break;
             case "ATTRIBUTION":
                 cgenAttribution((AttributionNode) node);
