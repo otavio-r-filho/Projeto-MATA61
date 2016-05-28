@@ -1,17 +1,12 @@
 package tools;
 /*
  * Classe para manuseio de arquivos 
- * Baseada em códigos do site stackoverflow.com de múltiplos autores
+ * Baseada em cï¿½digos do site stackoverflow.com de mï¿½ltiplos autores
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 public class FileHandler {
 	
@@ -41,6 +36,31 @@ public class FileHandler {
 	        char ch = (char) r;
 	        System.out.println("Do something with " + ch);
 	    }
+	}
+
+	public static void createFile(String fileName) {
+		File file = new File(fileName);
+		if(!file.exists() && !file.isDirectory()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void writeList(ArrayList<String> lines, String fileName) {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, false));
+			for(String line : lines) {
+				bw.write(line);
+				bw.newLine();
+			}
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

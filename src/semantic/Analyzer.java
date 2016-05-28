@@ -66,17 +66,26 @@ public class Analyzer {
     public boolean analyzeTree(ASTNode node) {
         switch (node.getNodeType()) {
             case "PROGRAM":
-                //First check for multiple declarations, then we can add the symbols to the symbol table
-                if(checkMultiDeclaration(node)) {
-                    fillSymbols(node);
-                    Program program = (Program) node;
-                    for(FunctionNode functionNode: program.getFunctions()) {
-                        if(!analyzeTree(functionNode)) {
-                            return false;
+                boolean mainExists = false;
+                for(FunctionNode functionNode: program.getFunctions()) {
+                    if(functionNode.getFunctioID().getTokenValue().equals("main")) { mainExists = true; }
+                }
+                if(mainExists) {
+                    //First check for multiple declarations, then we can add the symbols to the symbol table
+                    if (checkMultiDeclaration(node)) {
+                        fillSymbols(node);
+                        Program program = (Program) node;
+                        for (FunctionNode functionNode : program.getFunctions()) {
+                            if (!analyzeTree(functionNode)) {
+                                return false;
+                            }
                         }
+                        removeSymbols(node);
+                        return true;
                     }
-                    removeSymbols(node);
-                    return true;
+                } else {
+                    errorDescription = "Nao existe funcao main\n";
+                    return false;
                 }
                 break;
             case "FUNCTION":
@@ -170,6 +179,9 @@ public class Analyzer {
                 return analyzeTree(unaryExpression.getExpression());
             case "CONSTANT":
                 return true;
+            case "PRINT":
+                if(checkType(((PrintNode) node).getExpression()).equals("INTEGER") || checkType(((PrintNode) node).getExpression()).equals("FLOAT")) { return true; }
+                break;
         }
         return false;
     }
@@ -196,8 +208,13 @@ public class Analyzer {
                 break;
             case "FUNCTION":
                 functionNode = (FunctionNode)node;
+                int parameterOrder = functionNode.getFunctionParameters().size();
                 for(VariableNode variableNode : functionNode.getFunctionParameters()) {
-                    symbolTable.add(new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false));
+                    Symbol symbol = new Symbol(variableNode.getVariableID().getTokenValue(), variableNode.getVariableType().getTokenType(), false, false);
+                    symbol.setParameter(true);
+                    symbol.setParameterOrder(parameterOrder);
+                    parameterOrder--;
+                    symbolTable.add(symbol);
                 }
                 break;
             case "BLOCK":
@@ -317,12 +334,12 @@ public class Analyzer {
                             return false;
                         }
                     }
-                    symbolCounter = 0;
-                    //Checking for double declarations in the symbol table
-                    for(Symbol symbol: symbolTable) {
-                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isGlobal()) { symbolCounter++; }
-                    }
-                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
+//                    symbolCounter = 0;
+//                    //Checking for double declarations in the symbol table
+//                    for(Symbol symbol: symbolTable) {
+//                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isGlobal()) { symbolCounter++; }
+//                    }
+//                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
                 }
                 return true;
         }
@@ -349,7 +366,7 @@ public class Analyzer {
                         return true;
                     }
                     errorDescription = "Numero incorreto de parametros. Linha: " + callExpression.getFunctionID().getLine() + " .Coluna: " + callExpression.getFunctionID().getCollumn();
-                    return false; //TODO add error treatment here
+                    return false;
                 }
             }
         }

@@ -48,6 +48,9 @@ public class Generator {
             case "CALL":
                 cgenCall((CallExpression) node);
                 break;
+            case "PRINT":
+                cgenPrint((PrintNode) node);
+                break;
             case "RETURN":
                 cgenReturn((ReturnNode) node);
                 break;
@@ -66,49 +69,89 @@ public class Generator {
     }
 
     private void cgenProgram(Program program) {
+        analyzer.fillSymbols(program);
+        asmCode.add(".text");
+
+        for(FunctionNode functionNode: program.getFunctions()) {
+            cgen(functionNode);
+        }
+
         asmCode.add(".data");
         //Adding global variables
         for(VariableNode variableNode: program.getGlobalVariables()) {
             if(variableNode.getVariableType().getTokenType().equals("INTEGER")) {
                 asmCode.add("_" + variableNode.getVariableID().getTokenValue() + ": .word 0");
             } else {
-                asmCode.add("_" + variableNode.getVariableID().getTokenValue() + ": .float 0");
+                asmCode.add("_" + variableNode.getVariableID().getTokenValue() + ": .float 0.0");
             }
         }
-
-        asmCode.add(".text");
+        asmCode.add("_true: .word 1");
+        asmCode.add("_false: .word 0");
+        asmCode.add("_newline: .asciiz \"\\n\"");
         int size = asmCode.size();
         for(FunctionNode functionNode: program.getFunctions()) {
-            if(functionNode.getFunctioID().getTokenValue().equals("main")) {
-                asmCode.add(size - 1, ".globl main");
-            } else {
-                asmCode.add(".globl " + functionNode.getFunctioID().getTokenValue());
-            }
-        }
-
-        for(FunctionNode functionNode: program.getFunctions()) {
-            cgen(functionNode);
+            asmCode.add(".globl " + functionNode.getFunctioID().getTokenValue());
         }
     }
 
     private void cgenFunction(FunctionNode functionNode) {
+        analyzer.fillSymbols(functionNode);
+        asmCode.add(functionNode.getFunctioID().getTokenValue() + ":");
+        asmCode.add("move $fp, $sp");
+        asmCode.add("sw $ra, 0($sp)");
+        asmCode.add("subu $sp, $sp, 4");
 
+        cgen(functionNode.getBlock());
+        asmCode.add("lw $ra, 4($sp)");
+        asmCode.add("addiu, $sp, $sp, " + ((functionNode.getFunctionParameters().size() * 4) + 8));
+        asmCode.add("lw $fp, 0($sp)");
+        asmCode.add("jr $ra");
+        analyzer.removeSymbols(functionNode);
     }
 
     private void cgenBlock(BlockNode blockNode) {
-
+        analyzer.fillSymbols(blockNode);
+        for(VariableNode variableNode: blockNode.getBlockVariables()) {
+            asmCode.add("li $a0, 0");
+            if(variableNode.getVariableType().getTokenType().equals("FLOAT")) {
+                asmCode.add("mtc1 $a0, $f0");
+                asmCode.add("cvt.s.w $f0, $f0");
+                asmCode.add("mfc1 $a0, $f0");
+            }
+            asmCode.add("sw $a0, 0($sp)");
+            asmCode.add("subu $sp, $sp, 4");
+        }
+        for(CommandNode commandNode: blockNode.getCommands()) {
+            cgen(commandNode);
+        }
+        asmCode.add("addiu $sp, $sp, " + (blockNode.getBlockVariables().size() * 4));
+        analyzer.removeSymbols(blockNode);
     }
 
     private void cgenIf(IfNode ifNode) {
-
+        cgen(ifNode.getConditionExpression());
+        asmCode.add("beq $a0, 1, true_branch" + ifNode.getNodeID());
+        if(ifNode.getElseCommand() != null) {
+            cgen(ifNode.getElseCommand());
+        }
+        asmCode.add("b end_if" + ifNode.getNodeID());
+        asmCode.add("true_branch" + ifNode.getNodeID() + ":");
+        cgen(ifNode.getCommand());
+        asmCode.add("end_if" + ifNode.getNodeID() + ":");
     }
 
     private void cgenElse(ElseNode elseNode) {
-
+        asmCode.add("false_branch" + elseNode.getFatherNode().getNodeID() + ":");
+        cgen(elseNode.getCommand());
     }
 
     private void cgenWhile(WhileNode whileNode) {
-
+        asmCode.add("true_branch" + whileNode.getNodeID() + ":");
+        cgen(whileNode.getConditionExpression());
+        asmCode.add("beq $a0, 0, end_while" + whileNode.getNodeID());
+        cgen(whileNode.getCommand());
+        asmCode.add("b true_branch" + whileNode.getNodeID());
+        asmCode.add("end_branch" + whileNode.getNodeID() + ":");
     }
 
     private void cgenFor(ForNode forNode) {
@@ -540,10 +583,14 @@ public class Generator {
                     if(analyzer.getSymbolTable().get(i).getSymbolID().equals(constant.getVariableID().getTokenValue())) {
                         if(!analyzer.getSymbolTable().get(i).isGlobal()) {
                             if (analyzer.getSymbolTable().get(i).getSymbolType().equals("INTEGER")) {
-                                asmCode.add("lw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                                if(analyzer.getSymbolTable().get(i).isParameter()) {
+                                    asmCode.add("lw $a0, " + (analyzer.getSymbolTable().get(i).getParameterOrder() * 4) + "($fp)");
+                                } else {
+                                    asmCode.add("lw $a0, " + ((analyzer.getSymbolTable().size() - i) * 4) + "($sp)");
+                                }
                                 break;
                             } else {
-                                asmCode.add("lwc1.s $f0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                                asmCode.add("lwc1.s $f0, " + ((analyzer.getSymbolTable().size() - i) * 4) + "($sp)");
                                 asmCode.add("mfc1 $a0, $f0");
                                 break;
                             }
@@ -570,7 +617,22 @@ public class Generator {
         }
     }
 
-    private void cgenPrint(ASTNode node) {
+    private void cgenVariable(VariableNode variableNode) {
 
+    }
+
+    private void cgenPrint(PrintNode printNode) {
+        cgen(printNode.getExpression());
+        if(analyzer.checkType(printNode.getExpression()).equals("INTEGER")) {
+            asmCode.add("li $v0, 1");
+            asmCode.add("syscall");
+        } else {
+            asmCode.add("mtc1 $a0, $f12");
+            asmCode.add("li $v0, 2");
+            asmCode.add("syscall");
+        }
+        asmCode.add("li $v0, 4");
+        asmCode.add("la $a0, _newline");
+        asmCode.add("syscall");
     }
 }

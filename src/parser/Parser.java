@@ -159,7 +159,7 @@ public class Parser {
 					while(!actualNode.getNodeType().equals("IF") && !actualNode.getNodeType().equals("WHILE") &&
 						  !actualNode.getNodeType().equals("FOR") && !actualNode.getNodeType().equals("RETURN") &&
 						  !actualNode.getNodeType().equals("BLOCK") && !actualNode.getNodeType().equals("CALL") &&
-						  !actualNode.getNodeType().equals("ATTRIBUTION")) {
+						  !actualNode.getNodeType().equals("ATTRIBUTION") && !actualNode.getNodeType().equals("PRINT")) {
 						ExpressionNode expression = (ExpressionNode) actualNode;
 						if(expression.getExpressionType().getTokenType().equals("OPARENTHESES")) {
 							return true;
@@ -171,7 +171,7 @@ public class Parser {
 				}
 				break;
 			case "COMMA":
-				if(actualNode.getNodeType().equals("PARAMETER")) {
+				if(actualNode.getNodeType().equals("PARAMETER") || actualNode.getFatherNode().getNodeType().equals("CALL")) {
 					tokenStack.clearStack();
 					actualNode = actualNode.getFatherNode();
 				}
@@ -288,6 +288,9 @@ public class Parser {
 					eliminateParentheses(expressionNode);
 				}
 				break;
+			case "PRINT":
+				eliminateParentheses(((PrintNode) node).getExpression());
+				break;
 			case "UNARYEXPRESSION":
 				if(((UnaryExpression) node).getExpressionType().getTokenType().equals("OPARENTHESES")) {
 					ASTNode fatherNode = node.getFatherNode();
@@ -327,6 +330,10 @@ public class Parser {
 							((CallExpression) fatherNode).getExpressionList().add(((CallExpression) fatherNode).getExpressionList().indexOf(node), ((UnaryExpression) node).getExpression());
 							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
 							break;
+						case "PRINT":
+							((PrintNode) fatherNode).setExpression(((UnaryExpression) node).getExpression());
+							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
+							break;
 						case "ATTRIBUTION":
 							((AttributionNode) fatherNode).setExpression(((UnaryExpression) node).getExpression());
 							((UnaryExpression) node).getExpression().setFatherNode(fatherNode);
@@ -351,6 +358,7 @@ public class Parser {
 				eliminateParentheses(((BinaryExpression) node).getLhsExpression());
 				eliminateParentheses(((BinaryExpression) node).getRhsExpression());
 				break;
+
 		}
 	}
 }

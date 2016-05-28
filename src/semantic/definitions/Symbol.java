@@ -11,6 +11,8 @@ public class Symbol {
     private String symbolType;
     private boolean isGlobal;
     private boolean isFunction;
+    private boolean isParameter;
+    private int parameterOrder;
 
     public String getSymbolID() {
         return symbolID;
@@ -46,6 +48,7 @@ public class Symbol {
 
     public Symbol(String symbolID) {
         this.symbolID = symbolID;
+        this.isParameter = false;
     }
 
     public Symbol(String symbolID, String symbolType) {
@@ -61,5 +64,21 @@ public class Symbol {
     public Symbol(String symbolID, String symbolType, boolean isGlobal, boolean isFunction) {
         this(symbolID, symbolType, isGlobal);
         this.isFunction = isFunction;
+    }
+
+    public void setParameter(boolean parameter) {
+        isParameter = parameter;
+    }
+
+    public boolean isParameter() {
+        return isParameter;
+    }
+
+    public void setParameterOrder(int parameterOrder) {
+        this.parameterOrder = parameterOrder;
+    }
+
+    public int getParameterOrder() {
+        return parameterOrder;
     }
 }

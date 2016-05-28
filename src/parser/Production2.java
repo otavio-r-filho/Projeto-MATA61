@@ -283,7 +283,11 @@ public class Production2 {
 			//chamada -> ( lista-exp )
 			productionStack.pop();
 			productionStack.push("CPARENTHESES");
-			productionStack.push("lista-exp");
+			if(tokenStack.checkTop().getTokenValue().equals("println")) {
+				productionStack.push("exp");
+			} else {
+				productionStack.push("lista-exp");
+			}
 			productionStack.push("OPARENTHESES");
 			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 27:
@@ -407,8 +411,12 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("exp7");
 			productionStack.push("ID");
-			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON")) {
-				addConstantExpression(actualNode, tokenList, tokenPosition);
+			if(tokenList.get(tokenPosition + 1).getTokenType().equals("SEMICOLON") || tokenList.get(tokenPosition + 1).getTokenType().equals("CPARENTHESES") ||
+			   tokenList.get(tokenPosition + 1).getTokenType().equals("GREATER") || tokenList.get(tokenPosition + 1).getTokenType().equals("SMALLER") ||
+			   tokenList.get(tokenPosition + 1).getTokenType().equals("GEQUAL") || tokenList.get(tokenPosition + 1).getTokenType().equals("SEQUAL") ||
+			   tokenList.get(tokenPosition + 1).getTokenType().equals("PLUS") || tokenList.get(tokenPosition + 1).getTokenType().equals("MINUS") ||
+			   tokenList.get(tokenPosition + 1).getTokenType().equals("ASTERISK") || tokenList.get(tokenPosition + 1).getTokenType().equals("SLASH")) {
+				return addConstantExpression(actualNode, tokenList, tokenPosition);
 			}
 			break;
 		case 47:

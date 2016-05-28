@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import generator.Generator;
 import lexer.definitions.*;
 import lexer.Lexer;
 import parser.*;
 import semantic.Analyzer;
+import tools.FileHandler;
 
 public class Compiler_Tester {
 
@@ -23,6 +25,7 @@ public class Compiler_Tester {
 		Lexer lexer = new Lexer();
 		Parser parser = new Parser();
 		Analyzer analyzer;
+		Generator generator;
 		//String lexerResult = null;
 		char ch = 0;
 		int r = 0;
@@ -33,28 +36,28 @@ public class Compiler_Tester {
 		try {
 			InputStream in = new FileInputStream(testFile);
 			Reader reader = new InputStreamReader(in, charset);
-	         // buffer for efficiency
-	         Reader buffer = new BufferedReader(reader);
-	        //handleCharacters(buffer);
+			// buffer for efficiency
+			Reader buffer = new BufferedReader(reader);
+			//handleCharacters(buffer);
 			//int r; //Posi��o antiga do r
 			while ((r = buffer.read()) != -1) {
-		        ch = (char) r;
-		        lexer.feedTokenList(Lexeme.getLexemeIndex(String.valueOf(ch)), String.valueOf(ch), line, collumn);
-		        if(String.valueOf(ch).equals("\n")) {
-		        	++line;
-		        	collumn = 1;
-		        } else {
-		        	if(!String.valueOf(ch).equals("\r")) {
-		        		++collumn;
-		        	}
-		        }
+				ch = (char) r;
+				lexer.feedTokenList(Lexeme.getLexemeIndex(String.valueOf(ch)), String.valueOf(ch), line, collumn);
+				if (String.valueOf(ch).equals("\n")) {
+					++line;
+					collumn = 1;
+				} else {
+					if (!String.valueOf(ch).equals("\r")) {
+						++collumn;
+					}
+				}
 //		        lexerResult = lexer.spitToken(Lexemes.getLexemeIndex(ch), String.valueOf(ch));
 //		        if(lexerResult != null) {
 //		        	System.out.println(lexerResult);
 //		        }
 //		        Lexemes.printLexemeIndex(ch);
 //		        System.out.println("Do something with " + ch);
-			}	
+			}
 //			lexerResult = lexer.spitToken(81, "EOF");
 //			System.out.println(lexerResult);
 			lexer.feedTokenList(82, "$", line, collumn);
@@ -64,16 +67,20 @@ public class Compiler_Tester {
 				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
 			}
 			buffer.close();
-			
-			if(parser.checkSyntax(tokenList)) System.out.println("\nChecagem sintatica OK.");
-			else System.out.println("\nEste programa nao obedece a sintaxe da gramatica.");
 
-			analyzer = new Analyzer(parser.getASTTree());
-
-			if(analyzer.analyzeTree(parser.getASTTree())) {
-				System.out.println("Análise semântica OK");
+			if (parser.checkSyntax(tokenList)) {
+				System.out.println("\nChecagem sintatica OK.");
+				analyzer = new Analyzer(parser.getASTTree());
+				if(analyzer.analyzeTree(parser.getASTTree())) {
+					System.out.println("Análise semântica OK");
+					generator = new Generator();
+					FileHandler.createFile("codigoCompilado.s");
+					FileHandler.writeList(generator.cgen(parser.getASTTree()), "codigoCompilado.s");
+				} else {
+					System.out.println(analyzer.getErrorDescription());
+				}
 			} else {
-				System.out.println(analyzer.getErrorDescription());
+				System.out.println("\nEste programa nao obedece a sintaxe da gramatica.");
 			}
 			
 		} catch(IOException e) {
