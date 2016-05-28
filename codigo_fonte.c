@@ -1,3 +1,5 @@
+int x;
 void main() {
-    println(3);
+  x = 7+5;
+  println(x);
 }

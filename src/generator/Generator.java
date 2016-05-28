@@ -192,7 +192,7 @@ public class Generator {
             asmCode.add("sw $a0, 0($sp)");
             asmCode.add("subu $sp, $sp, 4");
         }
-        asmCode.add("jal " + callExpression.getFunctionID() + "_entry:");
+        asmCode.add("jal " + callExpression.getFunctionID().getTokenValue());
     }
 
     private void cgenReturn(ReturnNode returnNode) {
