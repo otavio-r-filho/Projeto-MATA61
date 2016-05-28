@@ -602,14 +602,25 @@ public class Production2 {
 			}
 			return returnNode;
 		case "OPARENTHESES":
-			callNode = new CallExpression(actualNode, tokenStack.checkTop());
-			callNode.setNodeID(nodeID);
-			nodeID++;
-			callNode.setCommandType(tokenStack.pop());
-			callNode.setNodeType("CALL");
-			setCommand(actualNode, callNode);
-			callNode.setFatherNode(actualNode);
-			return callNode;
+			if(tokenStack.checkTop().getTokenValue().equals("println")) {
+				PrintNode printNode = new PrintNode(actualNode);
+				tToken printToken = new tToken("PRINT", "println", 0, tokenStack.checkTop().getLine(), tokenStack.checkTop().getCollumn());
+				tokenStack.pop();
+				printNode.setNodeID(nodeID);
+				printNode.setCommandType(printToken);
+				setCommand(actualNode, printNode);
+				nodeID++;
+				return printNode;
+			} else {
+				callNode = new CallExpression(actualNode, tokenStack.checkTop());
+				callNode.setNodeID(nodeID);
+				nodeID++;
+				callNode.setCommandType(tokenStack.pop());
+				callNode.setNodeType("CALL");
+				setCommand(actualNode, callNode);
+				callNode.setFatherNode(actualNode);
+				return callNode;
+			}
 		case "ATTRIBUTION":
 			attributionNode = new AttributionNode();
 			attributionNode.setNodeID(nodeID);
@@ -763,6 +774,9 @@ public class Production2 {
 			callExpression = (CallExpression) actualNode;
 			callExpression.addExpression(expression);
 			break;
+		case "PRINT":
+			((PrintNode) actualNode).setExpression(expression);
+			break;
 		case "ATTRIBUTION":
 			attributionNode = (AttributionNode) actualNode;
 			attributionNode.setExpression(expression);
@@ -860,6 +874,10 @@ public class Production2 {
 			expressions = callExpression.getExpressionList();
 			expressions.add(expressions.indexOf(oldExpression), newExpression);
 			expressions.remove(oldExpression);
+			break;
+		case "PRINT":
+			PrintNode printNode = (PrintNode) oldExpression.getFatherNode();
+			printNode.setExpression(newExpression);
 			break;
 		case "ATTRIBUTION":
 			attributionNode = (AttributionNode) oldExpression.getFatherNode();

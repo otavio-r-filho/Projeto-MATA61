@@ -2,6 +2,7 @@ int var1, var2;
 
 float func2(int param1, float param2) {
 	float var2;
+	func3();
 	return var2;
 }
 
