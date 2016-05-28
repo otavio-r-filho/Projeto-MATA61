@@ -596,10 +596,10 @@ public class Generator {
                             }
                         } else {
                             if (analyzer.getSymbolTable().get(i).getSymbolType().equals("INTEGER")) {
-                                asmCode.add("lw $a0, " + constant.getVariableID().getTokenValue());
+                                asmCode.add("lw $a0, _" + constant.getVariableID().getTokenValue());
                                 break;
                             } else {
-                                asmCode.add("lwc1 $f0, " + constant.getVariableID().getTokenValue());
+                                asmCode.add("lwc1 $f0, _" + constant.getVariableID().getTokenValue());
                                 asmCode.add("mfc1 $a0, $f0");
                                 break;
                             }
