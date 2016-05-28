@@ -161,7 +161,7 @@ public class Generator {
     private void cgenAttribution(AttributionNode attributionNode) {
         cgen(attributionNode.getExpression());
         for(int i = analyzer.getSymbolTable().size() - 1 ; i >= 0 ; i--) {
-            if(analyzer.getSymbolTable().get(i).getSymbolID().equals(attributionNode.getCommandType().getToken())) {
+            if(analyzer.getSymbolTable().get(i).getSymbolID().equals(attributionNode.getCommandType().getTokenValue()) && !analyzer.getSymbolTable().get(i).isFunction()) {
                 if(analyzer.getSymbolTable().get(i).getSymbolType().equals("INTEGER")) {
                     if (analyzer.checkType(attributionNode.getExpression()).equals("FLOAT")) {
                         asmCode.add("mtc1 $a0, $f0");
@@ -177,8 +177,14 @@ public class Generator {
                 }
                 if(analyzer.getSymbolTable().get(i).isGlobal()) {
                     asmCode.add("sw $a0, _" + analyzer.getSymbolTable().get(i).getSymbolID());
+                    break;
                 } else {
-                    asmCode.add("sw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                    if(analyzer.getSymbolTable().get(i).isParameter()) {
+                        asmCode.add("sw $a0, " + (analyzer.getSymbolTable().get(i).getParameterOrder() * 4) + "($fp)");
+                    }else {
+                        asmCode.add("sw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                    }
+                    break;
                 }
             }
         }

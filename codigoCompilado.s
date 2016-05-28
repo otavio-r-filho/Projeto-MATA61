@@ -10,7 +10,8 @@ li $a0, 5
 lw $t0, 4($sp)
 addiu $sp, $sp, 4
 add $a0, $t0, $a0
-lw $a0, x
+sw $a0, _x
+lw $a0, _x
 li $v0, 1
 syscall
 li $v0, 4
