@@ -24,7 +24,15 @@ public class Compiler_Tester {
 	private static JFrame fatherFrame;
 
 	public static void main(String[] args) {
-		File testFile = new File("codigo_fonte.c");
+		String source, dest;
+		if(args.length == 2) {
+			source = args[0];
+			dest = args[1];
+		} else {
+			source = "prog.c";
+			dest = "prog.s";
+		}
+		File testFile = new File(source);
 		Charset charset = Charset.forName("UTF-8");
 		Lexer lexer = new Lexer();
 		Parser parser = new Parser();
@@ -86,8 +94,8 @@ public class Compiler_Tester {
 				if(analyzer.analyzeTree(parser.getASTTree())) {
 					System.out.println("Análise semântica OK");
 					generator = new Generator();
-					FileHandler.createFile("codigoCompilado.s");
-					FileHandler.writeList(generator.cgen(parser.getASTTree()), "codigoCompilado.s");
+					FileHandler.createFile(dest);
+					FileHandler.writeList(generator.cgen(parser.getASTTree()), dest);
 				} else {
 					System.out.println(analyzer.getErrorDescription());
 					JOptionPane.showMessageDialog(fatherFrame, analyzer.getErrorDescription(), "Erro semântico", JOptionPane.WARNING_MESSAGE);
