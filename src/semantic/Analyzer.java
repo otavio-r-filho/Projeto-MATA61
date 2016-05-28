@@ -126,26 +126,36 @@ public class Analyzer {
                 IfNode ifNode = (IfNode) node;
                 if(!ifNode.getConditionExpression().getNodeType().equals("ATTRIBUTION") && checkType(ifNode.getConditionExpression()).equals("BOOLEAN")) {
                     return analyzeTree(ifNode.getCommand()) && analyzeTree(ifNode.getElseCommand());
-                } //TODO add error treatment here
+                }
+                errorDescription = "A expressao deve retornar um tipo booleano. Linha: " + ifNode.getConditionExpression().getExpressionType().getLine() + " .Coluna: " + ifNode.getConditionExpression().getExpressionType().getCollumn();
                 break;
             case "WHILE":
                 //Condition expressions should return only boolean
                 WhileNode whileNode = (WhileNode) node;
                 if(!whileNode.getConditionExpression().getNodeType().equals("ATTRIBUTION") && checkType(whileNode.getConditionExpression()).equals("BOOLEAN")) {
                     return analyzeTree(whileNode.getCommand());
-                } //TODO add error treatment here
+                }
+                errorDescription = "A expressao deve retornar um tipo booleano. Linha: " + whileNode.getConditionExpression().getExpressionType().getLine() + " .Coluna: " + whileNode.getConditionExpression().getExpressionType().getCollumn();
                 break;
             case "FOR":
                 ForNode forNode = (ForNode) node;
-                //Checking if the number of expressions are the same;
-                if(forNode.getInitialExpressionList().size() != forNode.getStopExpressionList().size() || forNode.getInitialExpressionList().size() != forNode.getIncrementExpressionList().size() || forNode.getInitialExpressionList().size() == 0) {
-                    return false; //TODO add error treatment here
+                for(ExpressionNode expressionNode: forNode.getInitialExpressionList()) {
+                    if(!checkType(expressionNode).equals("BOOLEAN")) {
+                        errorDescription = "A expressao deve retornar um tipo booleano. Linha: " + expressionNode.getExpressionType().getLine() + " .Coluna: " + expressionNode.getExpressionType().getCollumn();
+                        return false;
+                    }
                 }
-
-                for(int i = 0; i < forNode.getInitialExpressionList().size(); i++) {
-                    //Checking for expression with different IDs
-                    //TODO fix this check
-                    if(forNode.getInitialExpressionList().get(i).getNodeType().equals("ATTRIBUTION") && checkType(forNode.getStopExpressionList().get(i)).equals("BOOLEAN") && forNode.getIncrementExpressionList().get(i).getNodeType().equals("ATTRIBUTION"));
+                for(ExpressionNode expressionNode: forNode.getStopExpressionList()) {
+                    if(checkType(expressionNode).equals("BOOLEAN")) {
+                        errorDescription = "A expressao deve retornar um tipo booleano. Linha: " + expressionNode.getExpressionType().getLine() + " .Coluna: " + expressionNode.getExpressionType().getCollumn();
+                        return false;
+                    }
+                }
+                for(ExpressionNode expressionNode: forNode.getIncrementExpressionList()) {
+                    if(!checkType(expressionNode).equals("BOOLEAN")) {
+                        errorDescription = "A expressao deve retornar um tipo booleano. Linha: " + expressionNode.getExpressionType().getLine() + " .Coluna: " + expressionNode.getExpressionType().getCollumn();
+                        return false;
+                    }
                 }
                 break;
             case "ELSE":
@@ -272,8 +282,6 @@ public class Analyzer {
         Program program;
         BlockNode blockNode;
         //Take each variable from the node and compare with the list
-        //TODO make it multiple thread
-        //TODO add error treatment
         switch (node.getNodeType()) {
             case "PROGRAM":
                 //Checking for double function declaration
@@ -339,7 +347,7 @@ public class Analyzer {
 //                    for(Symbol symbol: symbolTable) {
 //                        if(variableNode.getVariableID().getTokenValue().equals(symbol.getSymbolID()) && !symbol.isGlobal()) { symbolCounter++; }
 //                    }
-//                    if(symbolCounter > 1) { return false; } //TODO add error treatment here
+//                    if(symbolCounter > 1) { return false; }
                 }
                 return true;
         }
@@ -514,7 +522,7 @@ public class Analyzer {
                 }
                 break;
         }
-        return "ERROR"; //TODO define what error is to be generated
+        return "ERROR";
     }
 
     public boolean checkDeclaration(ASTNode node) {
@@ -526,14 +534,14 @@ public class Analyzer {
                 //Make it search from the last symbols towards the first
                 for(int i = symbolTable.size() - 1 ; i >= 0 ; i--) {
                     if(symbolTable.get(i).getSymbolID().equals(callExpression.getFunctionID().getTokenValue()) && symbolTable.get(i).isFunction()) { return true; }
-                } //TODO add error treatment here
+                }
                 this.errorDescription = "Funcao nao declarada. Linha: " + callExpression.getFunctionID().getLine() + ". Coluna: " + callExpression.getFunctionID().getCollumn() +".\n";
                 break;
             case "ATTRIBUTION":
                 attributionNode = (AttributionNode) node;
                 for(int i = symbolTable.size() - 1 ; i >= 0 ; i--) {
                     if (symbolTable.get(i).getSymbolID().equals(attributionNode.getCommandType().getTokenValue()) && !symbolTable.get(i).isFunction()) { return true; }
-                } //TODO add error treatment here
+                }
                 this.errorDescription = "Variavel não declarada. Linha: " + attributionNode.getCommandType().getLine() + ". Coluna: " + attributionNode.getCommandType().getCollumn() + ".\n";
                 break;
         }

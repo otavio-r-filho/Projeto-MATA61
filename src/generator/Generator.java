@@ -155,6 +155,21 @@ public class Generator {
     }
 
     private void cgenFor(ForNode forNode) {
+        for(ExpressionNode expressionNode: forNode.getInitialExpressionList()) {
+            cgen(expressionNode);
+        }
+        asmCode.add("for_entry" + forNode.getNodeID() + ":");
+        for(ExpressionNode expressionNode: forNode.getStopExpressionList()) {
+            cgen(expressionNode);
+            asmCode.add("beq $a0, 0, end_for" + forNode.getNodeID());
+        }
+        cgen(forNode.getCommand());
+        for(ExpressionNode expressionNode: forNode.getIncrementExpressionList()) {
+            cgen(expressionNode);
+        }
+        asmCode.add("b for_entry" + forNode.getNodeID());
+        asmCode.add("end_for" + forNode.getNodeID());
+
 
     }
 

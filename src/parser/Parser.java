@@ -11,6 +11,8 @@ import lexer.definitions.*;
 public class Parser {
 	private Program programNode;
 	private ASTNode actualNode;
+
+	private String errorDescription;
 	
 	private Stack treeStack;
 	
@@ -86,6 +88,7 @@ public class Parser {
 					actualNode = production.produce(productionID, treeStack, actualNode, tokenStack, tokenList, tokenPosition);
  					return checkSyntaxRecursive(tokenList);
 				}
+				errorDescription = "Erro sintatico. Esperado " + treeStack.checkTop() + ", mas encontrado " + tokenList.get(tokenPosition) + " .Linha: " + tokenList.get(tokenPosition).getLine() + " .Coluna: " + tokenList.get(tokenPosition).getCollumn();
 			}
 		}
 		
@@ -360,5 +363,9 @@ public class Parser {
 				break;
 
 		}
+	}
+
+	public String getErrorDescription() {
+		return errorDescription;
 	}
 }

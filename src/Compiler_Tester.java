@@ -17,7 +17,11 @@ import parser.*;
 import semantic.Analyzer;
 import tools.FileHandler;
 
+import javax.swing.*;
+
 public class Compiler_Tester {
+
+	private static JFrame fatherFrame;
 
 	public static void main(String[] args) {
 		File testFile = new File("codigo_fonte.c");
@@ -63,10 +67,18 @@ public class Compiler_Tester {
 			lexer.feedTokenList(82, "$", line, collumn);
 			lexer.feedTokenList(82, "$", line, collumn);
 			tokenList = lexer.getTokenList();
-			for (tToken token : tokenList) {
-				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
-			}
+//			for (tToken token : tokenList) {
+//				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
+//			}
 			buffer.close();
+
+			for(tToken token: tokenList) {
+				if(token.getTokenType().equals("ERROR")) {
+					System.out.println("Erro sintático. Linha: " + token.getLine() + " .Coluna: " +token.getCollumn());
+					JOptionPane.showMessageDialog(fatherFrame, "Erro sintático", "Erro sintático. Caractere \"" + token.getTokenValue() + "\" não reconhecido. Linha: " + token.getLine() + " .Coluna: " + token.getCollumn(), JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+			}
 
 			if (parser.checkSyntax(tokenList)) {
 				System.out.println("\nChecagem sintatica OK.");
@@ -78,9 +90,11 @@ public class Compiler_Tester {
 					FileHandler.writeList(generator.cgen(parser.getASTTree()), "codigoCompilado.s");
 				} else {
 					System.out.println(analyzer.getErrorDescription());
+					JOptionPane.showMessageDialog(fatherFrame, "Erro semântico", analyzer.getErrorDescription(), JOptionPane.WARNING_MESSAGE);
 				}
 			} else {
 				System.out.println("\nEste programa nao obedece a sintaxe da gramatica.");
+				JOptionPane.showMessageDialog(fatherFrame, "Erro sintático", parser.getErrorDescription(), JOptionPane.WARNING_MESSAGE);
 			}
 			
 		} catch(IOException e) {
