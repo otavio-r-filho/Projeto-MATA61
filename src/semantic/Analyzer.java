@@ -166,7 +166,7 @@ public class Analyzer {
                 break;
             case "ATTRIBUTION":
                 AttributionNode attributionNode = (AttributionNode) node;
-                if(checkDeclaration(node) && checkType(node).equals("BOOLEAN")) { return true; }
+                if(checkDeclaration(node) && (checkType(attributionNode.getExpression()).equals("INTEGER") || checkType(attributionNode.getExpression()).equals("INTEGER"))) { return true; }
                 break;
             case "CALL":
                 if(checkDeclaration(node) && checkParams(node)) { return true; }
@@ -509,7 +509,7 @@ public class Analyzer {
                         return "FLOAT";
                     case "ID":
                         int i = symbolTable.size() - 1;
-                        while(i >= 0 && (!symbolTable.get(i).getSymbolID().equals(constantNode.getVariableID().getTokenValue()) && !symbolTable.get(i).isFunction())) { i--; }
+                        while(i >= 0 && (!symbolTable.get(i).getSymbolID().equals(constantNode.getVariableID().getTokenValue()) && symbolTable.get(i).isFunction())) { i--; }
                         return symbolTable.get(i).getSymbolType();
                 }
                 break;
