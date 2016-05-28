@@ -1,30 +1,22 @@
-int x, y, z;
-
 int fat( int n ) {
+    if ( n == 0 ) {
+        return 1;
+    }
 
-   if ( n == 0 ) {
-   	return 1;
-   }
-
-   return n * fat( n - 1 ) ;
-
+    return n * fat( n - 1 ) ;
 }
 
 void main( ) {
 
-   int n, acc ;
+    int n, acc;
 
-   n = 0 ;
+    n = 0 ;
 
-   acc = 0;
+    acc = 0;
 
-   while ( n < 6 ) {
-
-      acc = acc + fat ( n - 1);
-
-      n = n + 1 ;
-
-   }
-      println( acc ) ;
-
+    while ( n < 6 ) {
+        acc = acc + fat(n);
+        n = n + 1 ;
+    }
+    println( acc ) ;
 }

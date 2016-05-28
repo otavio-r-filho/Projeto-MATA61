@@ -225,7 +225,7 @@ public class Production2 {
 			productionStack.push("CPARENTHESES");
 			productionStack.push("exp");
 			productionStack.push("OPARENTHESES");
-			productionStack.push("while");
+			productionStack.push("WHILE");
 			return addCommand(actualNode, tokenList, tokenPosition, tokenStack);
 		case 18:
 			//comando -> for ( lista-exp ; lista-exp ; lista-exp ) comando

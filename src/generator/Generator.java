@@ -151,7 +151,7 @@ public class Generator {
         asmCode.add("beq $a0, 0, end_while" + whileNode.getNodeID());
         cgen(whileNode.getCommand());
         asmCode.add("b true_branch" + whileNode.getNodeID());
-        asmCode.add("end_branch" + whileNode.getNodeID() + ":");
+        asmCode.add("end_while" + whileNode.getNodeID() + ":");
     }
 
     private void cgenFor(ForNode forNode) {
@@ -208,11 +208,17 @@ public class Generator {
     private void cgenCall(CallExpression callExpression) {
         asmCode.add("sw $fp, 0($sp)");
         asmCode.add("subu $sp, $sp, 4");
+        analyzer.addDummySymbol();
         for(ExpressionNode expressionNode: callExpression.getExpressionList()) {
             cgen(expressionNode);
             asmCode.add("sw $a0, 0($sp)");
             asmCode.add("subu $sp, $sp, 4");
+            analyzer.addDummySymbol();
         }
+        for(ExpressionNode expressionNode: callExpression.getExpressionList()) {
+            analyzer.removeDummySymbol();
+        }
+        analyzer.removeDummySymbol();
         asmCode.add("jal " + callExpression.getFunctionID().getTokenValue());
     }
 
@@ -230,7 +236,7 @@ public class Generator {
         }
         asmCode.add("addiu $sp, $sp, " + (variableCount * 4)); //popping function variables
         variableCount = ((FunctionNode) node).getFunctionParameters().size();
-        asmCode.add("lw $ra, 4($ra)");
+        asmCode.add("lw $ra, 4($sp)");
         asmCode.add("addiu $sp, $sp, " + ((variableCount * 4) + 8)); //popping the AR
         asmCode.add("lw $fp, 0($sp)");
         asmCode.add("jr $ra");
@@ -262,18 +268,22 @@ public class Generator {
                 cgen(binaryExpression.getLhsExpression());
                 asmCode.add("sw $a0, 0($sp)");
                 asmCode.add("subu $sp, $sp, 4");
+                analyzer.addDummySymbol();
                 cgen(binaryExpression.getRhsExpression());
                 asmCode.add("lw $t0, 4($sp)");
                 asmCode.add("addiu $sp, $sp, 4");
+                analyzer.removeDummySymbol();
                 asmCode.add("or $a0, $t0, $a0");
                 break;
             case "AND":
                 cgen(binaryExpression.getLhsExpression());
                 asmCode.add("sw $a0, 0($sp)");
                 asmCode.add("subu $sp, $sp, 4");
+                analyzer.addDummySymbol();
                 cgen(binaryExpression.getRhsExpression());
                 asmCode.add("lw $t0, 4($sp)");
                 asmCode.add("addiu $sp, $sp, 4");
+                analyzer.removeDummySymbol();
                 asmCode.add("or $a0, $t0, $a0");
                 break;
             case "COMPARISSON":

@@ -125,7 +125,13 @@ public class Analyzer {
                 //Condition expressions should return only boolean
                 IfNode ifNode = (IfNode) node;
                 if(!ifNode.getConditionExpression().getNodeType().equals("ATTRIBUTION") && checkType(ifNode.getConditionExpression()).equals("BOOLEAN")) {
-                    return analyzeTree(ifNode.getCommand()) && analyzeTree(ifNode.getElseCommand());
+                    if(analyzeTree(ifNode.getCommand())) {
+                        if(ifNode.getElseCommand() != null) {
+                            return analyzeTree(ifNode.getElseCommand());
+                        } else {
+                            return true;
+                        }
+                    }
                 }
                 errorDescription = "A expressao deve retornar um tipo booleano. Linha: " + ifNode.getConditionExpression().getExpressionType().getLine() + " .Coluna: " + ifNode.getConditionExpression().getExpressionType().getCollumn();
                 break;
@@ -491,7 +497,7 @@ public class Analyzer {
                 ArrayList<FunctionNode> functionNodes = program.getFunctions();
                 for(FunctionNode functionNode: functionNodes) {
                     if(functionNode.getFunctioID().getTokenValue().equals(callExpression.getFunctionID().getTokenValue())) {
-                        return functionNode.getReturnType().getTokenValue();
+                        return functionNode.getReturnType().getTokenType();
                     }
                 }
                 break;

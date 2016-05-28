@@ -216,6 +216,7 @@ public class Parser {
 		case "VARIABLE":
 			variable = (VariableNode)actualNode;
 			variable.setVariableID(tokenStack.pop());
+			actualNode = variable.getFatherNode();
 			break;
 		case "PARAMETER":
 			variable = (VariableNode)actualNode;
