@@ -1,3 +1,5 @@
+int x, y, z;
+
 int fat( int n ) {
 
    if ( n == 0 ) {
