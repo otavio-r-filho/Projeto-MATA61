@@ -809,7 +809,7 @@ public class Lexer {
 	public tToken spitToken(int lexemeIndex, String lexeme, int line, int collumn) {
 		switch(actualState){
 		case 0:
-			tToken errorToken = new tToken("ERROR", actualChain, 38);
+			tToken errorToken = new tToken("ERROR", actualChain, 38, line, collumn - actualChain.length());
 			actualChain = "";
 			if(lexemeIndex != -1) {
 				actualState = edges[actualState][lexemeIndex];
@@ -860,8 +860,8 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
-				actualState = 1;
+//				actualChain = "";
+				actualState = 0;
 				return null;
 			}
 		case 7: //NUM
@@ -881,7 +881,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -910,7 +910,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -927,7 +927,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -944,7 +944,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -961,7 +961,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -978,7 +978,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -995,7 +995,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -1012,7 +1012,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -1029,7 +1029,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -1046,7 +1046,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -1063,7 +1063,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}
@@ -1331,7 +1331,7 @@ public class Lexer {
 					return null;
 				}
 			} else {
-				actualChain = "";
+//				actualChain = "";
 				actualState = 0;
 				return null;
 			}

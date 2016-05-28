@@ -1,4 +1,7 @@
 int x;
+
+#
+
 void main() {
 	int y;
 	y = 3;

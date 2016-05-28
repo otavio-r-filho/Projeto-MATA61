@@ -67,9 +67,9 @@ public class Compiler_Tester {
 			lexer.feedTokenList(82, "$", line, collumn);
 			lexer.feedTokenList(82, "$", line, collumn);
 			tokenList = lexer.getTokenList();
-//			for (tToken token : tokenList) {
-//				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
-//			}
+			for (tToken token : tokenList) {
+				System.out.println(token.getToken() + " - linha: " + String.valueOf(token.getLine()) + " - coluna: " + String.valueOf(token.getCollumn()));
+			}
 			buffer.close();
 
 			for(tToken token: tokenList) {
