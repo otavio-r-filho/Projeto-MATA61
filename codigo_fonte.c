@@ -1,5 +1,7 @@
 int x;
 void main() {
-  x = 7 + 5;
-  println(x);
+	int y;
+	y = 3;
+	x = 7 + y;
+	println(x);
 }

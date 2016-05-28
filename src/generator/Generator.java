@@ -290,9 +290,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("seq $a0, $t0, $a0");
                 }
                 break;
@@ -325,9 +327,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("sne $a0, $t0, $a0");
                 }
                 break;
@@ -360,9 +364,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("sgt $a0, $t0, $a0");
                 }
                 break;
@@ -395,9 +401,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("slt $a0, $t0, $a0");
                 }
                 break;
@@ -430,9 +438,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("sge $a0, $t0, $a0");
                 }
                 break;
@@ -465,9 +475,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("sle $a0, $t0, $a0");
                 }
                 break;
@@ -497,9 +509,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("add $a0, $t0, $a0");
                 }
                 break;
@@ -529,9 +543,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("sub $a0, $t0, $a0");
                 }
                 break;
@@ -561,9 +577,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mul $a0, $t0, $a0");
                 }
                 break;
@@ -593,9 +611,11 @@ public class Generator {
                     cgen(binaryExpression.getLhsExpression());
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("div $a0, $t0, $a0");
                 }
                 break;
@@ -641,10 +661,6 @@ public class Generator {
                 asmCode.add("li $a0, " + constant.getVariableValue().getTokenValue());
                 break;
         }
-    }
-
-    private void cgenVariable(VariableNode variableNode) {
-
     }
 
     private void cgenPrint(PrintNode printNode) {

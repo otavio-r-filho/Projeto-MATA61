@@ -3,10 +3,15 @@ main:
 move $fp, $sp
 sw $ra, 0($sp)
 subu $sp, $sp, 4
+li $a0, 0
+sw $a0, 0($sp)
+subu $sp, $sp, 4
+li $a0, 3
+sw $a0, 4($sp)
 li $a0, 7
 sw $a0, 0($sp)
 subu $sp, $sp, 4
-li $a0, 5
+lw $a0, 8($sp)
 lw $t0, 4($sp)
 addiu $sp, $sp, 4
 add $a0, $t0, $a0
@@ -17,7 +22,7 @@ syscall
 li $v0, 4
 la $a0, _newline
 syscall
-addiu $sp, $sp, 0
+addiu $sp, $sp, 4
 lw $ra, 4($sp)
 addiu, $sp, $sp, 8
 lw $fp, 0($sp)
