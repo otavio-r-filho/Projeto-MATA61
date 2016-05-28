@@ -88,7 +88,7 @@ public class Parser {
 					actualNode = production.produce(productionID, treeStack, actualNode, tokenStack, tokenList, tokenPosition);
  					return checkSyntaxRecursive(tokenList);
 				}
-				errorDescription = "Erro sintatico. Esperado " + treeStack.checkTop() + ", mas encontrado " + tokenList.get(tokenPosition) + " .Linha: " + tokenList.get(tokenPosition).getLine() + " .Coluna: " + tokenList.get(tokenPosition).getCollumn();
+				errorDescription = "Erro sintatico. Esperado " + treeStack.checkTop() + ", mas encontrado " + tokenList.get(tokenPosition).getTokenValue() + " .Linha: " + tokenList.get(tokenPosition).getLine() + " .Coluna: " + tokenList.get(tokenPosition).getCollumn();
 			}
 		}
 		
