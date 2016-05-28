@@ -20,7 +20,7 @@ import tools.FileHandler;
 public class Compiler_Tester {
 
 	public static void main(String[] args) {
-		File testFile = new File("resources/arquivoTeste.c");
+		File testFile = new File("codigo_fonte.c");
 		Charset charset = Charset.forName("UTF-8");
 		Lexer lexer = new Lexer();
 		Parser parser = new Parser();
