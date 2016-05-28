@@ -134,7 +134,8 @@ public class Production2 {
 			productionStack.pop();
 			productionStack.push("SEMICOLON");
 			productionStack.push("lista-nomes");
-			return addVariable(actualNode, tokenStack); //Will return the actualNode
+			addVariable(actualNode, tokenStack); //Will return the actualNode
+			return actualNode;
 		case 5: //Creates a function
 			//dec-fim -> dec-funcao
 			productionStack.pop();
@@ -415,7 +416,7 @@ public class Production2 {
 			   tokenList.get(tokenPosition + 1).getTokenType().equals("GREATER") || tokenList.get(tokenPosition + 1).getTokenType().equals("SMALLER") ||
 			   tokenList.get(tokenPosition + 1).getTokenType().equals("GEQUAL") || tokenList.get(tokenPosition + 1).getTokenType().equals("SEQUAL") ||
 			   tokenList.get(tokenPosition + 1).getTokenType().equals("PLUS") || tokenList.get(tokenPosition + 1).getTokenType().equals("MINUS") ||
-			   tokenList.get(tokenPosition + 1).getTokenType().equals("ASTERISK") || tokenList.get(tokenPosition + 1).getTokenType().equals("SLASH")) {
+			   tokenList.get(tokenPosition + 1).getTokenType().equals("COMPARISSON") || tokenList.get(tokenPosition + 1).getTokenType().equals("DIFFERENT")) {
 				return addConstantExpression(actualNode, tokenList, tokenPosition);
 			}
 			break;
@@ -447,12 +448,13 @@ public class Production2 {
 			//exp7 -> chamada
 			productionStack.pop();
 			productionStack.push("chamada");
-			return addCallExpression(actualNode, tokenStack);
+//			return addCallExpression(actualNode, tokenStack);
+			break;
 		case 52:
 			//exp7 -> exp-p6
 			productionStack.pop();
 			productionStack.push("exp-p6");
-			return addConstantExpression(actualNode, tokenList, tokenPosition);
+			return addConstantExpression(actualNode, tokenStack.pop());
 		case 53:
 			//lista-exp -> exp lista-exp
 			productionStack.pop();
@@ -625,7 +627,8 @@ public class Production2 {
 				nodeID++;
 				callNode.setCommandType(tokenStack.pop());
 				callNode.setNodeType("CALL");
-				setCommand(actualNode, callNode);
+				callNode.setExpressionPrecedence(7);
+				setExpression(actualNode, callNode);
 				callNode.setFatherNode(actualNode);
 				return callNode;
 			}
@@ -684,6 +687,17 @@ public class Production2 {
 		constant.setNodeID(nodeID);
 		nodeID++;
 		constant.setExpressionType(tokenList.get(tokenPosition));
+		constant.setExpressionPrecedence(0);
+		return (VariableNode) setExpression(actualNode, constant);
+	}
+
+	public VariableNode addConstantExpression(ASTNode actualNode, tToken token) {
+		VariableNode constant = null;
+		constant = new VariableNode(token, token, token, actualNode);
+		constant.setNodeType("CONSTANT");
+		constant.setNodeID(nodeID);
+		nodeID++;
+		constant.setExpressionType(token);
 		constant.setExpressionPrecedence(0);
 		return (VariableNode) setExpression(actualNode, constant);
 	}
@@ -749,7 +763,8 @@ public class Production2 {
 	public CallExpression addCallExpression(ASTNode actualNode, TokenFIFOStack tokenStack) {
 		CallExpression callExpression = new CallExpression(actualNode, tokenStack.pop());
 		callExpression.setExpressionPrecedence(7);
-		callExpression.setNodeType("CALLEXPRESSION");
+		callExpression.setNodeType("CALL");
+		callExpression.setCommandType(callExpression.getFunctionID());
 		callExpression.setNodeID(nodeID);
 		nodeID++;
 		return (CallExpression) setExpression(actualNode, callExpression);

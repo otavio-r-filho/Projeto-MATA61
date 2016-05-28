@@ -88,7 +88,7 @@ public class Parser {
 					actualNode = production.produce(productionID, treeStack, actualNode, tokenStack, tokenList, tokenPosition);
  					return checkSyntaxRecursive(tokenList);
 				}
-				errorDescription = "Erro sintatico. Esperado " + treeStack.checkTop() + ", mas encontrado " + tokenList.get(tokenPosition).getTokenValue() + ". Linha: " + tokenList.get(tokenPosition).getLine() + ". Coluna: " + tokenList.get(tokenPosition).getCollumn();
+				errorDescription = "Erro sintatico. Esperado " + treeStack.checkTop() + ", mas encontrado \"" + tokenList.get(tokenPosition).getTokenValue() + "\". Linha: " + tokenList.get(tokenPosition).getLine() + ". Coluna: " + tokenList.get(tokenPosition).getCollumn();
 			}
 		}
 		
@@ -174,7 +174,7 @@ public class Parser {
 				}
 				break;
 			case "COMMA":
-				if(actualNode.getNodeType().equals("PARAMETER") || actualNode.getFatherNode().getNodeType().equals("CALL")) {
+				if(actualNode.getNodeType().equals("PARAMETER") || actualNode.getFatherNode().getNodeType().equals("CALL") || actualNode.getFatherNode().getNodeType().equals("VARIABLE")) {
 					tokenStack.clearStack();
 					actualNode = actualNode.getFatherNode();
 				}
