@@ -182,7 +182,7 @@ public class Generator {
                     if(analyzer.getSymbolTable().get(i).isParameter()) {
                         asmCode.add("sw $a0, " + (analyzer.getSymbolTable().get(i).getParameterOrder() * 4) + "($fp)");
                     }else {
-                        asmCode.add("sw $a0, " + (analyzer.getSymbolTable().size() - i) + "($sp)");
+                        asmCode.add("sw $a0, " + ((analyzer.getSymbolTable().size() - i) * 4) + "($sp)");
                     }
                     break;
                 }
@@ -271,6 +271,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -278,6 +279,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("c.eq.s $f1, $f0");
                     asmCode.add("lwc1 $f3, _false");
@@ -304,6 +306,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -311,6 +314,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("c.eq.s $f1, $f0");
                     asmCode.add("lwc1 $f3, _false");
@@ -337,6 +341,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -344,6 +349,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("c.lt.s $f0, $f1");
                     asmCode.add("lwc1 $f3, _false");
@@ -370,6 +376,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -377,6 +384,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("c.lt.s $f1, $f0");
                     asmCode.add("lwc1 $f3, _false");
@@ -403,6 +411,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -410,6 +419,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("c.le.s $f0, $f1");
                     asmCode.add("lwc1 $f3, _false");
@@ -436,6 +446,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -443,6 +454,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("c.le.s $f1, $f0");
                     asmCode.add("lwc1 $f3, _false");
@@ -469,6 +481,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -476,6 +489,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("add.s $f0, $f1, $f0");
                     asmCode.add("mfc1 $a0, $f0");
@@ -499,6 +513,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -506,6 +521,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("sub.s $f0, $f1, $f0");
                     asmCode.add("mfc1 $a0, $f0");
@@ -529,6 +545,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -536,6 +553,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("mul.s $f0, $f1, $f0");
                     asmCode.add("mfc1 $a0, $f0");
@@ -559,6 +577,7 @@ public class Generator {
                     }
                     asmCode.add("sw $a0, 0($sp)");
                     asmCode.add("subu $sp, $sp, 4");
+                    analyzer.addDummySymbol();
                     cgen(binaryExpression.getRhsExpression());
                     asmCode.add("mtc1 $a0, $f0");
                     if(analyzer.checkType(binaryExpression.getRhsExpression()).equals("INTEGER")) {
@@ -566,6 +585,7 @@ public class Generator {
                     }
                     asmCode.add("lw $t0, 4($sp)");
                     asmCode.add("addiu $sp, $sp, 4");
+                    analyzer.removeDummySymbol();
                     asmCode.add("mtc1 $t0, $f1");
                     asmCode.add("div.s $f0, $f1, $f0");
                     asmCode.add("mfc1 $a0, $f0");

@@ -600,4 +600,17 @@ public class Analyzer {
     public ArrayList<Symbol> getSymbolTable() {
         return symbolTable;
     }
+    
+    public void addDummySymbol() {
+    	this.symbolTable.add(new Symbol("DummySymbol", "VOID", false, false));
+    }
+    
+    public void removeDummySymbol() {
+    	for(int i = symbolTable.size() - 1; i >= 0 ; i--) {
+    		if(symbolTable.get(i).getSymbolID().equals("DummySymbol")) {
+    			symbolTable.remove(i);
+    			break;
+    		}
+    	}
+    }
 }
