@@ -1,23 +1,15 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import generator.Generator;
-import lexer.definitions.*;
 import lexer.Lexer;
-import parser.*;
+import lexer.definitions.Lexeme;
+import lexer.definitions.tToken;
+import parser.Parser;
 import semantic.Analyzer;
 import tools.FileHandler;
 
 import javax.swing.*;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 public class Compiler_Tester {
 
